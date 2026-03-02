@@ -549,17 +549,27 @@
         }
 
         // 2. Listen to Sidebar Chats
+        // 2. Listen to Sidebar Chats (UPDATED)
         function listenToChats() {
-            const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser), orderBy("updatedAt", "desc"));
+            // We removed the 'orderBy' here so Firebase doesn't block the request!
+            const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser));
             
             unsubChats = onSnapshot(q, (snapshot) => {
                 chatsCache = [];
                 snapshot.forEach((doc) => {
                     chatsCache.push({ id: doc.id, ...doc.data() });
                 });
+
+                // Sort the chats locally in JavaScript (Newest at the top)
+                chatsCache.sort((a, b) => {
+                    // If the timestamp hasn't hit the server yet, pretend it's happening right now
+                    const timeA = a.updatedAt ? a.updatedAt.toMillis() : Date.now();
+                    const timeB = b.updatedAt ? b.updatedAt.toMillis() : Date.now();
+                    return timeB - timeA;
+                });
+
                 renderSidebar();
                 
-                // If active chat was updated, refresh headers
                 if(activeChatId) refreshActiveChatHeader();
             });
         }
@@ -719,12 +729,17 @@
         };
 
         // --- NEW CHAT CREATION ---
+        // --- NEW CHAT CREATION (UPDATED) ---
         window.createChat = async function() {
             if(groupMembers.length === 0) return;
             const isGroup = groupMembers.length > 1;
             const groupName = document.getElementById('new-group-name').value.trim() || "New Group";
 
-            // Create new chat doc in Firestore
+            // Add the "Creating..." visual cue to the button
+            const startBtn = event.target;
+            startBtn.innerText = "Creating...";
+            startBtn.disabled = true;
+
             const chatRef = await addDoc(collection(db, "chats"), {
                 participants: [currentUser, ...groupMembers],
                 isGroup: isGroup,
@@ -735,7 +750,14 @@
             });
 
             toggleModal('new-chat-modal', false);
-            openChat(chatRef.id);
+            startBtn.innerText = "Start";
+            startBtn.disabled = false;
+            
+            // We add a tiny 300 millisecond delay to ensure the database 
+            // has enough time to push the new chat into our sidebar cache
+            setTimeout(() => {
+                openChat(chatRef.id);
+            }, 300);
         };
 
         // --- PROFILE EDITING ---

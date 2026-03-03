@@ -81,6 +81,8 @@
         body.theme-von-simon {
             /* Chat Background */
             --bg-main: url('https://yt3.googleusercontent.com/PAG-39SsOZp14BQMICAM5dVmeev3qpER10TC91HB63XddwXOQmRyS7S3LeGTAeT9AHUHYPjig-s=s900-c-k-c0x00ffffff-no-rj') no-repeat center center / cover;
+
+            
             
             /* Plaid Red and Black Theme for Sidebar */
             --bg-sidebar: 
@@ -121,6 +123,23 @@
             -webkit-font-smoothing: antialiased; 
             color: var(--text-dark);
             text-shadow: var(--glow);
+        }
+
+        /* Default state: No image, just transparent to show the plaid sidebar, with a dark red border */
+        body.theme-von-simon .conv-item {
+            background: transparent;
+            border-bottom: 1px solid #550000; 
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Hover and Active state: Reveal the image with a dark, readable overlay */
+        body.theme-von-simon .conv-item:hover,
+        body.theme-von-simon .conv-item.active {
+            /* Linear gradient acts as a dark tint over the image */
+            background: linear-gradient(rgba(17, 0, 0, 0.85), rgba(17, 0, 0, 0.85)), 
+                        url('https://vonsimonstore.com/cdn/shop/files/von_banner.jpg_smaller.jpg?v=1739298586&width=3840') no-repeat center center;
+            background-size: cover;
+            border-left: 6px solid #CC0000;
         }
 
         h1, h2, h3, .logo { font-weight: 700; letter-spacing: -0.5px; margin: 0; }

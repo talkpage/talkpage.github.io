@@ -78,6 +78,43 @@
             --blur: blur(10px);
         }
 
+        body.theme-von-simon {
+            /* Chat Background */
+            --bg-main: url('https://yt3.googleusercontent.com/PAG-39SsOZp14BQMICAM5dVmeev3qpER10TC91HB63XddwXOQmRyS7S3LeGTAeT9AHUHYPjig-s=s900-c-k-c0x00ffffff-no-rj') no-repeat center center / cover;
+            
+            /* Plaid Red and Black Theme for Sidebar */
+            --bg-sidebar: 
+              repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 40px,
+                rgba(204, 0, 0, 0.4) 40px,
+                rgba(204, 0, 0, 0.4) 50px
+              ),
+              repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 40px,
+                rgba(204, 0, 0, 0.4) 40px,
+                rgba(204, 0, 0, 0.4) 50px
+              ),
+              #110000; 
+
+            /* Red & Black Details Elsewhere */
+            --bg-input: #111111;
+            --border-dark: #CC0000;
+            --border-light: #550000;
+            --text-dark: #FFFFFF;
+            --text-muted: #FF9999;
+            --msg-sent-bg: #CC0000;
+            --msg-sent-txt: #FFFFFF;
+            --msg-recv-bg: #000000;
+            --msg-recv-txt: #FFFFFF;
+            
+            /* Optional glow to match the red aesthetic */
+            --glow: 0 0 5px rgba(204, 0, 0, 0.5);
+        }
+
         /* --- BASE STYLES --- */
         body, input, button, textarea { 
             font-family: var(--font-main); 
@@ -500,6 +537,7 @@
                 <div class="theme-card" onclick="setTheme('dark')" style="background:#121212; color:#FFF; border-color: #333;">Dark Mode</div>
                 <div class="theme-card" onclick="setTheme('stranger')" style="background:#050000; color:#FF0000; border-color:#FF0000;">Stranger Things</div>
                 <div class="theme-card" onclick="setTheme('rainbow')" style="background:linear-gradient(45deg, #ffecd2, #fcb69f); color:#000; border-color:#fcb69f;">Pastel Rainbow</div>
+                <div class="theme-card" onclick="setTheme('von-simon')">Von Simon</div>
             </div>
 
             <hr style="border:0; border-top:1px solid var(--border-light); margin: 20px 0;">

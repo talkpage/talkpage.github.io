@@ -90,7 +90,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg-main); }
 
-        /* --- PASSWORD WRAPPER --- */
         .password-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
         .password-wrapper input { margin-bottom: 0 !important; padding-right: 40px !important; }
         .pw-toggle { 
@@ -134,7 +133,7 @@
         #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; }
         #app-layout.active { display: flex; }
 
-        #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10;}
+        #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0;}
         
         .sb-header { height: 84px; padding: 0 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-dark); flex-shrink: 0;}
         
@@ -177,7 +176,6 @@
         .conv-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .conv-preview { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Sidebar Meatball Menu */
         .chat-options-wrapper { position: relative; margin-left: auto; display: flex; align-items: center; }
         .chat-dots { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 5px; opacity: 0; transition: opacity 0.2s; border-radius: 50%; display: flex; }
         .conv-item:hover .chat-dots { opacity: 1; }
@@ -198,46 +196,72 @@
         .chat-header-info h3 { transition: color 0.2s; }
         .chat-header-info:hover h3 { color: var(--accent); }
         
-        #messages-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth;}
+        #messages-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; min-height: 0;}
         
-        /* Message Styling & Menu */
-        .msg-wrapper { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; max-width: 80%; }
-        .msg-wrapper.sent { align-self: flex-end; justify-content: flex-end; }
-        .msg-wrapper.received { align-self: flex-start; justify-content: flex-start; }
+        /* Message Layout System */
+        .msg-wrapper { display: flex; flex-direction: column; max-width: 85%; margin-bottom: 4px; }
+        .msg-wrapper.sent { align-items: flex-end; align-self: flex-end; }
+        .msg-wrapper.received { align-items: flex-start; align-self: flex-start; }
+
+        .sender-name { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; margin-left: 36px; font-weight: bold; cursor: pointer; }
+        .sender-name:hover { color: var(--accent); text-decoration: underline; }
+
+        .msg-content-row { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; width: 100%;}
+        .msg-content-row.sent { justify-content: flex-end; }
+        .msg-content-row.received { justify-content: flex-start; }
 
         .msg-avatar { 
             width: 28px; height: 28px; border-radius: 50%; background: var(--border-dark); 
             display: flex; align-items: center; justify-content: center; color: #FFF; 
             font-weight: bold; font-size: 11px; text-transform: uppercase; overflow: hidden; 
-            flex-shrink: 0; cursor: pointer; margin-bottom: 20px; border: 1px solid var(--border-light);
+            flex-shrink: 0; cursor: pointer; border: 1px solid var(--border-light);
         }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
-        .bubble-container { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-        .msg-block { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
+        /* Inner cluster list with precise 3px gap */
+        .msg-list { display: flex; flex-direction: column; gap: 3px; }
+        
+        .msg-block { display: flex; flex-direction: column; position: relative; }
         .msg-block.sent { align-items: flex-end; }
         .msg-block.received { align-items: flex-start; }
         
         .bubble-row { display: flex; align-items: center; gap: 8px; position: relative; }
-
-        .sender-name { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; margin-left: 4px; font-weight: bold; cursor: pointer; }
-        .sender-name:hover { color: var(--accent); text-decoration: underline; }
         
         .bubble-content { display: flex; flex-direction: column; }
-        .bubble { padding: 12px 18px; border-radius: var(--radius-bubble); font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; white-space: pre-wrap;}
-        .sent .bubble { background: var(--msg-sent-bg); color: var(--msg-sent-txt); border-bottom-right-radius: 4px; }
-        .received .bubble { background: var(--msg-recv-bg); color: var(--msg-recv-txt); border-bottom-left-radius: 4px; border: 1px solid var(--border-light); }
-        .timestamp { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; white-space: pre-wrap;}
+        
+        /* Advanced Corner Stacking */
+        .sent .bubble { background: var(--msg-sent-bg); color: var(--msg-sent-txt); border-radius: var(--radius-bubble); }
+        .sent .msg-list > .msg-block:not(:last-child) .bubble { border-bottom-right-radius: 4px; }
+        .sent .msg-list > .msg-block:not(:first-child) .bubble { border-top-right-radius: 4px; }
+        
+        .received .bubble { background: var(--msg-recv-bg); color: var(--msg-recv-txt); border: 1px solid var(--border-light); border-radius: var(--radius-bubble); }
+        .received .msg-list > .msg-block:not(:last-child) .bubble { border-bottom-left-radius: 4px; }
+        .received .msg-list > .msg-block:not(:first-child) .bubble { border-top-left-radius: 4px; }
+
+        /* Emoji & Image Overrides */
+        .bubble.emoji-only { background: transparent !important; border: none !important; box-shadow: none !important; font-size: 46px !important; padding: 0 !important; margin: 0 !important;}
+        .bubble.image-only { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
+        
+        .chat-image { max-width: 180px; max-height: 180px; object-fit: cover; border-radius: 12px; cursor: pointer; display: block; border: 1px solid var(--border-light); transition: 0.2s;}
+        .chat-image:hover { opacity: 0.9; }
+
+        /* Dynamic Timestamps */
+        .timestamp { font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; width: 100%;}
+        .sent .timestamp { justify-content: flex-end; padding-right: 4px;}
+        .received .timestamp { justify-content: flex-start; padding-left: 4px;}
+        .receipt-icon { margin-left: 4px; display: flex; align-items: center; }
 
         /* Reply Block inside bubble */
         .reply-block { font-size: 13px; opacity: 0.85; margin-bottom: 6px; padding: 4px 8px; border-left: 3px solid currentColor; cursor: pointer; background: rgba(0,0,0,0.05); border-radius: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .sent .reply-block { background: rgba(255,255,255,0.2); }
         .theme-dark .reply-block { background: rgba(255,255,255,0.1); }
         .theme-dark .sent .reply-block { background: rgba(0,0,0,0.2); }
+        .emoji-only .reply-block { font-size: 13px !important; background: var(--bg-sidebar); border-color: var(--border-dark); color: var(--text-dark); border-radius:4px; padding: 4px 8px;}
 
         /* Reactions */
         .reactions-box { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-        .reaction-badge { background: var(--bg-sidebar); border: 1px solid var(--border-light); border-radius: 12px; padding: 2px 6px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s;}
+        .reaction-badge { background: var(--bg-sidebar); border: 1px solid var(--border-light); border-radius: 12px; padding: 2px 6px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s; color: var(--text-dark);}
         .reaction-badge:hover { border-color: var(--accent); }
         .reaction-badge.active-react { border-color: var(--accent); background: var(--bg-main); font-weight: bold;}
 
@@ -250,7 +274,7 @@
         .msg-menu { position: absolute; z-index: 100; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 8px; padding: 5px; display: flex; flex-direction: column; gap: 5px; top: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.15), var(--glow); min-width: 140px; }
         .sent .msg-menu { right: 0; }
         .received .msg-menu { left: 0; }
-        .menu-item { padding: 8px 10px; cursor: pointer; font-size: 13px; font-weight: bold; border-radius: 4px; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+        .menu-item { padding: 8px 10px; cursor: pointer; font-size: 13px; font-weight: bold; border-radius: 4px; display: flex; align-items: center; gap: 8px; transition: background 0.2s; color: var(--text-dark);}
         .menu-item:hover { background: var(--bg-sidebar); color: var(--accent); }
         .menu-item.text-red:hover { color: #EE352E; }
 
@@ -285,13 +309,33 @@
             border-radius: 30px; display: flex; align-items: center; justify-content: center;
         }
 
+        /* --- GOOGLE STYLE MINESWEEPER --- */
+        .ms-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; flex: 1;}
+        .ms-board { display: grid; background: transparent; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); user-select: none;}
+        .ms-cell { 
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; 
+            font-weight: bold; font-size: 18px; font-family: sans-serif; cursor: pointer; 
+            transition: filter 0.1s;
+        }
+        .ms-grass-1 { background-color: #AAD751; }
+        .ms-grass-2 { background-color: #A2D149; }
+        .ms-grass-1:hover:not(.revealed), .ms-grass-2:hover:not(.revealed) { filter: brightness(1.1); }
+        .ms-dirt-1 { background-color: #E5C29F; }
+        .ms-dirt-2 { background-color: #D7B899; }
+        .ms-cell.revealed { cursor: default; }
+        .ms-cell.mine { background-color: #EE352E !important; }
+        
+        .ms-cell.c-1 { color: #1976D2; } .ms-cell.c-2 { color: #388E3C; } .ms-cell.c-3 { color: #D32F2F; }
+        .ms-cell.c-4 { color: #7B1FA2; } .ms-cell.c-5 { color: #FF8F00; } .ms-cell.c-6 { color: #0097A7; }
+        .ms-cell.c-7 { color: #212121; } .ms-cell.c-8 { color: #757575; }
+
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-card { width: 100%; max-width: 450px; padding: 30px; background: var(--bg-main); border-radius: var(--radius-btn); border: 2px solid var(--border-dark); box-shadow: 0 10px 30px rgba(0,0,0,0.5), var(--glow); max-height: 90vh; overflow-y: auto; }
         .user-pill { display: inline-flex; align-items: center; background: var(--border-dark); color: var(--bg-main); padding: 8px 14px; border-radius: 20px; margin: 4px 4px 4px 0; font-size: 13px; font-weight: bold; }
         
         .search-container { position: relative; margin-bottom: 20px; }
-        #search-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-main); border: 2px solid var(--border-dark); border-top: none; z-index: 10; max-height: 150px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #search-dropdown, #gd-add-user-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-main); border: 2px solid var(--border-dark); border-top: none; z-index: 10; max-height: 150px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .search-result { padding: 12px 15px; border-bottom: 1px solid var(--border-light); cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .search-result:last-child { border-bottom: none; }
         .search-result:hover { background: var(--bg-sidebar); }
@@ -374,7 +418,7 @@
                     <button class="theme-btn" onclick="toggleModal('settings-modal', true)" title="Settings">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                         </svg>
                     </button>
                     <button class="new-chat-btn" onclick="toggleModal('new-chat-modal', true)">+</button>
@@ -425,6 +469,10 @@
         </div>
     </div>
 
+    <div id="lightbox-modal" class="modal-overlay" style="z-index: 6000;" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" style="max-width: 90vw; max-height: 90vh; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+    </div>
+
     <div id="confirm-modal" class="modal-overlay" style="z-index: 5000;">
         <div class="modal-card" style="text-align: center; max-width: 320px;">
             <h3 id="confirm-msg" style="margin-bottom: 25px; line-height: 1.4;">Are you sure?</h3>
@@ -455,23 +503,30 @@
             </div>
 
             <hr style="border:0; border-top:1px solid var(--border-light); margin: 20px 0;">
-            <h3 style="font-size: 16px; margin-bottom: 10px;">Change Password</h3>
-            <p id="pw-error" style="color: #EE352E; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
-            <p id="pw-success" style="color: #00933C; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;">Password successfully updated!</p>
             
-            <div class="password-wrapper">
-                <input type="password" id="old-pw" placeholder="Current Password">
-                <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('old-pw', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                </button>
+            <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="togglePasswordSection()">
+                <h3 style="font-size: 16px; margin:0;">Change Password</h3>
+                <span id="pw-arrow" style="color:var(--text-muted); font-size: 12px;">▼</span>
             </div>
-            <div class="password-wrapper">
-                <input type="password" id="new-pw" placeholder="New Password">
-                <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                </button>
+            
+            <div id="pw-change-section" style="display:none; margin-top:15px;">
+                <p id="pw-error" style="color: #EE352E; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
+                <p id="pw-success" style="color: #00933C; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;">Password successfully updated!</p>
+                
+                <div class="password-wrapper">
+                    <input type="password" id="old-pw" placeholder="Current Password">
+                    <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('old-pw', this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
+                <div class="password-wrapper">
+                    <input type="password" id="new-pw" placeholder="New Password">
+                    <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
+                <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
             </div>
-            <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
 
             <button class="btn-primary" style="margin-top: 20px; border:none;" onclick="toggleModal('settings-modal', false)">Close Settings</button>
         </div>
@@ -482,7 +537,7 @@
             <h2 style="margin-bottom: 10px;">New Conversation</h2>
             <div id="selected-users" style="margin-bottom: 15px;"></div>
             <div class="search-container">
-                <input type="text" id="user-search" placeholder="Search users..." oninput="handleSearchInput(event)" autocomplete="off" style="border-bottom: 2px solid var(--border-dark); margin-bottom: 0;">
+                <input type="text" id="user-search" placeholder="Search users..." oninput="handleSearchInput(event)" onkeypress="handleSearchEnter(event)" autocomplete="off" style="border-bottom: 2px solid var(--border-dark); margin-bottom: 0;">
                 <div id="search-dropdown"></div>
             </div>
             
@@ -517,13 +572,6 @@
                     <label for="edit-pic-input" class="upload-btn-fake">Change Photo</label>
                     <input type="file" id="edit-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePic(event, 'pv-pic')">
                 </div>
-                
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: var(--bg-sidebar); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light);">
-                    <input type="checkbox" id="edit-bubble-enabled" style="width: auto; margin: 0;">
-                    <label for="edit-bubble-enabled" style="font-size:14px; font-weight:bold; margin-right:auto; cursor:pointer;">Use Custom Bubble Color</label>
-                    <input type="color" id="edit-bubble-color" style="cursor:pointer; width:35px; height:35px; border:none; background:none; padding:0; border-radius: 50%;">
-                </div>
-
                 <div style="display: flex; gap: 10px;">
                     <input type="text" id="edit-fname" placeholder="First Name">
                     <input type="text" id="edit-lname" placeholder="Last Name">
@@ -543,16 +591,29 @@
     <div id="group-details-modal" class="modal-overlay">
         <div class="modal-card">
             <h2 style="text-align:center; margin-bottom:20px;">Group Settings</h2>
+            
             <div class="pic-upload-container" style="justify-content:center;">
                 <div class="profile-view-pic" id="gd-pic" style="width:80px; height:80px; margin:0;"></div>
                 <div>
                     <label for="gd-pic-input" class="upload-btn-fake">Change Photo</label>
-                    <input type="file" id="gd-pic-input" accept="image/*" style="display:none;" onchange="handleGroupPicEdit(event)">
+                    <input type="file" id="gd-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePic(event, 'gd-pic')">
                 </div>
             </div>
             <input type="text" id="gd-name" placeholder="Group Name" style="text-align:center; font-weight:bold; font-size:18px;">
+            
+            <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; background: var(--bg-sidebar); padding: 10px; border-radius: 8px; border: 1px solid var(--border-light);">
+                <label for="gd-my-color" style="font-size:14px; font-weight:bold; flex:1;">My Bubble Color:</label>
+                <input type="color" id="gd-my-color" style="cursor:pointer; width:35px; height:35px; border:none; background:none; padding:0; border-radius: 50%;">
+            </div>
+
+            <div class="search-container" style="margin-top: 15px;">
+                <input type="text" id="gd-add-user-input" placeholder="Add member..." oninput="handleGDAddUserSearch(event)" autocomplete="off" style="border-bottom: 2px solid var(--border-dark); margin-bottom: 0; font-size: 14px;">
+                <div id="gd-add-user-dropdown"></div>
+            </div>
+
             <h3 style="font-size:14px; margin-top:20px; border-bottom:1px solid var(--border-light); padding-bottom:5px;">Members</h3>
             <div id="gd-members-list" style="margin-bottom:20px; max-height: 150px; overflow-y:auto;"></div>
+            
             <button class="btn-primary" style="width:100%;" onclick="saveGroupDetails()">Save Changes</button>
             <button class="btn-primary btn-outline" style="margin-top:10px; border:none; width:100%;" onclick="toggleModal('group-details-modal', false)">Close</button>
         </div>
@@ -561,7 +622,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, arrayRemove, deleteField } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, arrayRemove, arrayUnion, deleteField } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCXbThxOKS_-gu6IB6S2EtgkcvdAf5fNAw",
@@ -596,7 +657,7 @@
         let isTyping = false;
         let typingTimeout = null;
 
-        // Close message/chat menus when clicking outside safely
+        // Close menus when clicking outside
         window.onclick = function(e) {
             if (e.target && e.target.closest && !e.target.closest('.msg-tools-wrapper')) {
                 document.querySelectorAll('.msg-menu').forEach(m => m.style.display = 'none');
@@ -606,6 +667,16 @@
             }
         };
 
+        // Readable Color Array for Group Chats
+        const readableColors = ['#E57373', '#F06292', '#BA68C8', '#9575CD', '#7986CB', '#64B5F6', '#4FC3F7', '#4DD0E1', '#4DB6AC', '#81C784', '#AED581', '#DCE775', '#FFD54F', '#FFB74D', '#FFA726', '#FF8A65'];
+        
+        window.getDefaultUserColor = function(username) {
+            if(!username) return '#F6A800';
+            let hash = 0;
+            for (let i = 0; i < username.length; i++) hash = username.charCodeAt(i) + ((hash << 5) - hash);
+            return readableColors[Math.abs(hash) % readableColors.length];
+        };
+
         // --- SAFE TIMESTAMP EXTRACTOR ---
         function getMillis(timestamp) {
             if (!timestamp) return Date.now();
@@ -613,6 +684,19 @@
             if (timestamp.seconds) return timestamp.seconds * 1000;
             return Date.now();
         }
+
+        // --- REAL-TIME READ RECEIPT UI TRIGGER ---
+        window.updateReadReceiptsUI = function() {
+            if (!activeChatId) return;
+            const chat = chatsCache.find(c => c.id === activeChatId);
+            const receiptEl = document.getElementById('read-receipt-status');
+            if (chat && receiptEl) {
+                const othersRead = chat.readBy && Object.keys(chat.readBy).some(u => u !== currentUser && chat.readBy[u]);
+                const singleCheckSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
+                receiptEl.innerHTML = othersRead ? doubleCheckSVG : singleCheckSVG;
+            }
+        };
 
         // --- CUSTOM CONFIRM MODAL ---
         window.showConfirm = function(msg, callback) {
@@ -625,7 +709,17 @@
             toggleModal('confirm-modal', true);
         };
 
-        // --- SVG ICONS ---
+        window.openLightbox = function(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox-modal').style.display = 'flex';
+        };
+
+        window.closeLightbox = function() {
+            document.getElementById('lightbox-modal').style.display = 'none';
+            document.getElementById('lightbox-img').src = '';
+        };
+
+        // --- PASSWORD TOGGLE / COLLAPSE ---
         const eyeOpenSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
         const eyeClosedSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
@@ -633,6 +727,16 @@
             const input = document.getElementById(inputId);
             if (input.type === "password") { input.type = "text"; btn.innerHTML = eyeClosedSVG; } 
             else { input.type = "password"; btn.innerHTML = eyeOpenSVG; }
+        };
+
+        window.togglePasswordSection = function() {
+            const sec = document.getElementById('pw-change-section');
+            const arr = document.getElementById('pw-arrow');
+            if(sec.style.display === 'none') {
+                sec.style.display = 'block'; arr.innerText = '▲';
+            } else {
+                sec.style.display = 'none'; arr.innerText = '▼';
+            }
         };
 
         // --- THEME ENGINE ---
@@ -767,10 +871,23 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    tempPicData = event.target.result; 
-                    const previewObj = document.getElementById(previewElementId);
-                    previewObj.innerHTML = `<img src="${tempPicData}">`;
-                    previewObj.style.color = "transparent";
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_SIZE = 200; 
+                        let width = img.width; let height = img.height;
+                        if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+                        else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        tempPicData = canvas.toDataURL('image/jpeg', 0.8);
+                        const previewObj = document.getElementById(previewElementId);
+                        previewObj.innerHTML = `<img src="${tempPicData}">`;
+                        previewObj.style.color = "transparent";
+                    };
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -811,7 +928,10 @@
                 });
                 
                 renderSidebar();
-                if(activeChatId) refreshActiveChatHeader();
+                if(activeChatId) {
+                    refreshActiveChatHeader();
+                    window.updateReadReceiptsUI();
+                }
             }, (error) => {
                 console.error("Firestore Error in listenToChats:", error);
             });
@@ -890,7 +1010,7 @@
 
         // --- TYPING INDICATOR & RENDERING ---
         window.handleTyping = function() {
-            if (!activeChatId) return;
+            if (!activeChatId || activeChatId === 'minesweeper') return;
             if (!isTyping) {
                 isTyping = true;
                 updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: true }).catch(e=>e);
@@ -925,10 +1045,14 @@
             }
             
             html += `
-                <div class="msg-block received">
-                    <div class="bubble-row received">
-                        <div class="bubble typing-dots">
-                            <span></span><span></span><span></span>
+                <div class="msg-content-row received">
+                    <div class="msg-list">
+                        <div class="msg-block received">
+                            <div class="bubble-row received">
+                                <div class="bubble typing-dots">
+                                    <span></span><span></span><span></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -940,6 +1064,7 @@
         }
 
         window.handleHeaderClick = function() {
+            if(activeChatId === 'minesweeper') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
             if(chat.isGroup) {
@@ -950,11 +1075,18 @@
             }
         };
 
+        function isOnlyEmojis(str) {
+            const cleanStr = str.replace(/\s/g, '');
+            if(!cleanStr) return false;
+            return /^[\p{Extended_Pictographic}]+$/u.test(cleanStr);
+        }
+
         window.openChat = async function(chatId) {
             activeChatId = chatId;
             renderSidebar(); 
             document.getElementById('no-chat-screen').style.display = 'none';
             document.getElementById('active-chat-screen').style.display = 'flex';
+            document.querySelector('.input-wrapper').style.display = 'flex'; 
             cancelReply();
             refreshActiveChatHeader();
 
@@ -977,15 +1109,32 @@
                     return getMillis(a.createdAt) - getMillis(b.createdAt);
                 });
                 
+                // Read Receipts logic for incoming messages
+                if (allMessages.length > 0) {
+                    const lastMsg = allMessages[allMessages.length - 1];
+                    if (lastMsg.sender !== currentUser) {
+                        const chat = chatsCache.find(c => c.id === chatId);
+                        if (chat && (!chat.readBy || !chat.readBy[currentUser])) {
+                            updateDoc(doc(db, "chats", chatId), {
+                                [`readBy.${currentUser}`]: true
+                            }).catch(e=>e);
+                        }
+                    }
+                }
+
                 let lastSender = null;
                 let lastTime = 0;
                 let currentWrapper = null;
                 let currentBubbleContainer = null;
 
-                allMessages.forEach((msg) => {
+                const singleCheckSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
+
+                allMessages.forEach((msg, index) => {
                     const isMe = msg.sender === currentUser;
                     const msgTime = getMillis(msg.createdAt);
                     const senderProfile = usersCache[msg.sender] || {};
+                    const chat = chatsCache.find(c => c.id === chatId);
 
                     let timeStr = "Sending...";
                     if(msg.createdAt) {
@@ -997,10 +1146,17 @@
                         timeStr = `${hours}:${mins} ${ampm}`;
                     }
 
-                    // User Custom Bubble Override
+                    // Check for Emoji or Image Only
+                    const isImg = msg.text.startsWith('<img');
+                    const isEmoji = !isImg && isOnlyEmojis(msg.text);
+                    let bubbleClasses = 'bubble';
+                    if (isImg) bubbleClasses += ' image-only';
+                    else if (isEmoji) bubbleClasses += ' emoji-only';
+
                     let bubbleStyle = '';
-                    if (senderProfile.useCustomBubble && senderProfile.bubbleColor) {
-                        bubbleStyle = `style="background: ${senderProfile.bubbleColor} !important; color: #FFFFFF !important; border-color: ${senderProfile.bubbleColor} !important;"`;
+                    if (chat && chat.isGroup && !isImg && !isEmoji) {
+                        let customColor = (chat.userColors && chat.userColors[msg.sender]) ? chat.userColors[msg.sender] : window.getDefaultUserColor(msg.sender);
+                        bubbleStyle = `style="background: ${customColor} !important; color: #FFFFFF !important; border-color: ${customColor} !important;"`;
                     }
 
                     // Build Reactions
@@ -1045,8 +1201,6 @@
                         </div>
                     `;
 
-                    // Avatar logic for group chats
-                    const chat = chatsCache.find(c => c.id === chatId);
                     let avatarHtml = '';
                     if (chat && chat.isGroup && !isMe) {
                         avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile)}</div>`;
@@ -1054,14 +1208,22 @@
 
                     const timeDiff = msgTime - lastTime;
                     const isClumped = (msg.sender === lastSender) && (timeDiff < 5 * 60 * 1000);
+                    
+                    const isLastMsg = (index === allMessages.length - 1);
+                    let readReceiptHtml = '';
+                    if (isMe) {
+                        const othersRead = chat && chat.readBy && Object.keys(chat.readBy).some(u => u !== currentUser && chat.readBy[u]);
+                        readReceiptHtml = othersRead ? doubleCheckSVG : singleCheckSVG;
+                    }
 
-                    // Core Message HTML builder
+                    const receiptContainerId = (isLastMsg && isMe) ? `id="read-receipt-status"` : '';
+
                     const msgBlockHtml = `
                         <div class="msg-block ${isMe ? 'sent' : 'received'}">
                             <div class="bubble-row ${isMe ? 'sent' : 'received'}">
                                 ${isMe ? toolsHtml : ''}
                                 <div class="bubble-content">
-                                    <div class="bubble" ${bubbleStyle}>${replyHtml}${msg.text}</div>
+                                    <div class="${bubbleClasses}" ${bubbleStyle}>${replyHtml}${msg.text}</div>
                                     ${reactionsHtml}
                                 </div>
                                 ${isMe ? '' : toolsHtml}
@@ -1071,45 +1233,37 @@
 
                     if (isClumped && currentWrapper) {
                         currentBubbleContainer.insertAdjacentHTML('beforeend', msgBlockHtml);
-                        currentWrapper.querySelector('.timestamp').innerText = timeStr;
+                        currentWrapper.querySelector('.timestamp').innerHTML = `${timeStr} <span class="receipt-icon" ${receiptContainerId}>${readReceiptHtml}</span>`;
                     } else {
                         const wrapper = document.createElement('div');
                         wrapper.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
                         
                         let html = '';
-                        html += `${!isMe ? avatarHtml : ''}`;
-                        html += `<div class="bubble-container">`;
-                        if (chat && chat.isGroup && !isMe) {
-                            html += `<div class="sender-name" onclick="viewProfile('${msg.sender}')">${getFullName(msg.sender)}</div>`;
-                        }
+                        if (chat && chat.isGroup && !isMe) html += `<div class="sender-name" onclick="viewProfile('${msg.sender}')">${getFullName(msg.sender)}</div>`;
                         
+                        let tsMargin = (chat && chat.isGroup && !isMe) ? 'margin-left: 36px;' : '';
+
                         html += `
-                                ${msgBlockHtml}
+                            <div class="msg-content-row ${isMe ? 'sent' : 'received'}">
+                                ${!isMe ? avatarHtml : ''}
+                                <div class="msg-list">
+                                    ${msgBlockHtml}
+                                </div>
                             </div>
-                        </div>`; // Ends bubble container and wrapper natively via DOM manipulation 
+                            <div class="timestamp" style="${tsMargin}">${timeStr} <span class="receipt-icon" ${receiptContainerId}>${readReceiptHtml}</span></div>
+                        `; 
                         
-                        // Because I'm building strings dynamically, I have to inject it fully formed.
-                        const wrapperHTML = `
-                            ${!isMe ? avatarHtml : ''}
-                            <div class="bubble-container">
-                                ${chat && chat.isGroup && !isMe ? `<div class="sender-name" onclick="viewProfile('${msg.sender}')">${getFullName(msg.sender)}</div>` : ''}
-                                ${msgBlockHtml}
-                                <div class="timestamp">${timeStr}</div>
-                            </div>
-                        `;
-                        wrapper.innerHTML = wrapperHTML;
-                        
+                        wrapper.innerHTML = html;
                         view.appendChild(wrapper);
 
                         currentWrapper = wrapper;
-                        currentBubbleContainer = wrapper.querySelector('.bubble-container');
+                        currentBubbleContainer = wrapper.querySelector('.msg-list');
                     }
                     
                     lastSender = msg.sender;
                     lastTime = msgTime;
                 });
 
-                // Attach typing container block to the bottom of the messages
                 const typingDiv = document.createElement('div');
                 typingDiv.id = 'typing-bubbles-container';
                 view.appendChild(typingDiv);
@@ -1120,6 +1274,7 @@
         };
 
         function refreshActiveChatHeader() {
+            if(activeChatId === 'minesweeper') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
 
@@ -1132,9 +1287,169 @@
                 titleEl.innerText = getFullName(targetUser);
                 document.getElementById('chat-subtitle').innerText = `@${targetUser}`;
             }
-
-            renderTypingBubbles();
         }
+
+        // --- MINESWEEPER LOGIC (Google Style) ---
+        window.msBoard = [];
+        window.msRows = 9; window.msCols = 9; window.msMines = 10;
+        window.msGameOver = false;
+
+        window.openMinesweeperMode = function() {
+            activeChatId = 'minesweeper';
+            document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('no-chat-screen').style.display = 'none';
+            document.getElementById('active-chat-screen').style.display = 'flex';
+            
+            document.getElementById('chat-title').innerText = "Minesweeper";
+            document.getElementById('chat-subtitle').innerText = "Secret Game Mode";
+            document.querySelector('.input-wrapper').style.display = 'none';
+            
+            if(unsubMessages) unsubMessages();
+            
+            const view = document.getElementById('messages-view');
+            view.innerHTML = `
+                <div class="ms-container">
+                    <div style="margin-bottom: 20px; display:flex; gap:10px;">
+                        <button class="btn-primary btn-outline" style="padding:8px 16px; width:auto;" onclick="startMinesweeper('easy')">Easy</button>
+                        <button class="btn-primary btn-outline" style="padding:8px 16px; width:auto;" onclick="startMinesweeper('med')">Medium</button>
+                        <button class="btn-primary btn-outline" style="padding:8px 16px; width:auto;" onclick="startMinesweeper('hard')">Expert</button>
+                    </div>
+                    <div id="ms-board-container" class="ms-board"></div>
+                    <h3 id="ms-status" style="margin-top: 20px; height: 24px; color: var(--text-dark);"></h3>
+                </div>
+            `;
+            window.startMinesweeper('easy');
+        };
+
+        window.startMinesweeper = function(level) {
+            if(level === 'easy') { window.msRows = 10; window.msCols = 10; window.msMines = 10; }
+            else if(level === 'med') { window.msRows = 14; window.msCols = 18; window.msMines = 40; }
+            else { window.msRows = 20; window.msCols = 24; window.msMines = 99; }
+            
+            window.msBoard = [];
+            for(let r=0; r<window.msRows; r++) {
+                let row = [];
+                for(let c=0; c<window.msCols; c++) row.push({mine:false, rev:false, flag:false, count:0});
+                window.msBoard.push(row);
+            }
+            let placed = 0;
+            while(placed < window.msMines) {
+                let r = Math.floor(Math.random() * window.msRows);
+                let c = Math.floor(Math.random() * window.msCols);
+                if(!window.msBoard[r][c].mine) { window.msBoard[r][c].mine = true; placed++; }
+            }
+            for(let r=0; r<window.msRows; r++) {
+                for(let c=0; c<window.msCols; c++) {
+                    if(window.msBoard[r][c].mine) continue;
+                    let cnt = 0;
+                    for(let dr=-1; dr<=1; dr++) {
+                        for(let dc=-1; dc<=1; dc++) {
+                            let nr=r+dr, nc=c+dc;
+                            if(nr>=0 && nr<window.msRows && nc>=0 && nc<window.msCols && window.msBoard[nr][nc].mine) cnt++;
+                        }
+                    }
+                    window.msBoard[r][c].count = cnt;
+                }
+            }
+            window.msGameOver = false;
+            document.getElementById('ms-status').innerText = "🚩 " + window.msMines;
+            window.renderMS();
+        };
+
+        window.renderMS = function() {
+            const container = document.getElementById('ms-board-container');
+            if(!container) return;
+            let html = `<div style="display: grid; grid-template-columns: repeat(${window.msCols}, 32px);" oncontextmenu="return false;">`;
+            
+            for(let r=0; r<window.msRows; r++) {
+                for(let c=0; c<window.msCols; c++) {
+                    const cell = window.msBoard[r][c];
+                    let content = "";
+                    const isEven = (r + c) % 2 === 0;
+                    let classes = "ms-cell";
+
+                    if (cell.rev) {
+                        classes += " revealed " + (isEven ? "ms-dirt-1" : "ms-dirt-2");
+                        if (cell.mine) { content = "💣"; classes += " mine"; }
+                        else if (cell.count > 0) {
+                            content = cell.count;
+                            classes += ` c-${cell.count}`;
+                        }
+                    } else {
+                        classes += isEven ? " ms-grass-1" : " ms-grass-2";
+                        if (cell.flag) content = "🚩";
+                    }
+                    html += `<div class="${classes}" oncontextmenu="msRightClick(event, ${r}, ${c}); return false;" onclick="msClick(${r}, ${c})">${content}</div>`;
+                }
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        };
+
+        window.msClick = function(r, c) {
+            if(window.msGameOver || window.msBoard[r][c].rev || window.msBoard[r][c].flag) return;
+            window.msBoard[r][c].rev = true;
+            if(window.msBoard[r][c].mine) {
+                window.msGameOver = true;
+                document.getElementById('ms-status').innerText = "Game Over! 💥";
+                for(let ir=0; ir<window.msRows; ir++) {
+                    for(let ic=0; ic<window.msCols; ic++) {
+                        if(window.msBoard[ir][ic].mine) window.msBoard[ir][ic].rev = true;
+                    }
+                }
+            } else if(window.msBoard[r][c].count === 0) {
+                window.msFloodFill(r, c);
+            }
+            window.renderMS();
+            window.msCheckWin();
+        };
+
+        window.msFloodFill = function(r, c) {
+            for(let dr=-1; dr<=1; dr++) {
+                for(let dc=-1; dc<=1; dc++) {
+                    let nr=r+dr, nc=c+dc;
+                    if(nr>=0 && nr<window.msRows && nc>=0 && nc<window.msCols) {
+                        if(!window.msBoard[nr][nc].rev && !window.msBoard[nr][nc].mine) {
+                            window.msBoard[nr][nc].rev = true;
+                            window.msBoard[nr][nc].flag = false;
+                            if(window.msBoard[nr][nc].count === 0) window.msFloodFill(nr, nc);
+                        }
+                    }
+                }
+            }
+        };
+
+        window.msRightClick = function(e, r, c) {
+            e.preventDefault();
+            if(window.msGameOver || window.msBoard[r][c].rev) return;
+            window.msBoard[r][c].flag = !window.msBoard[r][c].flag;
+            
+            let flags = 0;
+            for(let ir=0; ir<window.msRows; ir++) {
+                for(let ic=0; ic<window.msCols; ic++) {
+                    if(window.msBoard[ir][ic].flag) flags++;
+                }
+            }
+            document.getElementById('ms-status').innerText = "🚩 " + (window.msMines - flags);
+            
+            window.renderMS();
+            window.msCheckWin();
+        };
+
+        window.msCheckWin = function() {
+            if(window.msGameOver) return;
+            let hidden = 0;
+            for(let r=0; r<window.msRows; r++) {
+                for(let c=0; c<window.msCols; c++) {
+                    if(!window.msBoard[r][c].rev) hidden++;
+                }
+            }
+            if(hidden === window.msMines) {
+                window.msGameOver = true;
+                document.getElementById('ms-status').innerText = "You Win! 🎉";
+            }
+        };
 
         // --- MESSAGE ACTIONS (3 DOTS & REPLY) ---
         window.toggleMsgMenu = function(e, msgId) {
@@ -1149,7 +1464,6 @@
             const msg = activeChatMessages[msgId];
             if (!msg) return;
 
-            // If clicking the same reaction, remove it
             if (msg.reactions && msg.reactions[currentUser] === emoji) {
                 await updateDoc(doc(db, "chats", activeChatId, "messages", msgId), {
                     [`reactions.${currentUser}`]: deleteField()
@@ -1209,8 +1523,9 @@
 
             await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
 
+            // Wiping readBy explicitly to ONLY the sender resets it for everyone else
             await updateDoc(doc(db, "chats", activeChatId), {
-                updatedAt: serverTimestamp(), lastMessage: text, [`typing.${currentUser}`]: deleteField()
+                updatedAt: serverTimestamp(), lastMessage: text, [`typing.${currentUser}`]: deleteField(), readBy: { [currentUser]: true }
             });
         };
 
@@ -1241,25 +1556,33 @@
             if (file && activeChatId) {
                 const reader = new FileReader();
                 reader.onload = async function(event) {
-                    const base64Img = event.target.result;
-                    const msgText = `<img src="${base64Img}" style="max-width:100%; border-radius:8px; margin-bottom:5px;"><br>📎 Attached: ${file.name}`;
-                    
-                    const payload = { sender: currentUser, text: msgText, createdAt: serverTimestamp() };
-                    
-                    if (replyingToMsg) {
-                        payload.replyTo = {
-                            id: replyingToMsg.id,
-                            sender: replyingToMsg.sender,
-                            text: replyingToMsg.text.replace(/<[^>]*>?/gm, '').substring(0, 40).trim() || "Attachment"
-                        };
-                        cancelReply();
-                    }
+                    const img = new Image();
+                    img.onload = async function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_SIZE = 800; 
+                        let width = img.width; let height = img.height;
+                        if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
+                        else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
+                        canvas.width = width; canvas.height = height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                        
+                        const base64Img = canvas.toDataURL('image/jpeg', 0.8);
+                        const msgText = `<img src="${base64Img}" class="chat-image" onclick="openLightbox(this.src)">`;
+                        
+                        const payload = { sender: currentUser, text: msgText, createdAt: serverTimestamp() };
+                        
+                        if (replyingToMsg) {
+                            payload.replyTo = {
+                                id: replyingToMsg.id, sender: replyingToMsg.sender,
+                                text: replyingToMsg.text.replace(/<[^>]*>?/gm, '').substring(0, 40).trim() || "Attachment"
+                            };
+                            cancelReply();
+                        }
 
-                    await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
-
-                    await updateDoc(doc(db, "chats", activeChatId), {
-                        updatedAt: serverTimestamp(), lastMessage: `📎 Image Attached`
-                    });
+                        await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
+                        await updateDoc(doc(db, "chats", activeChatId), { updatedAt: serverTimestamp(), lastMessage: `📷 Image Attached`, readBy: { [currentUser]: true } });
+                    };
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file); 
             }
@@ -1277,7 +1600,8 @@
             const chatRef = await addDoc(collection(db, "chats"), {
                 participants: [currentUser, ...groupMembers],
                 isGroup: isGroup, name: isGroup ? groupName : "",
-                pic: tempPicData, updatedAt: serverTimestamp(), lastMessage: "Chat created"
+                pic: tempPicData, updatedAt: serverTimestamp(), lastMessage: "Chat created",
+                readBy: { [currentUser]: true }
             });
 
             toggleModal('new-chat-modal', false);
@@ -1301,9 +1625,7 @@
                     if (snap.exists()) {
                         profile = snap.data();
                         usersCache[username] = profile;
-                    } else {
-                        return; 
-                    }
+                    } else return; 
                 } catch(e) { return; }
             }
 
@@ -1332,28 +1654,18 @@
             document.getElementById('edit-fname').value = profile.fname || "";
             document.getElementById('edit-lname').value = profile.lname || "";
             document.getElementById('edit-bio').value = profile.bio || "";
-            
-            if (profile.useCustomBubble) {
-                document.getElementById('edit-bubble-enabled').checked = true;
-                document.getElementById('edit-bubble-color').value = profile.bubbleColor || "#F6A800";
-            } else {
-                document.getElementById('edit-bubble-enabled').checked = false;
-            }
         };
 
         window.saveProfileEdit = async function() {
             const fname = document.getElementById('edit-fname').value.trim();
             const lname = document.getElementById('edit-lname').value.trim();
             const bio = document.getElementById('edit-bio').value.trim();
-            const useCustomBubble = document.getElementById('edit-bubble-enabled').checked;
-            const bubbleColor = document.getElementById('edit-bubble-color').value;
 
             await updateDoc(doc(db, "users", currentUser), {
-                fname: fname, lname: lname, bio: bio, pic: tempPicData,
-                useCustomBubble: useCustomBubble, bubbleColor: bubbleColor
+                fname: fname, lname: lname, bio: bio, pic: tempPicData
             });
 
-            usersCache[currentUser] = { ...usersCache[currentUser], fname, lname, bio, pic: tempPicData, useCustomBubble, bubbleColor };
+            usersCache[currentUser] = { ...usersCache[currentUser], fname, lname, bio, pic: tempPicData };
             document.getElementById('my-profile-icon').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser]);
             
             toggleModal('profile-modal', false);
@@ -1365,16 +1677,19 @@
             if(!chat) return;
             
             const nameToUse = chat.name || "Group";
-            document.getElementById('gd-pic').innerHTML = chat.pic ? `<img src="${chat.pic}">` : `<span>${nameToUse.charAt(0).toUpperCase()}</span>`;
+            document.getElementById('gd-pic').innerHTML = chat.pic ? `<img src="${chat.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : `<span>${nameToUse.charAt(0).toUpperCase()}</span>`;
             document.getElementById('gd-name').value = chat.name || "";
             tempPicData = chat.pic || null;
+
+            const myColor = (chat.userColors && chat.userColors[currentUser]) ? chat.userColors[currentUser] : window.getDefaultUserColor(currentUser);
+            document.getElementById('gd-my-color').value = myColor;
 
             const safeParticipants = Array.isArray(chat.participants) ? chat.participants : [];
             const list = document.getElementById('gd-members-list');
             list.innerHTML = safeParticipants.map(p => `
                 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-light);">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <div style="width:30px;height:30px;border-radius:50%;background:var(--border-dark);display:flex;justify-content:center;align-items:center;font-weight:bold;overflow:hidden;">${getAvatarHTML(p)}</div>
+                        <div style="width:30px;height:30px;border-radius:50%;background:var(--border-dark);display:flex;justify-content:center;align-items:center;font-weight:bold;overflow:hidden;color:#FFF;">${getAvatarHTML(p)}</div>
                         <span style="font-weight:bold; font-size:14px;">${getFullName(p)}</span>
                     </div>
                     ${p !== currentUser ? `<button class="kick-btn" onclick="kickUser('${p}')">Remove</button>` : `<span style="font-size:12px; color:var(--text-muted);">You</span>`}
@@ -1384,16 +1699,17 @@
             toggleModal('group-details-modal', true);
         };
 
-        window.handleGroupPicEdit = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    tempPicData = event.target.result;
-                    document.getElementById('gd-pic').innerHTML = `<img src="${tempPicData}">`;
-                };
-                reader.readAsDataURL(file);
-            }
+        window.saveGroupDetails = async function() {
+            const newName = document.getElementById('gd-name').value.trim() || "Unnamed Group";
+            const myColor = document.getElementById('gd-my-color').value;
+
+            await updateDoc(doc(db, "chats", editingGroupChatId), {
+                name: newName, 
+                pic: tempPicData, 
+                updatedAt: serverTimestamp(),
+                [`userColors.${currentUser}`]: myColor
+            });
+            toggleModal('group-details-modal', false);
         };
 
         window.kickUser = async function(username) {
@@ -1406,12 +1722,40 @@
             toggleModal('group-details-modal', false);
         };
 
-        window.saveGroupDetails = async function() {
-            const newName = document.getElementById('gd-name').value.trim() || "Unnamed Group";
+        // --- GROUP CHAT: ADD USERS SEARCH ---
+        window.handleGDAddUserSearch = function(e) {
+            const val = e.target.value.trim().toLowerCase();
+            const dropdown = document.getElementById('gd-add-user-dropdown');
+            if (!val) { dropdown.style.display = 'none'; return; }
+            
+            const chat = chatsCache.find(c => c.id === editingGroupChatId);
+            const currentParts = (chat && Array.isArray(chat.participants)) ? chat.participants : [];
+
+            const matches = usersDirectory.filter(u => u.includes(val) && !currentParts.includes(u));
+
+            if (matches.length > 0) {
+                dropdown.innerHTML = matches.map(u => `
+                    <div class="search-result" onclick="gdAddUser('${u}')">
+                        <div class="search-avatar">${getAvatarHTML(u)}</div>
+                        <div><div style="font-weight:bold;">${getFullName(u)}</div><div style="font-size:12px; color:var(--text-muted);">@${u}</div></div>
+                    </div>`).join('');
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.innerHTML = `<div class="search-result" style="color:var(--text-muted); cursor:default;">No users found</div>`;
+                dropdown.style.display = 'block';
+            }
+        };
+
+        window.gdAddUser = async function(username) {
+            document.getElementById('gd-add-user-input').value = '';
+            document.getElementById('gd-add-user-dropdown').style.display = 'none';
             await updateDoc(doc(db, "chats", editingGroupChatId), {
-                name: newName, pic: tempPicData, updatedAt: serverTimestamp()
+                participants: arrayUnion(username), updatedAt: serverTimestamp()
             });
-            toggleModal('group-details-modal', false);
+            await addDoc(collection(db, "chats", editingGroupChatId, "messages"), {
+                sender: "System", text: `${getFullName(username)} was added to the group.`, createdAt: serverTimestamp()
+            });
+            window.openGroupDetails(editingGroupChatId);
         };
 
         // --- UI HELPERS ---
@@ -1419,6 +1763,16 @@
             if (e.key === 'Enter') {
                 if (type === 'auth-login') window.authenticate('login');
                 if (type === 'send') window.sendMsg();
+            }
+        };
+
+        window.handleSearchEnter = function(e) {
+            if (e.key === 'Enter') {
+                const val = e.target.value.trim().toLowerCase();
+                if (val === 'minesweeper') {
+                    toggleModal('new-chat-modal', false);
+                    openMinesweeperMode();
+                }
             }
         };
 
@@ -1434,7 +1788,7 @@
         window.getAvatarHTML = function(username, profileObj) {
             try {
                 const p = profileObj || usersCache[username];
-                if (p && p.pic && typeof p.pic === 'string' && p.pic.length > 10) return `<img src="${p.pic}">`;
+                if (p && p.pic && typeof p.pic === 'string' && p.pic.length > 10) return `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                 return `<span>${username ? String(username).charAt(0).toUpperCase() : "?"}</span>`;
             } catch(e) { return `<span>?</span>`; }
         };
@@ -1458,6 +1812,8 @@
                     document.getElementById('pv-save-btn').style.display = 'none';
                 }
                 if (id === 'settings-modal') {
+                    document.getElementById('pw-change-section').style.display = 'none';
+                    document.getElementById('pw-arrow').innerText = '▼';
                     document.getElementById('old-pw').value = '';
                     document.getElementById('new-pw').value = '';
                     document.getElementById('pw-error').style.display = 'none';
@@ -1469,7 +1825,7 @@
         window.handleSearchInput = function(e) {
             const val = e.target.value.trim().toLowerCase();
             const dropdown = document.getElementById('search-dropdown');
-            if (!val) { dropdown.style.display = 'none'; return; }
+            if (!val || val === 'minesweeper') { dropdown.style.display = 'none'; return; }
 
             const matches = usersDirectory.filter(u => u.includes(val) && u !== currentUser && !groupMembers.includes(u));
 

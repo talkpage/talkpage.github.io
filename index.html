@@ -79,30 +79,9 @@
         }
 
         body.theme-von-simon {
-            /* Chat Background */
             --bg-main: url('https://yt3.googleusercontent.com/PAG-39SsOZp14BQMICAM5dVmeev3qpER10TC91HB63XddwXOQmRyS7S3LeGTAeT9AHUHYPjig-s=s900-c-k-c0x00ffffff-no-rj') no-repeat center center / cover;
-
-            
-            
-            /* Plaid Red and Black Theme for Sidebar */
-            --bg-sidebar: 
-              repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 40px,
-                rgba(204, 0, 0, 0.4) 40px,
-                rgba(204, 0, 0, 0.4) 50px
-              ),
-              repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 40px,
-                rgba(204, 0, 0, 0.4) 40px,
-                rgba(204, 0, 0, 0.4) 50px
-              ),
-              #110000; 
-
-            /* Red & Black Details Elsewhere */
+            --bg-sidebar: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(204, 0, 0, 0.4) 40px, rgba(204, 0, 0, 0.4) 50px),
+                          repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(204, 0, 0, 0.4) 40px, rgba(204, 0, 0, 0.4) 50px), #110000; 
             --bg-input: #111111;
             --border-dark: #CC0000;
             --border-light: #550000;
@@ -112,34 +91,22 @@
             --msg-sent-txt: #FFFFFF;
             --msg-recv-bg: #000000;
             --msg-recv-txt: #FFFFFF;
-            
-            /* Optional glow to match the red aesthetic */
             --glow: 0 0 5px rgba(204, 0, 0, 0.5);
         }
 
         /* --- BASE STYLES --- */
-        body, input, button, textarea { 
+        body, input, button, textarea, [contenteditable] { 
             font-family: var(--font-main); 
             -webkit-font-smoothing: antialiased; 
             color: var(--text-dark);
             text-shadow: var(--glow);
         }
 
-        /* Default state: No image, just transparent to show the plaid sidebar, with a dark red border */
-        body.theme-von-simon .conv-item {
-            background: transparent;
-            border-bottom: 1px solid #550000; 
-            transition: all 0.2s ease-in-out;
-        }
-
-        /* Hover and Active state: Reveal the image with a dark, readable overlay */
-        body.theme-von-simon .conv-item:hover,
-        body.theme-von-simon .conv-item.active {
-            /* Linear gradient acts as a dark tint over the image */
+        body.theme-von-simon .conv-item { background: transparent; border-bottom: 1px solid #550000; transition: all 0.2s ease-in-out; }
+        body.theme-von-simon .conv-item:hover, body.theme-von-simon .conv-item.active {
             background: linear-gradient(rgba(17, 0, 0, 0.85), rgba(17, 0, 0, 0.85)), 
                         url('https://vonsimonstore.com/cdn/shop/files/von_banner.jpg_smaller.jpg?v=1739298586&width=3840') no-repeat center center;
-            background-size: cover;
-            border-left: 6px solid #CC0000;
+            background-size: cover; border-left: 6px solid #CC0000;
         }
 
         h1, h2, h3, .logo { font-weight: 700; letter-spacing: -0.5px; margin: 0; }
@@ -228,41 +195,42 @@
         .avatar span { color: #FFFFFF !important; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .conv-info { flex: 1; overflow: hidden; }
-        .conv-name { font-weight: bold; font-size: 16px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .conv-preview { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .conv-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center;}
+        
+        .conv-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .conv-name { font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .unread-dot { background: var(--accent); color: var(--bg-main); font-size: 11px; font-weight: bold; border-radius: 12px; display: none; box-shadow: var(--glow); align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box;}
+        .conv-preview { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s;}
 
-        .chat-options-wrapper { position: relative; margin-left: auto; display: flex; align-items: center; }
+        .chat-options-wrapper { position: relative; margin-left: 10px; display: flex; align-items: center; }
         .chat-dots { background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 5px; opacity: 0; transition: opacity 0.2s; border-radius: 50%; display: flex; }
         .conv-item:hover .chat-dots { opacity: 1; }
         .chat-dots:hover { background: var(--bg-main); color: var(--accent); }
         .chat-menu { position: absolute; right: 0; top: 100%; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 8px; padding: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.15), var(--glow); z-index: 100; min-width: 140px; }
 
         #empty-sidebar-hint { padding: 40px 20px; text-align: center; color: var(--text-muted); font-weight: bold; display: flex; flex-direction: column; align-items: center; }
-        .arrow-up { color: var(--accent); transform: rotate(15deg); text-shadow: var(--glow); margin-bottom: 10px; }
         
         #chat-area { flex: 1; display: flex; flex-direction: column; background: transparent; position: relative; z-index: 5; height: 100vh; overflow: hidden;}
         #no-chat-screen { flex: 1; display: flex; align-items: center; justify-content: center; background: var(--bg-sidebar); flex-direction: column; backdrop-filter: var(--blur);}
-        #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-main); backdrop-filter: var(--blur); height: 100%; overflow: hidden;} 
+        #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-main); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
-        /* Clickable Header Area */
         .chat-header { height: 84px; border-bottom: 2px solid var(--border-dark); padding: 0 30px; display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar);}
         .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
         .chat-header-info:hover { background: var(--bg-main); }
         .chat-header-info h3 { transition: color 0.2s; }
         .chat-header-info:hover h3 { color: var(--accent); }
         
-        #messages-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; min-height: 0;}
+        #messages-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 0;}
         
         /* Message Layout System */
-        .msg-wrapper { display: flex; flex-direction: column; max-width: 85%; margin-bottom: 4px; }
-        .msg-wrapper.sent { align-items: flex-end; align-self: flex-end; }
-        .msg-wrapper.received { align-items: flex-start; align-self: flex-start; }
+        .msg-wrapper { display: flex; flex-direction: column; width: 100%; margin-bottom: 4px; }
+        .msg-wrapper.sent { align-items: flex-end; }
+        .msg-wrapper.received { align-items: flex-start; }
 
         .sender-name { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; margin-left: 36px; font-weight: bold; cursor: pointer; }
         .sender-name:hover { color: var(--accent); text-decoration: underline; }
 
-        .msg-content-row { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; width: 100%;}
+        .msg-content-row { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; max-width: 80%; }
         .msg-content-row.sent { justify-content: flex-end; }
         .msg-content-row.received { justify-content: flex-start; }
 
@@ -270,11 +238,10 @@
             width: 28px; height: 28px; border-radius: 50%; background: var(--border-dark); 
             display: flex; align-items: center; justify-content: center; color: #FFF; 
             font-weight: bold; font-size: 11px; text-transform: uppercase; overflow: hidden; 
-            flex-shrink: 0; cursor: pointer; border: 1px solid var(--border-light);
+            flex-shrink: 0; cursor: pointer; border: 1px solid var(--border-light); margin-bottom: 2px;
         }
         .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Inner cluster list with precise 3px gap */
         .msg-list { display: flex; flex-direction: column; gap: 3px; }
         
         .msg-block { display: flex; flex-direction: column; position: relative; }
@@ -284,7 +251,7 @@
         .bubble-row { display: flex; align-items: center; gap: 8px; position: relative; }
         
         .bubble-content { display: flex; flex-direction: column; }
-        .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; white-space: pre-wrap;}
+        .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; white-space: pre-wrap; transition: filter 0.5s;}
         
         /* Advanced Corner Stacking */
         .sent .bubble { background: var(--msg-sent-bg); color: var(--msg-sent-txt); border-radius: var(--radius-bubble); }
@@ -303,9 +270,7 @@
         .chat-image:hover { opacity: 0.9; }
 
         /* Dynamic Timestamps */
-        .timestamp { font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; width: 100%;}
-        .sent .timestamp { justify-content: flex-end; padding-right: 4px;}
-        .received .timestamp { justify-content: flex-start; padding-left: 4px;}
+        .timestamp { font-size: 11px; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; }
         .receipt-icon { margin-left: 4px; display: flex; align-items: center; }
 
         /* Reply Block inside bubble */
@@ -334,7 +299,6 @@
         .menu-item:hover { background: var(--bg-sidebar); color: var(--accent); }
         .menu-item.text-red:hover { color: #EE352E; }
 
-        /* Emoji Row inside Menu */
         .emoji-row { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid var(--border-light); margin-bottom: 5px; }
         .emoji-btn { cursor: pointer; font-size: 16px; transition: transform 0.2s; border: none; background: none; padding: 2px; }
         .emoji-btn:hover { transform: scale(1.3); }
@@ -346,32 +310,34 @@
         .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typingAnim { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.4;} 40% { transform: scale(1); opacity: 1;} }
 
-        /* --- PERFECT ALIGNMENT INPUT BOX --- */
+        /* --- PERFECT ALIGNMENT INPUT BOX & CONTENT EDITABLE --- */
         .input-wrapper { display: flex; flex-direction: column; background: var(--bg-sidebar); border-top: 2px solid var(--border-dark); flex-shrink:0; }
         
-        .input-box { padding: 15px 30px 20px; display: flex; align-items: center; gap: 15px; }
+        .input-box { padding: 15px 30px 20px; display: flex; align-items: flex-end; gap: 15px; }
         
-        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
+        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 12px;}
         .attach-icon-label:hover { color: var(--accent); }
 
         #msg-input { 
-            flex: 1; height: 48px; padding: 0 20px; border-radius: 30px; 
-            border: 1px solid var(--border-dark); background: var(--bg-input); 
+            flex: 1; min-height: 20px; max-height: 120px; overflow-y: auto; padding: 14px 20px; 
+            border-radius: 24px; border: 1px solid var(--border-dark); background: var(--bg-input); 
             color: var(--text-dark); outline: none; font-size: 15px; margin: 0; box-shadow: var(--glow);
+            word-break: break-word; white-space: pre-wrap; line-height: 1.4;
         }
+        #msg-input:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block;}
         
         #send-btn {
             width: auto; flex-shrink: 0; height: 48px; margin: 0; padding: 0 24px;
-            border-radius: 30px; display: flex; align-items: center; justify-content: center;
+            border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px;
         }
 
         /* --- GOOGLE STYLE MINESWEEPER --- */
         .ms-container { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; flex: 1;}
-        .ms-board { display: grid; background: transparent; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); user-select: none;}
+        .ms-board { display: grid; background: transparent; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); user-select: none; gap: 0;}
         .ms-cell { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; 
             font-weight: bold; font-size: 18px; font-family: sans-serif; cursor: pointer; 
-            transition: filter 0.1s;
+            transition: filter 0.1s; border: none; box-shadow: none;
         }
         .ms-grass-1 { background-color: #AAD751; }
         .ms-grass-2 { background-color: #A2D149; }
@@ -410,7 +376,6 @@
         .profile-view-pic img { width: 100%; height: 100%; object-fit: cover; }
         .kick-btn { background: none; border: none; color: #EE352E; font-size: 12px; font-weight: bold; cursor: pointer; }
         
-        /* Loading Overlay */
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-main); z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: var(--text-dark); transition: opacity 0.5s;}
     </style>
 </head>
@@ -426,7 +391,7 @@
                 <p id="auth-error" style="color: #EE352E; font-size: 14px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
                 <input type="text" id="auth-u" placeholder="Username">
                 <div class="password-wrapper">
-                    <input type="password" id="auth-p" placeholder="Password" onkeypress="handleEnter(event, 'auth-login')">
+                    <input type="password" id="auth-p" placeholder="Password" onkeypress="handleAuthEnter(event)">
                     <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('auth-p', this)">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </button>
@@ -480,6 +445,7 @@
                     <button class="new-chat-btn" onclick="toggleModal('new-chat-modal', true)">+</button>
                 </div>
             </div>
+
             <div class="conv-list" id="conv-list">
                 <div style="padding:20px; text-align:center; color:var(--text-muted);">Loading chats...</div>
             </div>
@@ -517,7 +483,8 @@
                         </label>
                         <input type="file" id="file-input" style="display:none;" onchange="handleFileUpload(event)">
                         
-                        <input type="text" id="msg-input" placeholder="Type a message..." onkeypress="handleEnter(event, 'send')" oninput="handleTyping()">
+                        <div id="msg-input" contenteditable="true" placeholder="Type a message..." onkeydown="handleInputEnter(event)" oninput="handleTyping()"></div>
+                        
                         <button class="btn-primary" id="send-btn" onclick="sendMsg()">Send</button>
                     </div>
                 </div>
@@ -702,6 +669,9 @@
         let usersDirectory = []; 
         let activeChatMessages = {}; 
         
+        let chatScrollPositions = {}; 
+        let isFirstLoadForChat = true;
+
         let pendingSignUpUser = null;
         let tempPicData = null; 
         let groupMembers = [];
@@ -714,7 +684,20 @@
         let isTyping = false;
         let typingTimeout = null;
 
-        // Close menus when clicking outside
+        // Auto-cleanup stale typing indicators
+        setInterval(() => {
+            let changed = false;
+            const now = Date.now();
+            chatsCache.forEach(c => {
+                if (c.typing) {
+                    for (let u in c.typing) {
+                        if (now - c.typing[u] > 4000) { delete c.typing[u]; changed = true; }
+                    }
+                }
+            });
+            if (changed) { renderSidebar(); renderTypingBubbles(); }
+        }, 2000);
+
         window.onclick = function(e) {
             if (e.target && e.target.closest && !e.target.closest('.msg-tools-wrapper')) {
                 document.querySelectorAll('.msg-menu').forEach(m => m.style.display = 'none');
@@ -724,9 +707,7 @@
             }
         };
 
-        // Readable Color Array for Group Chats
         const readableColors = ['#E57373', '#F06292', '#BA68C8', '#9575CD', '#7986CB', '#64B5F6', '#4FC3F7', '#4DD0E1', '#4DB6AC', '#81C784', '#AED581', '#DCE775', '#FFD54F', '#FFB74D', '#FFA726', '#FF8A65'];
-        
         window.getDefaultUserColor = function(username) {
             if(!username) return '#F6A800';
             let hash = 0;
@@ -734,7 +715,6 @@
             return readableColors[Math.abs(hash) % readableColors.length];
         };
 
-        // --- SAFE TIMESTAMP EXTRACTOR ---
         function getMillis(timestamp) {
             if (!timestamp) return Date.now();
             if (typeof timestamp.toMillis === 'function') return timestamp.toMillis();
@@ -746,23 +726,27 @@
         window.updateReadReceiptsUI = function() {
             if (!activeChatId) return;
             const chat = chatsCache.find(c => c.id === activeChatId);
-            const receiptEl = document.getElementById('read-receipt-status');
-            if (chat && receiptEl) {
-                const othersRead = chat.readBy && Object.keys(chat.readBy).some(u => u !== currentUser && chat.readBy[u]);
+            const receiptEls = document.querySelectorAll('.receipt-icon');
+            if (chat && receiptEls.length > 0) {
+                const parts = Array.isArray(chat.participants) ? chat.participants : [];
+                const otherParts = parts.filter(p => p !== currentUser);
+                let allRead = false;
+                if (otherParts.length > 0) {
+                    allRead = otherParts.every(p => chat.readBy && chat.readBy[p] === true);
+                }
+                
                 const singleCheckSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                 const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
-                receiptEl.innerHTML = othersRead ? doubleCheckSVG : singleCheckSVG;
+                
+                const targetIcon = receiptEls[receiptEls.length - 1];
+                targetIcon.innerHTML = allRead ? doubleCheckSVG : singleCheckSVG;
             }
         };
 
-        // --- CUSTOM CONFIRM MODAL ---
         window.showConfirm = function(msg, callback) {
             document.getElementById('confirm-msg').innerText = msg;
             const yesBtn = document.getElementById('confirm-yes-btn');
-            yesBtn.onclick = () => {
-                toggleModal('confirm-modal', false);
-                callback();
-            };
+            yesBtn.onclick = () => { toggleModal('confirm-modal', false); callback(); };
             toggleModal('confirm-modal', true);
         };
 
@@ -776,7 +760,7 @@
             document.getElementById('lightbox-img').src = '';
         };
 
-        // --- PASSWORD TOGGLE / COLLAPSE ---
+        // --- PASSWORD TOGGLE ---
         const eyeOpenSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
         const eyeClosedSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
@@ -922,7 +906,6 @@
             }
         };
 
-        // --- PROFILE ONBOARDING ---
         window.handleProfilePic = function(e, previewElementId) {
             const file = e.target.files[0];
             if (file) {
@@ -941,7 +924,7 @@
                         
                         tempPicData = canvas.toDataURL('image/jpeg', 0.8);
                         const previewObj = document.getElementById(previewElementId);
-                        previewObj.innerHTML = `<img src="${tempPicData}">`;
+                        previewObj.innerHTML = `<img src="${tempPicData}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
                         previewObj.style.color = "transparent";
                     };
                     img.src = event.target.result;
@@ -962,7 +945,7 @@
             location.reload();
         };
 
-        // --- REAL-TIME SYNCING ---
+        // --- SYNCING ---
         async function fetchDirectory() {
             try {
                 const querySnapshot = await getDocs(collection(db, "users"));
@@ -974,6 +957,19 @@
             } catch(e) { console.error("Directory fetch safely skipped."); }
         }
 
+        window.markChatAsRead = function(chatId) {
+            if (document.hasFocus()) {
+                const currentChat = chatsCache.find(c => c.id === chatId);
+                if (currentChat && (currentChat.unreadCount?.[currentUser] > 0 || !currentChat.readBy?.[currentUser])) {
+                    updateDoc(doc(db, "chats", chatId), { [`readBy.${currentUser}`]: true, [`unreadCount.${currentUser}`]: 0 }).catch(e=>e);
+                }
+            }
+        };
+
+        window.addEventListener('focus', () => {
+            if(activeChatId && activeChatId !== 'minesweeper') window.markChatAsRead(activeChatId);
+        });
+
         function listenToChats() {
             const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser));
             unsubChats = onSnapshot(q, (snapshot) => {
@@ -981,16 +977,18 @@
                 snapshot.forEach((doc) => { chatsCache.push({ id: doc.id, ...doc.data() }); });
                 
                 chatsCache.sort((a, b) => {
+                    const aUnread = a.unreadCount && a.unreadCount[currentUser] > 0;
+                    const bUnread = b.unreadCount && b.unreadCount[currentUser] > 0;
+                    if (aUnread && !bUnread) return -1;
+                    if (!aUnread && bUnread) return 1;
                     return getMillis(b.updatedAt) - getMillis(a.updatedAt);
                 });
                 
                 renderSidebar();
-                if(activeChatId) {
+                if(activeChatId && activeChatId !== 'minesweeper') {
                     refreshActiveChatHeader();
                     window.updateReadReceiptsUI();
                 }
-            }, (error) => {
-                console.error("Firestore Error in listenToChats:", error);
             });
         }
 
@@ -999,13 +997,7 @@
             list.innerHTML = '';
             
             if (chatsCache.length === 0) {
-                list.innerHTML = `
-                <div id="empty-sidebar-hint">
-                    <div class="arrow-up">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-                    </div>
-                    Start a conversation here
-                </div>`;
+                list.innerHTML = `<div id="empty-sidebar-hint"><div class="arrow-up"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></div>Start a conversation here</div>`;
                 return;
             }
 
@@ -1028,22 +1020,36 @@
                         avatarContent = getAvatarHTML(targetUser, usersCache[targetUser]);
                     }
 
-                    // Sidebar Typing Indicator logic
+                    const unreadCount = chat.unreadCount ? (chat.unreadCount[currentUser] || 0) : 0;
+                    const isUnread = unreadCount > 0;
+                    const fw = isUnread ? 'bold' : 'normal';
+                    const color = isUnread ? 'var(--text-dark)' : 'var(--text-muted)';
+                    const unreadBadge = isUnread ? `<div class="unread-dot" style="display:inline-flex;">${unreadCount}</div>` : `<div class="unread-dot"></div>`;
+
                     let typingStr = null;
                     if (chat.typing) {
-                        const typists = Object.keys(chat.typing).filter(u => chat.typing[u] && u !== currentUser);
-                        if (typists.length > 0) {
-                            typingStr = `<span style="font-style:italic; color:var(--accent);">${getFullName(typists[0])} is typing...</span>`;
-                        }
+                        const now = Date.now();
+                        const typists = Object.keys(chat.typing).filter(u => {
+                            if (u === currentUser) return false;
+                            const val = chat.typing[u];
+                            if (typeof val !== 'number') return false; 
+                            return (now - val < 4000);
+                        });
+                        if (typists.length > 0) typingStr = `<span style="font-style:italic; color:var(--accent);">${getFullName(typists[0])} is typing...</span>`;
                     }
 
                     const lastMsg = typingStr || chat.lastMessage || "Start chatting...";
-                    
                     const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
                     
                     item.innerHTML = `
                         <div class="avatar-container"><div class="avatar">${avatarContent}</div><div class="online-dot"></div></div>
-                        <div class="conv-info"><div class="conv-name">${chatTitle}</div><div class="conv-preview">${lastMsg}</div></div>
+                        <div class="conv-info">
+                            <div class="conv-header-row">
+                                <div class="conv-name">${chatTitle}</div>
+                                ${unreadBadge}
+                            </div>
+                            <div class="conv-preview" style="font-weight:${fw}; color:${color};">${lastMsg}</div>
+                        </div>
                         <div class="chat-options-wrapper" onclick="toggleChatMenu(event, '${chat.id}')">
                             <button class="chat-dots">${dotsSVG}</button>
                             <div id="chat-menu-${chat.id}" class="chat-menu" style="display:none;">
@@ -1052,9 +1058,7 @@
                         </div>
                     `;
                     list.appendChild(item);
-                } catch(err) {
-                    console.error("Skipping a malformed chat document", err);
-                }
+                } catch(err) { console.error("Skipping malformed chat document"); }
             });
         }
 
@@ -1065,12 +1069,11 @@
             if(menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
         };
 
-        // --- TYPING INDICATOR & RENDERING ---
         window.handleTyping = function() {
             if (!activeChatId || activeChatId === 'minesweeper') return;
             if (!isTyping) {
                 isTyping = true;
-                updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: true }).catch(e=>e);
+                updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: Date.now() }).catch(e=>e);
             }
             clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
@@ -1084,36 +1087,24 @@
             if(!container) return;
             
             const chat = chatsCache.find(c => c.id === activeChatId);
-            if(!chat || !chat.typing) {
-                container.innerHTML = '';
-                return;
-            }
+            if(!chat || !chat.typing) { container.innerHTML = ''; return; }
 
-            const typists = Object.keys(chat.typing).filter(u => chat.typing[u] && u !== currentUser);
-            if (typists.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
+            const now = Date.now();
+            const typists = Object.keys(chat.typing).filter(u => {
+                if (u === currentUser) return false;
+                const val = chat.typing[u];
+                if (typeof val !== 'number') return false; 
+                return (now - val < 4000);
+            });
+            
+            if (typists.length === 0) { container.innerHTML = ''; return; }
 
             let html = '';
             if(chat.isGroup) {
                  const names = typists.map(u => getFullName(u)).join(', ');
                  html += `<div class="sender-name">${names}</div>`;
             }
-            
-            html += `
-                <div class="msg-content-row received">
-                    <div class="msg-list">
-                        <div class="msg-block received">
-                            <div class="bubble-row received">
-                                <div class="bubble typing-dots">
-                                    <span></span><span></span><span></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+            html += `<div class="msg-content-row received"><div class="msg-list"><div class="msg-block received"><div class="bubble-row received"><div class="bubble typing-dots"><span></span><span></span><span></span></div></div></div></div></div>`;
             container.innerHTML = `<div class="msg-wrapper received" style="margin-top: 10px;">${html}</div>`;
             
             const view = document.getElementById('messages-view');
@@ -1124,12 +1115,8 @@
             if(activeChatId === 'minesweeper') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
-            if(chat.isGroup) {
-                openGroupDetails(chat.id);
-            } else {
-                const targetUser = chat.participants.find(p => p !== currentUser) || currentUser;
-                viewProfile(targetUser);
-            }
+            if(chat.isGroup) openGroupDetails(chat.id);
+            else viewProfile(chat.participants.find(p => p !== currentUser) || currentUser);
         };
 
         function isOnlyEmojis(str) {
@@ -1138,20 +1125,39 @@
             return /^[\p{Extended_Pictographic}]+$/u.test(cleanStr);
         }
 
-        window.openChat = async function(chatId) {
+       window.openChat = async function(chatId) {
+            // 1. Save scroll position of previous chat
+            if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper') {
+                const view = document.getElementById('messages-view');
+                chatScrollPositions[activeChatId] = view.scrollTop;
+            }
+            
+            // 2. FORGET scroll position if this chat has NEW messages (force jump to bottom)
+            const targetChat = chatsCache.find(c => c.id === chatId);
+            if (targetChat && targetChat.unreadCount && targetChat.unreadCount[currentUser] > 0) {
+                delete chatScrollPositions[chatId];
+            }
+            
             activeChatId = chatId;
+            isFirstLoadForChat = true;
+            
             renderSidebar(); 
             document.getElementById('no-chat-screen').style.display = 'none';
             document.getElementById('active-chat-screen').style.display = 'flex';
             document.querySelector('.input-wrapper').style.display = 'flex'; 
+            
             cancelReply();
             refreshActiveChatHeader();
+
+            window.markChatAsRead(chatId);
 
             if(unsubMessages) unsubMessages();
 
             const msgRef = collection(db, "chats", chatId, "messages");
             unsubMessages = onSnapshot(msgRef, (snapshot) => {
                 const view = document.getElementById('messages-view');
+                const wasAtBottom = (view.scrollHeight - view.scrollTop - view.clientHeight) <= 50;
+                
                 view.innerHTML = '';
                 
                 let allMessages = [];
@@ -1162,19 +1168,14 @@
                     activeChatMessages[docSnap.id] = data; 
                 });
 
-                allMessages.sort((a, b) => {
-                    return getMillis(a.createdAt) - getMillis(b.createdAt);
-                });
+                allMessages.sort((a, b) => getMillis(a.createdAt) - getMillis(b.createdAt));
                 
-                // Read Receipts logic for incoming messages
                 if (allMessages.length > 0) {
                     const lastMsg = allMessages[allMessages.length - 1];
-                    if (lastMsg.sender !== currentUser) {
-                        const chat = chatsCache.find(c => c.id === chatId);
-                        if (chat && (!chat.readBy || !chat.readBy[currentUser])) {
-                            updateDoc(doc(db, "chats", chatId), {
-                                [`readBy.${currentUser}`]: true
-                            }).catch(e=>e);
+                    const liveChat = chatsCache.find(c => c.id === chatId);
+                    if (lastMsg.sender !== currentUser && liveChat) {
+                        if (liveChat.unreadCount?.[currentUser] > 0 || !liveChat.readBy?.[currentUser]) {
+                            window.markChatAsRead(chatId);
                         }
                     }
                 }
@@ -1188,137 +1189,141 @@
                 const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
 
                 allMessages.forEach((msg, index) => {
-                    const isMe = msg.sender === currentUser;
-                    const msgTime = getMillis(msg.createdAt);
-                    const senderProfile = usersCache[msg.sender] || {};
-                    const chat = chatsCache.find(c => c.id === chatId);
+                    try {
+                        const isMe = msg.sender === currentUser;
+                        const msgTime = getMillis(msg.createdAt);
+                        const senderProfile = usersCache[msg.sender] || {};
+                        const chat = chatsCache.find(c => c.id === chatId);
 
-                    let timeStr = "Sending...";
-                    if(msg.createdAt) {
-                        const date = (typeof msg.createdAt.toDate === 'function') ? msg.createdAt.toDate() : new Date(msgTime);
-                        let hours = date.getHours();
-                        const ampm = hours >= 12 ? 'PM' : 'AM';
-                        hours = hours % 12 || 12;
-                        const mins = date.getMinutes().toString().padStart(2, '0');
-                        timeStr = `${hours}:${mins} ${ampm}`;
-                    }
-
-                    // Check for Emoji or Image Only
-                    const isImg = msg.text.startsWith('<img');
-                    const isEmoji = !isImg && isOnlyEmojis(msg.text);
-                    let bubbleClasses = 'bubble';
-                    if (isImg) bubbleClasses += ' image-only';
-                    else if (isEmoji) bubbleClasses += ' emoji-only';
-
-                    let bubbleStyle = '';
-                    if (chat && chat.isGroup && !isImg && !isEmoji) {
-                        let customColor = (chat.userColors && chat.userColors[msg.sender]) ? chat.userColors[msg.sender] : window.getDefaultUserColor(msg.sender);
-                        bubbleStyle = `style="background: ${customColor} !important; color: #FFFFFF !important; border-color: ${customColor} !important;"`;
-                    }
-
-                    // Build Reactions
-                    let reactionsHtml = '';
-                    if (msg.reactions) {
-                        const counts = {};
-                        let activeReact = null;
-                        for (const u in msg.reactions) {
-                            const e = msg.reactions[u];
-                            if(u === currentUser) activeReact = e;
-                            counts[e] = (counts[e] || 0) + 1;
+                        let timeStr = "Sending...";
+                        if(msg.createdAt) {
+                            const date = (typeof msg.createdAt.toDate === 'function') ? msg.createdAt.toDate() : new Date(msgTime);
+                            let hours = date.getHours();
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12 || 12;
+                            const mins = date.getMinutes().toString().padStart(2, '0');
+                            timeStr = `${hours}:${mins} ${ampm}`;
                         }
-                        const badges = Object.entries(counts).map(([e, c]) => {
-                            const isActive = (e === activeReact) ? 'active-react' : '';
-                            return `<span class="reaction-badge ${isActive}" onclick="reactToMessage('${msg.id}', '${e}')">${e} ${c}</span>`;
-                        }).join('');
-                        if (badges) reactionsHtml = `<div class="reactions-box">${badges}</div>`;
-                    }
 
-                    // Native Reply Block Render
-                    let replyHtml = '';
-                    if (msg.replyTo) {
-                        const rName = getFullName(msg.replyTo.sender);
-                        replyHtml = `<div class="reply-block"><strong>${rName}</strong>: ${msg.replyTo.text}</div>`;
-                    }
+                        const safeMsgText = msg.text || '';
+                        const isImg = safeMsgText.startsWith('<img');
+                        const isEmoji = !isImg && isOnlyEmojis(safeMsgText);
+                        let bubbleClasses = 'bubble';
+                        if (isImg) bubbleClasses += ' image-only';
+                        else if (isEmoji) bubbleClasses += ' emoji-only';
 
-                    // Context Menu HTML (Dots are placed on the inside: left for sent, right for received)
-                    const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
-                    const toolsHtml = `
-                        <div class="msg-tools-wrapper">
-                            <button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button>
-                            <div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;">
-                                <div class="emoji-row">
-                                    <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button>
-                                    <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button>
-                                    <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button>
-                                    <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button>
-                                </div>
-                                <div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div>
-                                ${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}
-                            </div>
-                        </div>
-                    `;
+                        let bubbleStyle = '';
+                        if (chat && chat.isGroup && !isImg && !isEmoji) {
+                            let customColor = (chat.userColors && chat.userColors[msg.sender]) ? chat.userColors[msg.sender] : window.getDefaultUserColor(msg.sender);
+                            bubbleStyle = `style="background: ${customColor} !important; color: #FFFFFF !important; border-color: ${customColor} !important;"`;
+                        }
 
-                    let avatarHtml = '';
-                    if (chat && chat.isGroup && !isMe) {
-                        avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile)}</div>`;
-                    }
+                        let reactionsHtml = '';
+                        if (msg.reactions) {
+                            const counts = {};
+                            let activeReact = null;
+                            for (const u in msg.reactions) {
+                                const e = msg.reactions[u];
+                                if(u === currentUser) activeReact = e;
+                                counts[e] = (counts[e] || 0) + 1;
+                            }
+                            const badges = Object.entries(counts).map(([e, c]) => {
+                                const isActive = (e === activeReact) ? 'active-react' : '';
+                                return `<span class="reaction-badge ${isActive}" onclick="reactToMessage('${msg.id}', '${e}')">${e} ${c}</span>`;
+                            }).join('');
+                            if (badges) reactionsHtml = `<div class="reactions-box">${badges}</div>`;
+                        }
 
-                    const timeDiff = msgTime - lastTime;
-                    const isClumped = (msg.sender === lastSender) && (timeDiff < 5 * 60 * 1000);
-                    
-                    const isLastMsg = (index === allMessages.length - 1);
-                    let readReceiptHtml = '';
-                    if (isMe) {
-                        const othersRead = chat && chat.readBy && Object.keys(chat.readBy).some(u => u !== currentUser && chat.readBy[u]);
-                        readReceiptHtml = othersRead ? doubleCheckSVG : singleCheckSVG;
-                    }
+                        let replyHtml = '';
+                        if (msg.replyTo) {
+                            const rName = getFullName(msg.replyTo.sender);
+                            replyHtml = `<div class="reply-block"><strong>${rName}</strong>: ${msg.replyTo.text}</div>`;
+                        }
 
-                    const receiptContainerId = (isLastMsg && isMe) ? `id="read-receipt-status"` : '';
-
-                    const msgBlockHtml = `
-                        <div class="msg-block ${isMe ? 'sent' : 'received'}">
-                            <div class="bubble-row ${isMe ? 'sent' : 'received'}">
-                                ${isMe ? toolsHtml : ''}
-                                <div class="bubble-content">
-                                    <div class="${bubbleClasses}" ${bubbleStyle}>${replyHtml}${msg.text}</div>
-                                    ${reactionsHtml}
-                                </div>
-                                ${isMe ? '' : toolsHtml}
-                            </div>
-                        </div>
-                    `;
-
-                    if (isClumped && currentWrapper) {
-                        currentBubbleContainer.insertAdjacentHTML('beforeend', msgBlockHtml);
-                        currentWrapper.querySelector('.timestamp').innerHTML = `${timeStr} <span class="receipt-icon" ${receiptContainerId}>${readReceiptHtml}</span>`;
-                    } else {
-                        const wrapper = document.createElement('div');
-                        wrapper.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
-                        
-                        let html = '';
-                        if (chat && chat.isGroup && !isMe) html += `<div class="sender-name" onclick="viewProfile('${msg.sender}')">${getFullName(msg.sender)}</div>`;
-                        
-                        let tsMargin = (chat && chat.isGroup && !isMe) ? 'margin-left: 36px;' : '';
-
-                        html += `
-                            <div class="msg-content-row ${isMe ? 'sent' : 'received'}">
-                                ${!isMe ? avatarHtml : ''}
-                                <div class="msg-list">
-                                    ${msgBlockHtml}
+                        const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
+                        const toolsHtml = `
+                            <div class="msg-tools-wrapper">
+                                <button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button>
+                                <div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;">
+                                    <div class="emoji-row">
+                                        <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button>
+                                        <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button>
+                                        <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button>
+                                        <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button>
+                                    </div>
+                                    <div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div>
+                                    ${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}
                                 </div>
                             </div>
-                            <div class="timestamp" style="${tsMargin}">${timeStr} <span class="receipt-icon" ${receiptContainerId}>${readReceiptHtml}</span></div>
-                        `; 
-                        
-                        wrapper.innerHTML = html;
-                        view.appendChild(wrapper);
+                        `;
 
-                        currentWrapper = wrapper;
-                        currentBubbleContainer = wrapper.querySelector('.msg-list');
-                    }
-                    
-                    lastSender = msg.sender;
-                    lastTime = msgTime;
+                        let avatarHtml = '';
+                        if (chat && chat.isGroup && !isMe) {
+                            avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile)}</div>`;
+                        }
+
+                        const timeDiff = msgTime - lastTime;
+                        const isClumped = (msg.sender === lastSender) && (timeDiff < 5 * 60 * 1000);
+                        
+                        const isLastMsg = (index === allMessages.length - 1);
+                        let readReceiptHtml = '';
+                        if (isMe) {
+                            const parts = Array.isArray(chat?.participants) ? chat.participants : [];
+                            const otherParts = parts.filter(p => p !== currentUser);
+                            let allRead = false;
+                            if (otherParts.length > 0) {
+                                allRead = otherParts.every(p => chat?.readBy && chat.readBy[p] === true);
+                            }
+                            readReceiptHtml = allRead ? doubleCheckSVG : singleCheckSVG;
+                        }
+
+                        const msgBlockHtml = `
+                            <div class="msg-block ${isMe ? 'sent' : 'received'}">
+                                <div class="bubble-row ${isMe ? 'sent' : 'received'}">
+                                    ${isMe ? toolsHtml : ''}
+                                    <div class="bubble-content">
+                                        <div class="${bubbleClasses}" ${bubbleStyle}>${replyHtml}${safeMsgText}</div>
+                                        ${reactionsHtml}
+                                    </div>
+                                    ${isMe ? '' : toolsHtml}
+                                </div>
+                            </div>
+                        `;
+
+                        if (isClumped && currentWrapper) {
+                            currentBubbleContainer.insertAdjacentHTML('beforeend', msgBlockHtml);
+                            const tsSpan = isMe ? `<span class="receipt-icon">${readReceiptHtml}</span>` : '';
+                            currentWrapper.querySelector('.timestamp').innerHTML = `${timeStr} ${tsSpan}`;
+                        } else {
+                            const wrapper = document.createElement('div');
+                            wrapper.id = `msg-${msg.id}`;
+                            wrapper.className = `msg-wrapper ${isMe ? 'sent' : 'received'}`;
+                            
+                            let tsMargin = (chat && chat.isGroup && !isMe) ? 'margin-left: 36px;' : '';
+                            let contentRow = `<div class="msg-content-row ${isMe ? 'sent' : 'received'}">`;
+                            if (!isMe && avatarHtml) contentRow += avatarHtml;
+                            contentRow += `<div class="msg-list"></div></div>`;
+                            
+                            const receiptSpan = isMe ? `<span class="receipt-icon">${readReceiptHtml}</span>` : '';
+                            
+                            wrapper.innerHTML = `
+                                ${chat && chat.isGroup && !isMe ? `<div class="sender-name" onclick="viewProfile('${msg.sender}')">${getFullName(msg.sender)}</div>` : ''}
+                                ${contentRow}
+                                <div class="timestamp" style="${tsMargin}">${timeStr} ${receiptSpan}</div>
+                            `; 
+                            
+                            const listNode = wrapper.querySelector('.msg-list');
+                            listNode.insertAdjacentHTML('beforeend', msgBlockHtml);
+
+                            view.appendChild(wrapper);
+
+                            currentWrapper = wrapper;
+                            currentBubbleContainer = listNode;
+                        }
+                        
+                        lastSender = msg.sender;
+                        lastTime = msgTime;
+                    } catch(err) { console.error("Message Render Error:", err); }
                 });
 
                 const typingDiv = document.createElement('div');
@@ -1326,7 +1331,16 @@
                 view.appendChild(typingDiv);
                 renderTypingBubbles();
 
-                view.scrollTop = view.scrollHeight;
+                if (isFirstLoadForChat) {
+                    if (chatScrollPositions[chatId] !== undefined) {
+                        view.scrollTop = chatScrollPositions[chatId];
+                    } else {
+                        view.scrollTop = view.scrollHeight;
+                    }
+                    isFirstLoadForChat = false;
+                } else if (wasAtBottom) {
+                    view.scrollTop = view.scrollHeight;
+                }
             });
         };
 
@@ -1350,6 +1364,21 @@
         window.msBoard = [];
         window.msRows = 9; window.msCols = 9; window.msMines = 10;
         window.msGameOver = false;
+        
+        window.msTimerInterval = null;
+        window.msTime = 0;
+
+        function startMsTimer() {
+            clearInterval(window.msTimerInterval);
+            window.msTime = 0;
+            document.getElementById('ms-timer').innerText = '000';
+            window.msTimerInterval = setInterval(() => {
+                if(!window.msGameOver) {
+                    window.msTime++;
+                    document.getElementById('ms-timer').innerText = window.msTime.toString().padStart(3, '0');
+                }
+            }, 1000);
+        }
 
         window.openMinesweeperMode = function() {
             activeChatId = 'minesweeper';
@@ -1372,8 +1401,12 @@
                         <button class="btn-primary btn-outline" style="padding:8px 16px; width:auto;" onclick="startMinesweeper('med')">Medium</button>
                         <button class="btn-primary btn-outline" style="padding:8px 16px; width:auto;" onclick="startMinesweeper('hard')">Expert</button>
                     </div>
+                    <div class="ms-topbar">
+                        <div style="color: white; font-weight: bold; font-size: 18px; display:flex; align-items:center; gap:5px;"><span style="font-size:24px;">🚩</span> <span id="ms-status">${window.msMines}</span></div>
+                        <button id="ms-reset-btn" style="background: #AAD751; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; box-shadow: 0 4px 0 #87AF3A;" onclick="startMinesweeper('easy')">🙂</button>
+                        <div style="color: white; font-weight: bold; font-size: 18px; display:flex; align-items:center; gap:5px;">⏱️ <span id="ms-timer">000</span></div>
+                    </div>
                     <div id="ms-board-container" class="ms-board"></div>
-                    <h3 id="ms-status" style="margin-top: 20px; height: 24px; color: var(--text-dark);"></h3>
                 </div>
             `;
             window.startMinesweeper('easy');
@@ -1384,6 +1417,13 @@
             else if(level === 'med') { window.msRows = 14; window.msCols = 18; window.msMines = 40; }
             else { window.msRows = 20; window.msCols = 24; window.msMines = 99; }
             
+            clearInterval(window.msTimerInterval);
+            window.msTime = 0;
+            document.getElementById('ms-timer').innerText = '000';
+            
+            document.getElementById('ms-reset-btn').innerText = '🙂';
+            document.getElementById('ms-reset-btn').onclick = () => window.startMinesweeper(level);
+
             window.msBoard = [];
             for(let r=0; r<window.msRows; r++) {
                 let row = [];
@@ -1410,7 +1450,7 @@
                 }
             }
             window.msGameOver = false;
-            document.getElementById('ms-status').innerText = "🚩 " + window.msMines;
+            document.getElementById('ms-status').innerText = window.msMines;
             window.renderMS();
         };
 
@@ -1446,10 +1486,14 @@
 
         window.msClick = function(r, c) {
             if(window.msGameOver || window.msBoard[r][c].rev || window.msBoard[r][c].flag) return;
+            
+            if(window.msTime === 0) startMsTimer();
+            
             window.msBoard[r][c].rev = true;
             if(window.msBoard[r][c].mine) {
                 window.msGameOver = true;
-                document.getElementById('ms-status').innerText = "Game Over! 💥";
+                clearInterval(window.msTimerInterval);
+                document.getElementById('ms-reset-btn').innerText = '😵';
                 for(let ir=0; ir<window.msRows; ir++) {
                     for(let ic=0; ic<window.msCols; ic++) {
                         if(window.msBoard[ir][ic].mine) window.msBoard[ir][ic].rev = true;
@@ -1482,13 +1526,15 @@
             if(window.msGameOver || window.msBoard[r][c].rev) return;
             window.msBoard[r][c].flag = !window.msBoard[r][c].flag;
             
+            if(window.msTime === 0) startMsTimer();
+            
             let flags = 0;
             for(let ir=0; ir<window.msRows; ir++) {
                 for(let ic=0; ic<window.msCols; ic++) {
                     if(window.msBoard[ir][ic].flag) flags++;
                 }
             }
-            document.getElementById('ms-status').innerText = "🚩 " + (window.msMines - flags);
+            document.getElementById('ms-status').innerText = (window.msMines - flags);
             
             window.renderMS();
             window.msCheckWin();
@@ -1504,7 +1550,8 @@
             }
             if(hidden === window.msMines) {
                 window.msGameOver = true;
-                document.getElementById('ms-status').innerText = "You Win! 🎉";
+                clearInterval(window.msTimerInterval);
+                document.getElementById('ms-reset-btn').innerText = '😎';
             }
         };
 
@@ -1560,11 +1607,17 @@
         // --- SEND/DELETE MESSAGES & CHATS ---
         window.sendMsg = async function() {
             const input = document.getElementById('msg-input');
-            const text = input.value.trim();
+            let text = input.innerHTML.trim();
             if(!text || !activeChatId) return;
 
-            input.value = ''; 
+            input.innerHTML = ''; 
             
+            text = text.replace(/<div[^>]*>/gi, '\n').replace(/<\/div>/gi, '');
+            text = text.replace(/<p[^>]*>/gi, '\n').replace(/<\/p>/gi, '');
+            text = text.replace(/<br[^>]*>/gi, '\n');
+            text = text.replace(/<\/?(?!(b|i|u)\b)[a-z]+(?:[^>"']|"[^"]*"|'[^']*')*>/gi, '');
+            text = text.trim().replace(/\n+/g, '<br>');
+
             const payload = {
                 sender: currentUser, text: text, createdAt: serverTimestamp()
             };
@@ -1580,10 +1633,29 @@
 
             await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
 
-            // Wiping readBy explicitly to ONLY the sender resets it for everyone else
-            await updateDoc(doc(db, "chats", activeChatId), {
-                updatedAt: serverTimestamp(), lastMessage: text, [`typing.${currentUser}`]: deleteField(), readBy: { [currentUser]: true }
-            });
+            const chat = chatsCache.find(c => c.id === activeChatId);
+            let updates = {
+                updatedAt: serverTimestamp(),
+                lastMessage: text.replace(/<[^>]*>?/gm, ''), 
+                [`typing.${currentUser}`]: deleteField()
+            };
+            
+            if (chat && chat.participants) {
+                chat.participants.forEach(p => {
+                    if (p !== currentUser) {
+                        updates[`unreadCount.${p}`] = (chat.unreadCount?.[p] || 0) + 1;
+                        updates[`readBy.${p}`] = false; 
+                    } else {
+                        updates[`unreadCount.${p}`] = 0;
+                        updates[`readBy.${p}`] = true;
+                    }
+                });
+            }
+
+            await updateDoc(doc(db, "chats", activeChatId), updates);
+            
+            const view = document.getElementById('messages-view');
+            view.scrollTo({ top: view.scrollHeight, behavior: 'smooth' });
         };
 
         window.deleteMessage = function(msgId) {
@@ -1637,7 +1709,24 @@
                         }
 
                         await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
-                        await updateDoc(doc(db, "chats", activeChatId), { updatedAt: serverTimestamp(), lastMessage: `📷 Image Attached`, readBy: { [currentUser]: true } });
+                        
+                        const chat = chatsCache.find(c => c.id === activeChatId);
+                        let updates = { updatedAt: serverTimestamp(), lastMessage: `📷 Image Attached` };
+                        if (chat && chat.participants) {
+                            chat.participants.forEach(p => {
+                                if (p !== currentUser) {
+                                    updates[`unreadCount.${p}`] = (chat.unreadCount?.[p] || 0) + 1;
+                                    updates[`readBy.${p}`] = false; 
+                                } else {
+                                    updates[`unreadCount.${p}`] = 0;
+                                    updates[`readBy.${p}`] = true;
+                                }
+                            });
+                        }
+                        await updateDoc(doc(db, "chats", activeChatId), updates);
+                        
+                        const view = document.getElementById('messages-view');
+                        view.scrollTo({ top: view.scrollHeight, behavior: 'smooth' });
                     };
                     img.src = event.target.result;
                 };
@@ -1658,7 +1747,8 @@
                 participants: [currentUser, ...groupMembers],
                 isGroup: isGroup, name: isGroup ? groupName : "",
                 pic: tempPicData, updatedAt: serverTimestamp(), lastMessage: "Chat created",
-                readBy: { [currentUser]: true }
+                readBy: { [currentUser]: true },
+                unreadCount: { [currentUser]: 0 }
             });
 
             toggleModal('new-chat-modal', false);
@@ -1779,7 +1869,6 @@
             toggleModal('group-details-modal', false);
         };
 
-        // --- GROUP CHAT: ADD USERS SEARCH ---
         window.handleGDAddUserSearch = function(e) {
             const val = e.target.value.trim().toLowerCase();
             const dropdown = document.getElementById('gd-add-user-dropdown');
@@ -1816,11 +1905,15 @@
         };
 
         // --- UI HELPERS ---
-        window.handleEnter = function(e, type) {
-            if (e.key === 'Enter') {
-                if (type === 'auth-login') window.authenticate('login');
-                if (type === 'send') window.sendMsg();
+        window.handleInputEnter = function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                window.sendMsg();
             }
+        };
+
+        window.handleAuthEnter = function(e) {
+            if (e.key === 'Enter') window.authenticate('login');
         };
 
         window.handleSearchEnter = function(e) {
@@ -1867,6 +1960,7 @@
                     document.getElementById('edit-profile-form').style.display = 'none';
                     document.getElementById('pv-bio').style.display = 'block';
                     document.getElementById('pv-save-btn').style.display = 'none';
+                    document.getElementById('pv-edit-btn').style.display = 'block';
                 }
                 if (id === 'settings-modal') {
                     document.getElementById('pw-change-section').style.display = 'none';

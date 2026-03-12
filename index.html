@@ -77,8 +77,8 @@
         h1, h2, h3, .logo { font-weight: 700; letter-spacing: -0.5px; margin: 0; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* 100dvh prevents Safari bottom bar jumpiness */
-        body, html { height: 100dvh; width: 100vw; overflow: hidden; background: var(--bg-main); overscroll-behavior: none; }
+        /* Revert to 100vh to fix iOS bottom gap */
+        body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg-main); overscroll-behavior: none; }
 
         .password-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
         .password-wrapper input { margin-bottom: 0 !important; padding-right: 40px !important; }
@@ -103,9 +103,10 @@
         .upload-btn-fake { padding: 8px 12px; border: 2px solid var(--border-dark); font-size: 13px; font-weight: bold; cursor: pointer; display: inline-block; box-shadow: var(--glow); border-radius: var(--radius-btn); background: var(--border-dark); color: var(--bg-main); transition: 0.2s; }
         .upload-btn-fake:hover { background: var(--accent); border-color: var(--accent); color: var(--bg-main); }
 
-        /* --- APP LAYOUT --- */
-        #app-layout { display: flex; height: 100dvh; width: 100vw; background: transparent; overflow: hidden; position: relative; }
-        
+       /* --- APP LAYOUT --- */
+        #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; }
+        #app-layout.active { display: flex; }
+
         #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0; height: 100%;}
        .sb-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 25px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-dark); flex-shrink: 0; }
         .sb-title-area { display: flex; flex-direction: column; justify-content: center; }
@@ -123,8 +124,7 @@
         
         .new-chat-btn { background: none; border: none; font-size: 30px; cursor: pointer; font-weight: bold; color: var(--text-dark); line-height: 1; margin-top: -4px;}
         
-        .conv-list { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
-        .conv-item { padding: 15px 25px; display: flex; align-items: center; border-bottom: 1px solid var(--border-light); transition: background 0.2s; cursor: pointer;}
+.conv-list { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }        .conv-item { padding: 15px 25px; display: flex; align-items: center; border-bottom: 1px solid var(--border-light); transition: background 0.2s; cursor: pointer;}
         @media (hover: hover) and (pointer: fine) { .conv-item:hover { background: var(--bg-main); opacity: 0.9; } }
         .conv-item.active { background: var(--bg-main); border-left: 6px solid var(--accent); }
 
@@ -148,8 +148,7 @@
 
         #empty-sidebar-hint { padding: 40px 20px; text-align: center; color: var(--text-muted); font-weight: bold; display: flex; flex-direction: column; align-items: center; }
         
-        #chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); position: relative; z-index: 5; height: 100dvh; overflow: hidden;}
-        #no-chat-screen { flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; -webkit-overflow-scrolling: touch;}
+#chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); position: relative; z-index: 5; height: 100%; overflow: hidden;}        #no-chat-screen { flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; -webkit-overflow-scrolling: touch;}
         #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-chat); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
         /* Clickable Header Area */

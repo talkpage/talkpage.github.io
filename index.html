@@ -77,8 +77,7 @@
         h1, h2, h3, .logo { font-weight: 700; letter-spacing: -0.5px; margin: 0; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* Revert to 100vh to fix iOS bottom gap */
-        body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg-main); overscroll-behavior: none; }
+        body, html { height: 100vh; width: 100vw; overflow: hidden; background: var(--bg-main); position: fixed; }
 
         .password-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
         .password-wrapper input { margin-bottom: 0 !important; padding-right: 40px !important; }
@@ -103,12 +102,12 @@
         .upload-btn-fake { padding: 8px 12px; border: 2px solid var(--border-dark); font-size: 13px; font-weight: bold; cursor: pointer; display: inline-block; box-shadow: var(--glow); border-radius: var(--radius-btn); background: var(--border-dark); color: var(--bg-main); transition: 0.2s; }
         .upload-btn-fake:hover { background: var(--accent); border-color: var(--accent); color: var(--bg-main); }
 
-       /* --- APP LAYOUT --- */
+        /* --- APP LAYOUT --- */
         #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; }
         #app-layout.active { display: flex; }
 
         #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0; height: 100%;}
-       .sb-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 25px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-dark); flex-shrink: 0; }
+        .sb-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 25px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-dark); flex-shrink: 0; }
         .sb-title-area { display: flex; flex-direction: column; justify-content: center; }
         .sb-title-area h1 { font-size: 22px; line-height: 1.1; margin-bottom: 2px; }
         .sb-title-area span { font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
@@ -124,7 +123,8 @@
         
         .new-chat-btn { background: none; border: none; font-size: 30px; cursor: pointer; font-weight: bold; color: var(--text-dark); line-height: 1; margin-top: -4px;}
         
-.conv-list { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }        .conv-item { padding: 15px 25px; display: flex; align-items: center; border-bottom: 1px solid var(--border-light); transition: background 0.2s; cursor: pointer;}
+        .conv-list { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
+        .conv-item { padding: 15px 25px; display: flex; align-items: center; border-bottom: 1px solid var(--border-light); transition: background 0.2s; cursor: pointer;}
         @media (hover: hover) and (pointer: fine) { .conv-item:hover { background: var(--bg-main); opacity: 0.9; } }
         .conv-item.active { background: var(--bg-main); border-left: 6px solid var(--accent); }
 
@@ -148,26 +148,29 @@
 
         #empty-sidebar-hint { padding: 40px 20px; text-align: center; color: var(--text-muted); font-weight: bold; display: flex; flex-direction: column; align-items: center; }
         
-#chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); position: relative; z-index: 5; height: 100%; overflow: hidden;}        #no-chat-screen { flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; -webkit-overflow-scrolling: touch;}
+        #chat-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-chat); position: relative; z-index: 5; height: 100%; overflow: hidden;}
+        #no-chat-screen { flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;}
         #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-chat); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
         /* Clickable Header Area */
-.chat-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: 2px solid var(--border-dark); display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar); }        .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
+        .chat-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: 2px solid var(--border-dark); display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar); }
+        .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
         @media (hover: hover) and (pointer: fine) { .chat-header-info:hover { background: var(--bg-main); } }
         .chat-header-info h3 { transition: color 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         @media (hover: hover) and (pointer: fine) { .chat-header-info:hover h3 { color: var(--accent); } }
 
-        #messages-view { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; min-height: 0; -webkit-overflow-scrolling: touch;}
+        /* Lock horizontal scrolling in chat view */
+        #messages-view { flex: 1; padding: 30px; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 12px; min-height: 0; -webkit-overflow-scrolling: touch;}
         
         /* Message Layout System */
-        .msg-wrapper { display: flex; flex-direction: column; width: 100%; margin-bottom: 4px; }
+        .msg-wrapper { display: flex; flex-direction: column; width: 100%; margin-bottom: 4px; box-sizing: border-box; }
         .msg-wrapper.sent { align-items: flex-end; align-self: flex-end; }
         .msg-wrapper.received { align-items: flex-start; align-self: flex-start; }
 
         .sender-name { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; margin-left: 36px; font-weight: bold; cursor: pointer; }
         @media (hover: hover) and (pointer: fine) { .sender-name:hover { color: var(--accent); text-decoration: underline; } }
 
-        .msg-content-row { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; max-width: 80%; }
+        .msg-content-row { display: flex; flex-direction: row; align-items: flex-end; gap: 8px; max-width: 85%; }
         .msg-content-row.sent { justify-content: flex-end; }
         .msg-content-row.received { justify-content: flex-start; }
 
@@ -236,9 +239,9 @@
         @keyframes typingAnim { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.4;} 40% { transform: scale(1); opacity: 1;} }
 
         /* --- INPUT BOX --- */
-        .input-wrapper { display: flex; flex-direction: column; background: var(--bg-sidebar); border-top: 2px solid var(--border-dark); flex-shrink:0; padding-bottom: max(10px, env(safe-area-inset-bottom));}
-        .input-box { padding: 15px 30px 10px; display: flex; align-items: flex-end; gap: 15px; }
-        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 12px;}
+        .input-wrapper { display: flex; flex-direction: column; background: var(--bg-sidebar); border-top: 2px solid var(--border-dark); flex-shrink: 0; }
+        .input-box { display: flex; flex-direction: row; align-items: flex-end; gap: 15px; padding: 15px 30px 20px; width: 100%; box-sizing: border-box; }
+        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 12px; flex-shrink: 0; }
         @media (hover: hover) and (pointer: fine) { .attach-icon-label:hover { color: var(--accent); } }
 
         #msg-input { 
@@ -249,10 +252,10 @@
         }
         #msg-input:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block;}
         
-        #send-btn { width: auto; flex-shrink: 0; height: 48px; margin: 0; padding: 0 24px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; transition: background 0.2s, color 0.2s; background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer;}
+        #send-btn { flex-shrink: 0; height: 48px; margin: 0; padding: 0 24px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; transition: background 0.2s, color 0.2s; background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer;}
         
         /* --- GOOGLE STYLE MINIGAMES --- */
-        .ms-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; width: 100%; margin: 0 auto; flex: 1;}
+        .ms-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; width: 100%; max-width: 600px; margin: 0 auto; flex: 1;}
         .ms-board { display: grid; background: transparent; overflow: hidden; user-select: none; gap: 0; border: 2px solid var(--border-light); border-radius: 4px; box-shadow: var(--glow);}
         .ms-cell { display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: "Arial Rounded MT Bold", sans-serif; cursor: pointer; transition: filter 0.1s; border: none; box-shadow: none; }
         .ms-grass-1 { background-color: #AAD751; }
@@ -275,9 +278,9 @@
         .dir-section-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin: 25px 0 10px; font-weight: 800; }
 
         /* --- MODALS & COLOR PICKER --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s ease; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s ease; }
         .modal-overlay.active { opacity: 1; }
-        .modal-card { width: 90%; max-width: 380px; padding: 30px; background: var(--bg-main); border-radius: 16px; border: 2px solid var(--border-dark); box-shadow: 0 15px 40px rgba(0,0,0,0.5), var(--glow); max-height: 85dvh; overflow-y: auto; transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 20px;}
+        .modal-card { width: 90%; max-width: 380px; padding: 30px; background: var(--bg-main); border-radius: 16px; border: 2px solid var(--border-dark); box-shadow: 0 15px 40px rgba(0,0,0,0.5), var(--glow); max-height: 85vh; overflow-y: auto; transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 20px;}
         .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
 
         .user-pill { display: inline-flex; align-items: center; background: var(--border-dark); color: var(--bg-main); padding: 8px 14px; border-radius: 20px; margin: 4px 4px 4px 0; font-size: 13px; font-weight: bold; }
@@ -305,7 +308,7 @@
         .profile-view-pic img { width: 100%; height: 100%; object-fit: cover; }
         .kick-btn { background: none; border: none; color: #EE352E; font-size: 12px; font-weight: bold; cursor: pointer; }
         
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: var(--bg-main); z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: var(--text-dark); transition: opacity 0.5s;}
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-main); z-index: 9999; display: flex; justify-content: center; align-items: center; font-size: 24px; font-weight: bold; color: var(--text-dark); transition: opacity 0.5s;}
 
         /* --- MOBILE RESPONSIVE CSS --- */
         .mobile-back-btn { display: none; background: none; border: none; color: var(--text-dark); padding: 8px 12px; cursor: pointer; margin-left: 0; margin-right: 8px; transition: background 0.2s, color 0.2s; border-radius: 50%; }
@@ -322,8 +325,9 @@
             .mobile-back-btn { display: flex !important; }
             .chat-header { padding: env(safe-area-inset-top) 15px 0; }
             #messages-view { padding: 20px 15px; }
-            .input-box { padding: 10px 15px 10px; }
+            .input-box { padding: 10px 15px 15px; }
             .msg-wrapper { max-width: 90%; }
+            .pointer-hint { display: none !important; }
         }
     </style>
 </head>
@@ -406,16 +410,12 @@
 
         <div id="chat-area">
             
-            <div id="no-chat-screen" style="flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto;">
-                
-                <button class="mobile-back-btn" style="position: absolute; top: 15px; left: 15px; z-index: 10;" onclick="backToList()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                </button>
-
-                <div style="position: absolute; top: 30px; left: 20px; color: var(--accent); font-size: 14px; pointer-events: none; display:none;">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+            <div id="no-chat-screen">
+                <div class="pointer-hint" style="position: absolute; top: 30px; left: 15px; color: var(--accent); font-size: 14px; pointer-events: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 5px;">
                         <line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
+                    <span>Start a new conversation here</span>
                 </div>
                 
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; min-height: 250px;">
@@ -452,7 +452,7 @@
                                     <span>Quotes Doc</span>
                                 </a>
                                 <a href="https://genius.com/artists/Olivia-anne" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>Olivia Anne Genius Lyrics</span>
                                 </a>
 
@@ -478,19 +478,19 @@
                                     <span>17 Months Bluesky</span>
                                 </a>
                                 <a href="https://genius.com/artists/17-months" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>17 Months Genius Lyrics</span>
                                 </a>
                                 <a href="https://andrewhills23.github.io/radio/" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>17 Months Radio</span>
                                 </a>
                                 <a href="https://open.spotify.com/artist/0ua6bQTocPdZGTWHCMYRfk" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>17 Months Spotify</span>
                                 </a>
                                 <a href="https://open.spotify.com/show/3G27bzEDvYwPetzJD9xk06?si=e65b36d982fd4b99&nd=1&dlsi=5884f4ac050a420a" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>17 Months Audiobook</span>
                                 </a>
 
@@ -586,7 +586,7 @@
             </div>
 
             <hr style="border:0; border-top:1px solid var(--border-light); margin: 20px 0;">
-
+            
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
                 <span style="font-weight:bold; font-size: 14px; color: var(--text-dark);">Push Notifications</span>
                 <button class="theme-pill" id="notify-btn" onclick="enableNotifications()">Enable</button>
@@ -594,7 +594,6 @@
             
             <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="togglePasswordSection()">
                 <h3 style="font-size: 16px; margin:0;">Change Password</h3>
-
                 <span id="pw-arrow" style="color:var(--text-muted); font-size: 12px;">▼</span>
             </div>
             
@@ -617,7 +616,7 @@
                 <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
             </div>
 
-            <button class="btn-primary" style="margin-top: 20px; border:none;" onclick="toggleModal('settings-modal', false)">Close Settings</button>
+            <button class="btn-primary" style="margin-top: 20px; border:none; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('settings-modal', false)">Close</button>
         </div>
     </div>
 
@@ -644,7 +643,7 @@
 
             <div style="display:flex; gap:10px;">
                 <button class="btn-primary" style="flex:1;" onclick="createChat(event)">Start</button>
-                <button class="btn-primary btn-outline" style="flex:1;" onclick="toggleModal('new-chat-modal', false)">Cancel</button>
+                <button class="btn-primary btn-outline" style="flex:1; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('new-chat-modal', false)">Cancel</button>
             </div>
         </div>
     </div>
@@ -707,7 +706,7 @@
             <div id="gd-members-list" style="margin-bottom:20px; max-height: 150px; overflow-y:auto;"></div>
             
             <button class="btn-primary" style="width:100%;" onclick="saveGroupDetails()">Save Changes</button>
-            <button class="btn-primary btn-outline" style="margin-top:10px; border:none; width:100%;" onclick="toggleModal('group-details-modal', false)">Close</button>
+            <button class="btn-primary btn-outline" style="margin-top:10px; border:none; width:100%; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('group-details-modal', false)">Close</button>
         </div>
     </div>
 
@@ -901,8 +900,10 @@
                 if (otherParts.length > 0) {
                     allRead = otherParts.every(p => chat.readBy && chat.readBy[p] === true);
                 }
+                
                 const singleCheckSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                 const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
+                
                 const targetIcon = receiptEls[receiptEls.length - 1];
                 if(targetIcon) targetIcon.innerHTML = allRead ? doubleCheckSVG : singleCheckSVG;
             }
@@ -1172,18 +1173,21 @@
                     window.updateReadReceiptsUI();
                 }
 
-                // Push Notification Logic
+                // Push Notification Logic (Fires on updates to existing chats or newly added ones)
                 snapshot.docChanges().forEach((change) => {
-                    if (change.type === "added") {
+                    if (change.type === "modified" || change.type === "added") {
                         const chatData = change.doc.data();
                         const timeDiff = Date.now() - getMillis(chatData.updatedAt);
-                        // Only alert if it's new (under 5 seconds) and not focused
-                        if (chatData.unreadCount?.[currentUser] > 0 && timeDiff < 5000 && !document.hasFocus()) {
+                        
+                        // Fire notification if there are unread messages, it happened recently, and the app tab is hidden
+                        if (chatData.unreadCount && chatData.unreadCount[currentUser] > 0 && timeDiff < 5000 && document.hidden) {
                             if ("Notification" in window && Notification.permission === "granted") {
                                 const senderName = chatData.isGroup ? chatData.name : getFullName(chatData.participants.find(p=>p!==currentUser));
+                                const msgText = chatData.lastMessage || "New message";
+                                
                                 navigator.serviceWorker.ready.then(function(registration) {
-                                    registration.showNotification("Talkpage", {
-                                        body: `New message in ${senderName}`,
+                                    registration.showNotification(senderName, {
+                                        body: msgText,
                                         icon: document.getElementById('dynamic-favicon').href,
                                         badge: document.getElementById('dynamic-favicon').href
                                     });
@@ -1321,7 +1325,7 @@
                  html += `<div class="sender-name">${names}</div>`;
             }
             html += `<div class="msg-content-row received"><div class="msg-list"><div class="msg-block received"><div class="bubble-row received"><div class="bubble typing-dots"><span></span><span></span><span></span></div></div></div></div></div>`;
-            container.innerHTML = `<div class="msg-wrapper received" style="margin-top: 10px;">${html}</div>`;
+            container.innerHTML = `<div class="msg-wrapper received" style="margin-top: 10px; box-sizing: border-box;">${html}</div>`;
             
             const view = document.getElementById('messages-view');
             if(view) view.scrollTop = view.scrollHeight;
@@ -1793,6 +1797,7 @@
             if(hidden === window.msMines) {
                 window.msGameOver = true;
                 clearInterval(window.msTimerInterval);
+                document.getElementById('ms-status').innerText = "🎉";
             }
         };
 

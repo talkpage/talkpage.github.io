@@ -586,9 +586,15 @@
             </div>
 
             <hr style="border:0; border-top:1px solid var(--border-light); margin: 20px 0;">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <span style="font-weight:bold; font-size: 14px; color: var(--text-dark);">Push Notifications</span>
+                <button class="theme-pill" id="notify-btn" onclick="enableNotifications()">Enable</button>
+            </div>
             
             <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="togglePasswordSection()">
                 <h3 style="font-size: 16px; margin:0;">Change Password</h3>
+
                 <span id="pw-arrow" style="color:var(--text-muted); font-size: 12px;">▼</span>
             </div>
             
@@ -757,15 +763,38 @@
             if (changed) { renderSidebar(); renderTypingBubbles(); }
         }, 2000);
 
-        // Native Push Notification Setup (iOS 16.4+ / Android)
-        if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
-            Notification.requestPermission();
-        }
+        // Native Push Notification & Service Worker Setup
         if ('serviceWorker' in navigator) {
-            const swCode = `self.addEventListener('fetch', function(e) {});`;
+            const swCode = `
+                self.addEventListener('fetch', function(e) {});
+                self.addEventListener('push', function(e) {});
+                self.addEventListener('notificationclick', function(e) {
+                    e.notification.close();
+                    e.waitUntil(clients.matchAll({ type: 'window' }).then(clientsArr => {
+                        if (clientsArr.length) { clientsArr[0].focus(); } 
+                        else { clients.openWindow('/'); }
+                    }));
+                });
+            `;
             const blob = new Blob([swCode], {type: 'application/javascript'});
             navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(e => {});
         }
+
+        window.enableNotifications = async function() {
+            const btn = document.getElementById('notify-btn');
+            if (!("Notification" in window)) {
+                btn.innerText = "Not Supported";
+                return;
+            }
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                btn.innerText = "Enabled";
+                btn.style.borderColor = "var(--accent)";
+                btn.style.color = "var(--accent)";
+            } else {
+                btn.innerText = "Denied";
+            }
+        };
 
         // Swipe-to-Go-Back Logic for Mobile
         let touchStartX = 0;
@@ -1152,9 +1181,12 @@
                         if (chatData.unreadCount?.[currentUser] > 0 && timeDiff < 5000 && !document.hasFocus()) {
                             if ("Notification" in window && Notification.permission === "granted") {
                                 const senderName = chatData.isGroup ? chatData.name : getFullName(chatData.participants.find(p=>p!==currentUser));
-                                new Notification("Talkpage", {
-                                    body: `New message in ${senderName}`,
-                                    icon: document.getElementById('apple-touch-icon').href
+                                navigator.serviceWorker.ready.then(function(registration) {
+                                    registration.showNotification("Talkpage", {
+                                        body: `New message in ${senderName}`,
+                                        icon: document.getElementById('dynamic-favicon').href,
+                                        badge: document.getElementById('dynamic-favicon').href
+                                    });
                                 });
                             }
                         }

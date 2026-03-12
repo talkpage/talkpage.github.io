@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Talkpage">
     <meta name="theme-color" content="#121212">
-    <link rel="apple-touch-icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Google_logo_%282010-2013%29.svg/1024px-Google_logo_%282010-2013%29.svg.png"> 
+    <link id="apple-touch-icon" rel="apple-touch-icon" href="">
     <link rel="manifest" href="manifest.json">
 
     <title>Talkpage</title>
@@ -936,10 +936,30 @@
 
         // --- THEME ENGINE ---
         window.updateFavicon = function(color) {
+            // 1. Update Standard Browser Tab Favicon (SVG)
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${encodeURIComponent(color)}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
             const url = "data:image/svg+xml;charset=utf-8," + svg;
             let link = document.getElementById('dynamic-favicon');
             if(link) link.href = url;
+
+            // 2. Generate iOS Home Screen App Icon (PNG on Grey Background)
+            const canvas = document.createElement('canvas');
+            canvas.width = 192; 
+            canvas.height = 192;
+            const ctx = canvas.getContext('2d');
+            
+            // Paint the grey background
+            ctx.fillStyle = "#E2E2E2"; 
+            ctx.fillRect(0, 0, 192, 192);
+
+            // Draw the themed chat bubble into the center
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 36, 36, 120, 120);
+                let touchLink = document.getElementById('apple-touch-icon');
+                if (touchLink) touchLink.href = canvas.toDataURL('image/png');
+            };
+            img.src = url;
         };
 
         window.setTheme = function(themeName) {

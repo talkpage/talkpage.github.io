@@ -152,6 +152,22 @@
         #no-chat-screen { flex: 1; display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;}
         #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-chat); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
+        /* Home Screen Additions */
+        #home-greeting {
+            background: linear-gradient(45deg, var(--accent), #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease-in-out;
+        }
+        #home-weather {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Clickable Header Area */
         .chat-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar); }
         .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
@@ -452,8 +468,45 @@
                 </div>
                 
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; min-height: 250px;">
-                    <h2 style="color: var(--text-muted); font-size: 24px; margin-bottom: 5px; text-align: center;">No Chat Selected</h2>
+                    <h2 id="home-greeting" style="font-size: 32px; margin-bottom: 10px; text-align: center;">Welcome to Talkpage</h2>
+                    <div id="home-weather" style="color: var(--text-dark); font-size: 15px; font-weight: bold; margin-bottom: 30px; text-align: center; background: var(--bg-sidebar); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-light); box-shadow: var(--glow);">Loading weather...</div>
+                    
                     <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin: 0;">Select a conversation or start a new one.</p>
+                    
+                    <div style="display:flex; gap:15px; margin-top:20px; flex-wrap: wrap; justify-content: center;">
+                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('wordle')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="2" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                                <rect x="9" y="2" width="6" height="6" rx="1" fill="#B59F3B"></rect>
+                                <rect x="16" y="2" width="6" height="6" rx="1" fill="#3A3A3C"></rect>
+                                <rect x="2" y="9" width="6" height="6" rx="1" fill="#3A3A3C"></rect>
+                                <rect x="9" y="9" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                                <rect x="16" y="9" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                                <rect x="2" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                                <rect x="9" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                                <rect x="16" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
+                            </svg>
+                            Wordle
+                        </button>
+                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('connections')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <rect x="2" y="2" width="9" height="9" rx="2" fill="#F9DF6D"></rect>
+                                <rect x="13" y="2" width="9" height="9" rx="2" fill="#A0C35A"></rect>
+                                <rect x="2" y="13" width="9" height="9" rx="2" fill="#B0C4EF"></rect>
+                                <rect x="13" y="13" width="9" height="9" rx="2" fill="#BA81C5"></rect>
+                            </svg>
+                            Connections
+                        </button>
+                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('mini')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                                <path d="M8 2v20"></path><path d="M16 2v20"></path>
+                                <path d="M2 8h20"></path><path d="M2 16h20"></path>
+                                <rect x="8" y="8" width="8" height="8" fill="currentColor"></rect>
+                            </svg>
+                            The Mini
+                        </button>
+                    </div>
                 </div>
 
                 <div style="width: 100%; padding: 20px; display: flex; justify-content: center; align-items: flex-end;">
@@ -473,7 +526,7 @@
                                     <span>The Quotes Gallery</span>
                                 </a>
                                 <a href="https://von-simon.github.io/" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                                     <span>Von Simon Poetry</span>
                                 </a>
                                 <a href="https://andrewhills23.github.io/tictactoe3/" target="_blank" class="home-link-card">
@@ -485,7 +538,7 @@
                                     <span>Quotes Doc</span>
                                 </a>
                                 <a href="https://genius.com/artists/Olivia-anne" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>Olivia Anne Genius Lyrics</span>
                                 </a>
 
@@ -816,6 +869,7 @@
         let isTyping = false;
         let typingTimeout = null;
         window.isViewingHome = true;
+        window.lastConfettiMsg = null;
 
         // Auto-cleanup stale typing indicators
         setInterval(() => {
@@ -974,7 +1028,7 @@
         };
 
         window.goToHome = function() {
-            if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
+            if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
                 const view = document.getElementById('messages-view');
                 if(view) chatScrollPositions[activeChatId] = view.scrollTop;
             }
@@ -1007,6 +1061,45 @@
             } else {
                 content.style.display = 'none';
                 arrow.style.transform = 'rotate(0deg)';
+            }
+        };
+
+        window.updateHomeGreeting = function() {
+            const hour = new Date().getHours();
+            let greeting = 'Good evening';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 18) greeting = 'Good afternoon';
+            
+            const profile = usersCache[currentUser] || {};
+            const name = profile.fname || currentUser || '';
+            
+            const titleEl = document.getElementById('home-greeting');
+            if (titleEl) titleEl.innerText = `${greeting}, ${name}.`;
+        };
+
+        window.fetchTorontoWeather = async function() {
+            try {
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=43.7001&longitude=-79.4163&current_weather=true');
+                const data = await res.json();
+                const temp = Math.round(data.current_weather.temperature);
+                const code = data.current_weather.weathercode;
+                
+                let emoji = '🌤️';
+                if (code === 0) emoji = '☀️';
+                else if (code === 1 || code === 2) emoji = '⛅';
+                else if (code === 3) emoji = '☁️';
+                else if (code >= 45 && code <= 48) emoji = '🌫️';
+                else if (code >= 51 && code <= 67) emoji = '🌧️';
+                else if (code >= 71 && code <= 86) emoji = '❄️';
+                else if (code >= 95) emoji = '⛈️';
+                
+                const wEl = document.getElementById('home-weather');
+                if (wEl) {
+                    wEl.innerHTML = `${emoji} Toronto: ${temp}°C`;
+                    wEl.style.opacity = 1;
+                }
+            } catch(e) {
+                console.log("Weather fetch failed.");
             }
         };
 
@@ -1139,6 +1232,8 @@
                     fetchDirectory(); 
                     listenToChats(); 
                     document.getElementById('my-profile-icon').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser]);
+                    window.updateHomeGreeting();
+                    window.fetchTorontoWeather();
                 } else {
                     document.getElementById('loading-overlay').style.display = 'none';
                     document.getElementById('auth-screen').style.display = 'flex';
@@ -1270,7 +1365,7 @@
         };
 
         window.addEventListener('focus', () => {
-            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') window.markChatAsRead(activeChatId);
+            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') window.markChatAsRead(activeChatId);
         });
 
         // CONTACTS / FRIENDS ENGINE
@@ -1340,7 +1435,7 @@
                 });
                 
                 renderSidebar();
-                if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
+                if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
                     refreshActiveChatHeader();
                     window.updateReadReceiptsUI();
                 }
@@ -1512,7 +1607,7 @@
         };
 
         window.handleTyping = function() {
-            if (!activeChatId || activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
+            if (!activeChatId || activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
             if (!isTyping) {
                 isTyping = true;
                 updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: Date.now() }).catch(e=>e);
@@ -1557,7 +1652,7 @@
         }
 
         window.handleHeaderClick = function() {
-            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
+            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
             if(chat.isGroup) openGroupDetails(chat.id);
@@ -1577,7 +1672,7 @@
                 if (homeBtnIcon) homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
                 document.body.classList.add('mobile-chat-open');
 
-                if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
+                if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
                     const view = document.getElementById('messages-view');
                     if (view) chatScrollPositions[activeChatId] = view.scrollTop;
                 }
@@ -1639,6 +1734,7 @@
                     let lastTime = 0;
                     let currentWrapper = null;
                     let currentBubbleContainer = null;
+                    let lastDateStr = null;
 
                     const singleCheckSVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                     const doubleCheckSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L7 17l-5-5"/><path d="M22 6l-11 11"/></svg>`;
@@ -1650,13 +1746,32 @@
                             const senderProfile = usersCache[msg.sender] || {};
                             const chat = chatsCache.find(c => c.id === chatId);
 
+                            // Date Separator Engine
+                            const dateObj = new Date(msgTime);
+                            const dateStr = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+                            if (dateStr !== lastDateStr) {
+                                const divider = document.createElement('div');
+                                divider.style.textAlign = 'center';
+                                divider.style.margin = '25px 0 15px';
+                                divider.style.color = 'var(--text-muted)';
+                                divider.style.fontSize = '11px';
+                                divider.style.fontWeight = 'bold';
+                                divider.style.textTransform = 'uppercase';
+                                divider.style.letterSpacing = '1px';
+                                divider.innerText = dateStr;
+                                view.appendChild(divider);
+                                lastDateStr = dateStr;
+                                lastSender = null; 
+                                currentWrapper = null;
+                            }
+
                             let timeStr = "Sending...";
                             if(msg.createdAt) {
-                                const date = (typeof msg.createdAt.toDate === 'function') ? msg.createdAt.toDate() : new Date(msgTime);
-                                let hours = date.getHours();
+                                let hours = dateObj.getHours();
                                 const ampm = hours >= 12 ? 'PM' : 'AM';
                                 hours = hours % 12 || 12;
-                                const mins = date.getMinutes().toString().padStart(2, '0');
+                                const mins = dateObj.getMinutes().toString().padStart(2, '0');
                                 timeStr = `${hours}:${mins} ${ampm}`;
                             }
 
@@ -1835,7 +1950,7 @@
         };
 
         function refreshActiveChatHeader() {
-            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
+            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
 
@@ -1859,7 +1974,29 @@
             await updateDoc(doc(db, "users", currentUser), { status: newStatus });
             usersCache[currentUser].status = newStatus;
             
-            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') refreshActiveChatHeader();
+            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') refreshActiveChatHeader();
+        };
+
+        // --- WEB GAMES ENGINE ---
+        window.openWebGame = function(gameId) {
+            activeChatId = gameId;
+            document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('no-chat-screen').style.display = 'none';
+            document.getElementById('active-chat-screen').style.display = 'flex';
+            document.querySelector('.input-wrapper').style.display = 'none';
+            if(unsubMessages) unsubMessages();
+
+            let title = "", subtitle = "New York Times", url = "";
+            if (gameId === 'wordle') { title = "Wordle"; url = "https://www.nytimes.com/games/wordle/index.html"; }
+            else if (gameId === 'connections') { title = "Connections"; url = "https://www.nytimes.com/games/connections"; }
+            else if (gameId === 'mini') { title = "The Mini"; url = "https://www.nytimes.com/crosswords/game/mini"; }
+
+            document.getElementById('chat-title').innerText = title;
+            document.getElementById('chat-subtitle').innerText = subtitle;
+            
+            const view = document.getElementById('messages-view');
+            view.style.padding = '0'; 
+            view.innerHTML = `<iframe src="${url}" style="width: 100%; height: 100%; border: none; background: var(--bg-main);"></iframe>`;
         };
 
         // --- MINESWEEPER LOGIC (Google Style) ---
@@ -2281,6 +2418,8 @@
             if(text === '/shrug') text = '¯\\_(ツ)_/¯';
             if(text === '/tableflip') text = '(╯°□°)╯︵ ┻━┻';
             if(text === '/unflip') text = '┬─┬ノ( º _ ºノ)';
+            if(text === '/roll') text = `🎲 Rolled a ${Math.floor(Math.random() * 6) + 1}!`;
+            if(text === '/coin') text = `🪙 Flipped ${Math.random() > 0.5 ? 'Heads' : 'Tails'}!`;
 
             input.innerHTML = ''; 
             const sendBtn = document.getElementById('send-btn');

@@ -18,7 +18,7 @@
             --accent: #F6A800; 
             --bg-main: #FFFFFF;
             --bg-sidebar: #F2F2F2;
-            --bg-input: #FFFFFF;
+            --bg-input: rgba(255, 255, 255, 0.9);
             --bg-chat: transparent;
             --border-dark: #222222;
             --border-light: #DDDDDD;
@@ -29,20 +29,20 @@
             --msg-recv-bg: #F2F2F2;
             --msg-recv-txt: #111111;
             --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            --radius-btn: 4px;
-            --radius-bubble: 18px;
+            --radius-btn: 8px;
+            --radius-bubble: 20px;
             --glow: none;
-            --blur: none;
+            --blur: blur(10px);
         }
 
         body.theme-dark {
-            --bg-main: #121212; --bg-sidebar: #1E1E1E; --bg-input: #2C2C2C; --bg-chat: transparent;
+            --bg-main: #121212; --bg-sidebar: #1E1E1E; --bg-input: rgba(44, 44, 44, 0.9); --bg-chat: transparent;
             --border-dark: #333333; --border-light: #2A2A2A; --text-dark: #E0E0E0; --text-muted: #888888;
             --msg-sent-bg: var(--accent); --msg-sent-txt: #000000; --msg-recv-bg: #2C2C2C; --msg-recv-txt: #E0E0E0;
         }
 
         body.theme-stranger {
-            --bg-main: #050000; --bg-sidebar: #0A0000; --bg-input: #1A0000; --bg-chat: transparent;
+            --bg-main: #050000; --bg-sidebar: #0A0000; --bg-input: rgba(26, 0, 0, 0.9); --bg-chat: transparent;
             --border-dark: #FF0000; --border-light: #550000; --text-dark: #FF0000; --text-muted: #AA0000;
             --msg-sent-bg: var(--accent); --msg-sent-txt: #000000; --msg-recv-bg: #1A0000; --msg-recv-txt: #FF0000;
             --glow: 0 0 8px rgba(255,0,0,0.6);
@@ -55,13 +55,12 @@
             --bg-sidebar: rgba(255, 255, 255, 0.6); --bg-input: rgba(255, 255, 255, 0.7); --bg-chat: transparent;
             --border-dark: rgba(0,0,0,0.2); --border-light: rgba(0,0,0,0.1); --text-dark: #222222; --text-muted: #555555;
             --msg-sent-bg: var(--accent); --msg-sent-txt: #FFFFFF; --msg-recv-bg: rgba(255,255,255,0.8); --msg-recv-txt: #222222;
-            --blur: blur(10px);
         }
 
         body.theme-von-simon {
             --bg-main: repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(204, 0, 0, 0.4) 40px, rgba(204, 0, 0, 0.4) 50px),
                        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(204, 0, 0, 0.4) 40px, rgba(204, 0, 0, 0.4) 50px), #110000; 
-            --bg-sidebar: rgba(17, 0, 0, 0.95); --bg-input: #111111; --bg-chat: url('https://vonsimonstore.com/cdn/shop/files/von_banner.jpg_smaller.jpg?v=1739298586&width=3840') no-repeat center center / cover;
+            --bg-sidebar: rgba(17, 0, 0, 0.95); --bg-input: rgba(17, 17, 17, 0.95); --bg-chat: url('https://vonsimonstore.com/cdn/shop/files/von_banner.jpg_smaller.jpg?v=1739298586&width=3840') no-repeat center center / cover;
             --border-dark: #CC0000; --border-light: #550000; --text-dark: #FFFFFF; --text-muted: #FF9999;
             --msg-sent-bg: #CC0000; --msg-sent-txt: #FFFFFF; --msg-recv-bg: #000000; --msg-recv-txt: #FFFFFF; --glow: 0 0 5px rgba(204, 0, 0, 0.5);
         }
@@ -90,11 +89,12 @@
         .logo-large { font-size: 56px; margin-bottom: 40px; border-bottom: 4px solid var(--border-dark); padding-bottom: 10px; display: inline-block; box-shadow: var(--glow); }
         input[type="text"], input[type="password"], textarea { width: 100%; padding: 14px 0; border: none; border-bottom: 2px solid var(--border-light); font-size: 16px; outline: none; transition: border-color 0.2s; background: transparent; margin-bottom: 15px; resize: none; color: var(--text-dark); border-radius: 0;}
         input:focus, textarea:focus { border-bottom-color: var(--accent); }
-        .btn-primary { width: 100%; padding: 14px; background: var(--border-dark); color: var(--bg-main); border: none; border-radius: var(--radius-btn); font-weight: bold; cursor: pointer; font-size: 15px; transition: 0.2s; box-shadow: var(--glow); display: flex; justify-content: center; align-items: center; }
+        .btn-primary { width: 100%; padding: 14px; background: var(--border-dark); color: var(--bg-main); border: none; border-radius: var(--radius-btn); font-weight: bold; cursor: pointer; font-size: 15px; transition: transform 0.1s, background 0.2s; box-shadow: var(--glow); display: flex; justify-content: center; align-items: center; }
+        .btn-primary:active { transform: scale(0.97); }
         .btn-primary:hover { background: var(--accent); color: var(--bg-main); border-color: var(--accent); }
         .btn-outline { background: transparent; color: var(--text-dark); border: 2px solid var(--border-dark); }
         .btn-outline:hover { background: var(--border-dark); color: var(--bg-main); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         .pic-upload-container { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .pic-preview { width: 60px; height: 60px; border-radius: 50%; background: var(--border-light); display: flex; align-items: center; justify-content: center; overflow: hidden; font-weight: bold; font-size: 20px; border: 2px solid var(--border-dark); text-transform: uppercase; color: var(--text-dark);}
@@ -153,7 +153,7 @@
         #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-chat); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
         /* Clickable Header Area */
-        .chat-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: 2px solid var(--border-dark); display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar); }
+        .chat-header { height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink:0; background: var(--bg-sidebar); }
         .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 8px; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
         @media (hover: hover) and (pointer: fine) { .chat-header-info:hover { background: var(--bg-main); } }
         .chat-header-info h3 { transition: color 0.2s; display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -183,8 +183,12 @@
         
         .bubble-row { display: flex; align-items: center; gap: 8px; position: relative; }
         .bubble-content { display: flex; flex-direction: column; }
-        .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; max-width: 100%; white-space: pre-wrap; transition: filter 0.5s;}
+        .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; max-width: 100%; white-space: pre-wrap; transition: filter 0.5s; cursor: pointer; -webkit-tap-highlight-color: transparent;}
         
+        /* SPOILER INVISIBLE INK */
+        .spoiler-blur { filter: blur(6px); cursor: pointer; transition: filter 0.4s ease, opacity 0.4s ease; opacity: 0.8; user-select: none; }
+        .spoiler-blur.revealed { filter: blur(0); opacity: 1; user-select: auto; }
+
         .sent .bubble { background: var(--msg-sent-bg); color: var(--msg-sent-txt); border-radius: var(--radius-bubble); }
         .sent .msg-list > .msg-block:not(:last-child) .bubble { border-bottom-right-radius: 4px; }
         .sent .msg-list > .msg-block:not(:first-child) .bubble { border-top-right-radius: 4px; }
@@ -237,30 +241,43 @@
         .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes typingAnim { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.4;} 40% { transform: scale(1); opacity: 1;} }
 
-        /* --- INPUT BOX --- */
-        .input-wrapper { display: flex; flex-direction: column; background: var(--bg-sidebar); border-top: 2px solid var(--border-dark); flex-shrink:0; padding-bottom: max(10px, env(safe-area-inset-bottom)); position: relative;}
-        .input-box { padding: 15px 30px 10px; display: flex; align-items: flex-end; gap: 15px; }
-        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 12px;}
+        /* --- FLOATING MODERN INPUT BOX --- */
+        .input-wrapper { 
+            position: relative; display: flex; flex-direction: column; background: transparent; 
+            flex-shrink: 0; padding: 10px 15px; padding-bottom: max(10px, env(safe-area-inset-bottom));
+        }
+        .input-box { 
+            display: flex; flex-direction: row; align-items: flex-end; gap: 12px; padding: 8px 12px; width: 100%; 
+            box-sizing: border-box; background: var(--bg-sidebar); border-radius: 28px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05), var(--glow); border: 1px solid var(--border-light);
+            backdrop-filter: var(--blur);
+        }
+        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 8px; flex-shrink: 0; }
         @media (hover: hover) and (pointer: fine) { .attach-icon-label:hover { color: var(--accent); } }
 
         #msg-input { 
-            flex: 1; min-height: 20px; max-height: 120px; overflow-y: auto; padding: 14px 20px; 
-            border-radius: 24px; border: 1px solid var(--border-dark); background: var(--bg-input); 
-            color: var(--text-dark); outline: none; font-size: 15px; margin: 0; box-shadow: var(--glow);
-            word-break: break-word; white-space: pre-wrap; line-height: 1.4;
+            flex: 1; min-height: 20px; max-height: 120px; overflow-y: auto; padding: 8px 10px; 
+            border-radius: 18px; border: none; background: transparent; 
+            color: var(--text-dark); outline: none; font-size: 15px; margin: 0; 
+            word-break: break-word; white-space: pre-wrap; line-height: 1.4; align-self: center;
         }
         #msg-input:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block;}
         
-        #send-btn { width: auto; flex-shrink: 0; height: 48px; margin: 0; padding: 0 24px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; transition: background 0.2s, color 0.2s; background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer;}
+        #send-btn { 
+            flex-shrink: 0; height: 36px; width: 36px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; 
+            background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer;
+            margin-bottom: 2px;
+        }
         
         /* MENTIONS SYSTEM */
-        #mentions-popup { position: absolute; bottom: 100%; left: 30px; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 8px; box-shadow: var(--glow); max-height: 150px; overflow-y: auto; display: none; z-index: 100; width: 250px; margin-bottom: 10px; padding: 5px; }
-        .mention-item { padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 6px; transition: background 0.2s; }
+        #mentions-popup { position: absolute; bottom: 100%; left: 30px; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2), var(--glow); max-height: 150px; overflow-y: auto; display: none; z-index: 100; width: 250px; margin-bottom: 10px; padding: 5px; }
+        .mention-item { padding: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; border-radius: 8px; transition: background 0.2s; }
         @media (hover: hover) and (pointer: fine) { .mention-item:hover { background: var(--bg-sidebar); color: var(--accent); } }
 
         /* --- GOOGLE STYLE MINIGAMES --- */
         .ms-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; width: 100%; max-width: 600px; margin: 0 auto; flex: 1;}
-        .ms-board { display: grid; background: transparent; overflow: hidden; user-select: none; gap: 0; border: 2px solid var(--border-light); border-radius: 4px; box-shadow: var(--glow);}
+        .ms-board { display: grid; background: transparent; overflow: hidden; user-select: none; gap: 0; border: 2px solid var(--border-light); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15), var(--glow);}
         .ms-cell { display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; font-family: "Arial Rounded MT Bold", sans-serif; cursor: pointer; transition: filter 0.1s; border: none; box-shadow: none; width: 32px; height: 32px; }
         .ms-grass-1 { background-color: #AAD751; }
         .ms-grass-2 { background-color: #A2D149; }
@@ -287,9 +304,12 @@
         .modal-card { width: 90%; max-width: 380px; padding: 30px; background: var(--bg-main); border-radius: 16px; border: 2px solid var(--border-dark); box-shadow: 0 15px 40px rgba(0,0,0,0.5), var(--glow); max-height: 85vh; overflow-y: auto; transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin: 20px;}
         .modal-overlay.active .modal-card { transform: scale(1) translateY(0); }
 
+        /* Doodle Canvas */
+        #doodle-canvas { border: 2px solid var(--border-light); border-radius: 12px; background: var(--bg-main); cursor: crosshair; touch-action: none; width: 100%; height: 250px; }
+
         .user-pill { display: inline-flex; align-items: center; background: var(--border-dark); color: var(--bg-main); padding: 8px 14px; border-radius: 20px; margin: 4px 4px 4px 0; font-size: 13px; font-weight: bold; }
         .search-container { position: relative; margin-bottom: 20px; }
-        #search-dropdown, #gd-add-user-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-main); border: 2px solid var(--border-dark); border-top: none; z-index: 10; max-height: 150px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #search-dropdown, #gd-add-user-dropdown { position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-main); border: 2px solid var(--border-dark); border-top: none; z-index: 10; max-height: 150px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;}
         .search-result { padding: 12px 15px; border-bottom: 1px solid var(--border-light); cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .search-result:last-child { border-bottom: none; }
         @media (hover: hover) and (pointer: fine) { .search-result:hover { background: var(--bg-sidebar); } }
@@ -329,8 +349,6 @@
             .mobile-back-btn { display: flex !important; }
             .chat-header { padding: env(safe-area-inset-top) 15px 0; }
             #messages-view { padding: 20px 15px; }
-            .input-box { padding: 10px 15px 10px; }
-            .msg-wrapper { max-width: 90%; }
             .pointer-hint { display: none !important; }
         }
     </style>
@@ -467,7 +485,7 @@
                                     <span>Quotes Doc</span>
                                 </a>
                                 <a href="https://genius.com/artists/Olivia-anne" target="_blank" class="home-link-card">
-                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                    <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                     <span>Olivia Anne Genius Lyrics</span>
                                 </a>
 
@@ -544,7 +562,7 @@
                 <div class="input-wrapper">
                     <div id="mentions-popup"></div>
 
-                    <div id="reply-banner" style="display:none; padding: 10px 30px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-light); font-size: 13px; color: var(--text-muted); align-items: center; justify-content: space-between;">
+                    <div id="reply-banner" style="display:none; padding: 10px 30px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-light); font-size: 13px; color: var(--text-muted); align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; margin: 0 15px;">
                         <div id="reply-banner-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; border-left: 3px solid var(--accent); padding-left: 10px;"></div>
                         <button onclick="cancelReply()" style="background:none; border:none; cursor:pointer; font-weight:bold; color: var(--text-muted); font-size: 16px;">✕</button>
                     </div>
@@ -559,11 +577,40 @@
                         </label>
                         <input type="file" id="file-input" style="display:none;" onchange="handleFileUpload(event)">
                         
+                        <div class="attach-icon-label" title="Send a Doodle" onclick="toggleModal('doodle-modal', true)">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                <path d="M2 2l7.586 7.586"></path>
+                                <circle cx="11" cy="11" r="2"></circle>
+                            </svg>
+                        </div>
+
                         <div id="msg-input" contenteditable="true" placeholder="Type a message..." onkeydown="handleInputEnter(event)" oninput="handleInputColor()"></div>
                         
-                        <button class="btn-primary" id="send-btn" onclick="sendMsg()">Send</button>
+                        <button id="send-btn" onclick="sendMsg()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doodle-modal" class="modal-overlay">
+        <div class="modal-card" style="padding: 20px;">
+            <h3 style="text-align: center; margin-bottom: 15px;">Draw a Message</h3>
+            <canvas id="doodle-canvas"></canvas>
+            <div style="display: flex; gap: 10px; margin: 15px 0; justify-content: center;">
+                <button class="color-picker-circle" style="background:#000000; width:25px; height:25px; border-radius:50%;" onclick="setDoodleColor('#000000')"></button>
+                <button class="color-picker-circle" style="background:#EE352E; width:25px; height:25px; border-radius:50%;" onclick="setDoodleColor('#EE352E')"></button>
+                <button class="color-picker-circle" style="background:#4285F4; width:25px; height:25px; border-radius:50%;" onclick="setDoodleColor('#4285F4')"></button>
+                <button class="color-picker-circle" style="background:#34A853; width:25px; height:25px; border-radius:50%;" onclick="setDoodleColor('#34A853')"></button>
+                <button class="color-picker-circle" style="background:#FBBC05; width:25px; height:25px; border-radius:50%;" onclick="setDoodleColor('#FBBC05')"></button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" style="flex:2;" onclick="sendDoodle()">Send Doodle</button>
+                <button class="btn-primary btn-outline" style="flex:1;" onclick="toggleModal('doodle-modal', false)">Cancel</button>
             </div>
         </div>
     </div>
@@ -587,7 +634,7 @@
             <h2 style="margin-bottom: 15px; text-align: center; padding: 0 20px;">Contacts</h2>
             <div id="contacts-list" style="max-height: 400px; overflow-y: auto;"></div>
             <div style="padding: 0 20px; margin-top: 15px;">
-                <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('contacts-modal', false)">Close</button>
+                <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted); padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('contacts-modal', false)">Close</button>
             </div>
         </div>
     </div>
@@ -638,7 +685,7 @@
                 <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
             </div>
 
-            <button class="btn-primary" style="margin-top: 20px; border:none;" onclick="toggleModal('settings-modal', false)">Close</button>
+            <button class="btn-primary" style="margin-top: 20px; border:none; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('settings-modal', false)">Close</button>
         </div>
     </div>
 
@@ -665,7 +712,7 @@
 
             <div style="display:flex; gap:10px;">
                 <button class="btn-primary" style="flex:1;" onclick="createChat(event)">Start</button>
-                <button class="btn-primary btn-outline" style="flex:1;" onclick="toggleModal('new-chat-modal', false)">Cancel</button>
+                <button class="btn-primary btn-outline" style="flex:1; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('new-chat-modal', false)">Cancel</button>
             </div>
         </div>
     </div>
@@ -696,7 +743,7 @@
                 <button id="pv-edit-btn" class="btn-primary btn-outline" style="display:none; width:100%;" onclick="enableProfileEdit()">Edit Profile</button>
                 <button id="pv-save-btn" class="btn-primary" style="display:none; width:100%;" onclick="saveProfileEdit()">Save Changes</button>
                 <button id="pv-logout-btn" class="btn-primary btn-outline" style="display:none; width:100%; border-color:#EE352E; color:#EE352E;" onclick="logout()">Log Out</button>
-                <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('profile-modal', false)">Close</button>
+                <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted); padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('profile-modal', false)">Close</button>
             </div>
         </div>
     </div>
@@ -728,7 +775,7 @@
             <div id="gd-members-list" style="margin-bottom:20px; max-height: 150px; overflow-y:auto;"></div>
             
             <button class="btn-primary" style="width:100%;" onclick="saveGroupDetails()">Save Changes</button>
-            <button class="btn-primary btn-outline" style="margin-top:10px; border:none; width:100%;" onclick="toggleModal('group-details-modal', false)">Close</button>
+            <button class="btn-primary btn-outline" style="margin-top:10px; border:none; width:100%; padding-bottom: 0; margin-bottom: -15px;" onclick="toggleModal('group-details-modal', false)">Close</button>
         </div>
     </div>
 
@@ -794,6 +841,84 @@
                 window.backToList();
             }
         }, {passive: true});
+
+        // DOODLE CANVAS LOGIC
+        const doodleCanvas = document.getElementById('doodle-canvas');
+        const doodleCtx = doodleCanvas.getContext('2d');
+        let isDoodling = false;
+        let doodleColor = '#000000';
+
+        function resizeDoodleCanvas() {
+            const rect = doodleCanvas.parentElement.getBoundingClientRect();
+            doodleCanvas.width = rect.width - 40;
+            doodleCanvas.height = 250; /* Matches the CSS height perfectly */
+            doodleCtx.fillStyle = '#FFFFFF';
+            doodleCtx.fillRect(0, 0, doodleCanvas.width, doodleCanvas.height);
+            doodleCtx.lineWidth = 3;
+            doodleCtx.lineCap = 'round';
+            doodleCtx.strokeStyle = doodleColor;
+        }
+
+        window.setDoodleColor = function(c) {
+            doodleColor = c;
+            doodleCtx.strokeStyle = c;
+        };
+
+        function startDoodle(e) {
+            isDoodling = true;
+            doodleCtx.beginPath();
+            const rect = doodleCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            doodleCtx.moveTo(clientX - rect.left, clientY - rect.top);
+            e.preventDefault();
+        }
+        function drawDoodle(e) {
+            if (!isDoodling) return;
+            const rect = doodleCanvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            doodleCtx.lineTo(clientX - rect.left, clientY - rect.top);
+            doodleCtx.stroke();
+            e.preventDefault();
+        }
+        function stopDoodle() { isDoodling = false; }
+
+        doodleCanvas.addEventListener('mousedown', startDoodle);
+        doodleCanvas.addEventListener('mousemove', drawDoodle);
+        doodleCanvas.addEventListener('mouseup', stopDoodle);
+        doodleCanvas.addEventListener('mouseout', stopDoodle);
+        doodleCanvas.addEventListener('touchstart', startDoodle, {passive: false});
+        doodleCanvas.addEventListener('touchmove', drawDoodle, {passive: false});
+        doodleCanvas.addEventListener('touchend', stopDoodle);
+
+        window.sendDoodle = async function() {
+            if(!activeChatId) return;
+            const base64Img = doodleCanvas.toDataURL('image/jpeg', 0.8);
+            const msgText = `<img src="${base64Img}" class="chat-image" onclick="openLightbox(this.src)">`;
+            
+            const payload = { sender: currentUser, text: msgText, createdAt: serverTimestamp() };
+            if (replyingToMsg) {
+                payload.replyTo = { id: replyingToMsg.id, sender: replyingToMsg.sender, text: "Attachment" };
+                cancelReply();
+            }
+
+            await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
+            
+            const chat = chatsCache.find(c => c.id === activeChatId);
+            let updates = { updatedAt: serverTimestamp(), lastMessage: `🎨 Doodle Sent`, [`typing.${currentUser}`]: deleteField() };
+            if (chat && chat.participants) {
+                chat.participants.forEach(p => {
+                    if (p !== currentUser) { updates[`unreadCount.${p}`] = (chat.unreadCount?.[p] || 0) + 1; updates[`readBy.${p}`] = false; } 
+                    else { updates[`unreadCount.${p}`] = 0; updates[`readBy.${p}`] = true; }
+                });
+            }
+            await updateDoc(doc(db, "chats", activeChatId), updates);
+            toggleModal('doodle-modal', false);
+            const view = document.getElementById('messages-view');
+            if (view) view.scrollTo({ top: view.scrollHeight, behavior: 'smooth' });
+        };
+
 
         // Close menus safely
         window.onclick = function(e) {
@@ -1265,9 +1390,12 @@
                         if (typists.length > 0) typingStr = `<span style="font-style:italic; color:var(--accent);">${getFullName(typists[0])} is typing...</span>`;
                     }
 
-                    const lastMsg = typingStr || chat.lastMessage || "Start chatting...";
+                    let lastMsg = typingStr || chat.lastMessage || "Start chatting...";
+                    if (lastMsg.startsWith('/spoiler ')) {
+                        lastMsg = "Sent a message using the spoiler effect.";
+                    }
                     const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
-                    
+
                     item.innerHTML = `
                         <div class="avatar-container"><div class="avatar">${avatarContent}</div><div class="online-dot"></div></div>
                         <div class="conv-info">
@@ -1294,6 +1422,29 @@
             document.querySelectorAll('.chat-menu').forEach(m => m.style.display = 'none');
             const menu = document.getElementById(`chat-menu-${chatId}`);
             if(menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        };
+
+        // CONFETTI ENGINE
+        window.spawnConfetti = function() {
+            const emojis = ['🎉', '✨', '🎈', '🎊'];
+            for(let i=0; i<40; i++) {
+                let el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.style.position = 'fixed';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.top = '-50px';
+                el.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                el.style.zIndex = 9999;
+                el.style.pointerEvents = 'none';
+                el.style.transition = 'transform 3s cubic-bezier(0.25, 1, 0.5, 1), opacity 3s';
+                document.body.appendChild(el);
+                
+                setTimeout(() => {
+                    el.style.transform = `translateY(110vh) rotate(${Math.random()*720}deg) translateX(${(Math.random()-0.5)*200}px)`;
+                    el.style.opacity = 0;
+                }, 50);
+                setTimeout(() => el.remove(), 3000);
+            }
         };
 
         // MENTIONS ENGINE
@@ -1502,12 +1653,33 @@
                                 timeStr = `${hours}:${mins} ${ampm}`;
                             }
 
-                            // Dynamic Mention Engine: Wrap @usernames in clickable links
                             let safeMsgText = msg.text || '';
-                            const isImg = safeMsgText.startsWith('<img');
-                            const isEmoji = !isImg && isOnlyEmojis(safeMsgText);
                             
-                            if (!isImg && !isEmoji) {
+                            // CONFETTI CHECK
+                            const isLastMsg = (index === allMessages.length - 1);
+                            const timeDiffSinceSent = Date.now() - msgTime;
+                            if (isLastMsg && timeDiffSinceSent < 5000) {
+                                const lowerText = safeMsgText.toLowerCase();
+                                if (lowerText.includes('congrats') || lowerText.includes('happy birthday') || lowerText.includes('🎉')) {
+                                    if(window.lastConfettiMsg !== msg.id) {
+                                        window.spawnConfetti();
+                                        window.lastConfettiMsg = msg.id;
+                                    }
+                                }
+                            }
+
+                            // SPOILER INK CHECK
+                            let isSpoiler = false;
+                            if (safeMsgText.startsWith('/spoiler ')) {
+                                isSpoiler = true;
+                                safeMsgText = `<span class="spoiler-blur" onclick="this.classList.add('revealed')" title="Tap to reveal">${safeMsgText.substring(9)}</span>`;
+                            }
+
+                            // MENTION ENGINE LINKIFY
+                            const isImg = safeMsgText.startsWith('<img');
+                            const isEmoji = !isImg && isOnlyEmojis(safeMsgText.replace(/<[^>]*>?/gm, '')); // Strip tags for emoji check
+                            
+                            if (!isImg && !isEmoji && !isSpoiler) {
                                 safeMsgText = safeMsgText.replace(/@([a-zA-Z0-9_]+)/g, (match, p1) => {
                                     return `<span style="color:var(--accent); font-weight:bold; cursor:pointer;" onclick="openDirectChat('${p1}')">@${p1}</span>`;
                                 });
@@ -1550,7 +1722,7 @@
                                 <div class="msg-tools-wrapper">
                                     <button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button>
                                     <div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;">
-                                        <div class="emoji-row" style="display: flex; align-items: center; gap: 4px; padding: 5px; border-bottom: 1px solid var(--border-light); margin-bottom: 5px;">
+                                        <div class="emoji-row">
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button>
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button>
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button>
@@ -1572,7 +1744,6 @@
                             const timeDiff = msgTime - lastTime;
                             const isClumped = (msg.sender === lastSender) && (timeDiff < 5 * 60 * 1000);
                             
-                            const isLastMsg = (index === allMessages.length - 1);
                             let readReceiptHtml = '';
                             
                             if (isMe) {
@@ -1591,7 +1762,7 @@
                                 <div class="msg-block ${isMe ? 'sent' : 'received'}">
                                     <div class="bubble-row ${isMe ? 'sent' : 'received'}" style="${isMe ? 'flex-direction: row-reverse;' : ''}">
                                         <div class="bubble-content">
-                                            <div class="${bubbleClasses}" ${bubbleStyle}>${replyHtml}${safeMsgText}</div>
+                                            <div class="${bubbleClasses}" ${bubbleStyle} ondblclick="reactToMessage('${msg.id}', '❤️')">${replyHtml}${safeMsgText}</div>
                                             ${reactionsHtml}
                                         </div>
                                         ${toolsHtml}
@@ -2086,9 +2257,16 @@
             await addDoc(collection(db, "chats", activeChatId, "messages"), payload);
 
             const chat = chatsCache.find(c => c.id === activeChatId);
+            
+            // Protect spoiler text in sidebar preview and notifications
+            let rawText = text.replace(/<[^>]*>?/gm, '');
+            if (rawText.startsWith('/spoiler ')) {
+                rawText = "Sent a message using the spoiler effect.";
+            }
+
             let updates = {
                 updatedAt: serverTimestamp(),
-                lastMessage: text.replace(/<[^>]*>?/gm, ''), 
+                lastMessage: rawText, 
                 [`typing.${currentUser}`]: deleteField()
             };
             
@@ -2425,9 +2603,10 @@
                 el.style.display = 'flex';
                 void el.offsetWidth; // Trigger reflow
                 el.classList.add('active');
+                if (id === 'doodle-modal') setTimeout(resizeDoodleCanvas, 300);
             } else {
                 el.classList.remove('active');
-                setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 200);
+                setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 300);
                 
                 if (id === 'new-chat-modal') {
                     document.getElementById('user-search').value = '';

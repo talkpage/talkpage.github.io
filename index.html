@@ -468,10 +468,7 @@
             #messages-view { padding: 20px 15px; }
             .pointer-hint { display: none !important; }
         
-            .sidebar-search-wrapper,
-#chat-search-bar { 
-    display: none !important; 
-}
+           
         
         }
 
@@ -528,6 +525,7 @@
         <div id="sidebar">
             <div class="sb-header">
                 <div class="sb-header-top">
+                   
                     <div style="display:flex; align-items:center; gap:12px;">
                         <div class="my-profile-icon" id="my-profile-icon" onclick="viewMyProfile()" title="My Profile"></div>
                         <div class="sb-title-area">
@@ -703,18 +701,19 @@
                         <h3 id="chat-title" class="clickable-name"></h3>
                         <p id="chat-subtitle" style="font-size: 13px; color: var(--text-muted); margin:0;"></p>
                     </div>
-                    <button class="theme-btn" onclick="toggleChatSearch()" title="Search in Chat" style="margin-right: 10px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    </button>
+                    
+                    
                 </div>
                 
-                <div id="chat-search-bar">
-                    <input type="text" id="chat-search-input" placeholder="Search this conversation..." oninput="searchMessages()" style="width:100%; padding:8px 12px; border-radius:18px; border:1px solid var(--border-dark); background:var(--bg-main); color:var(--text-dark); outline:none; font-size:14px; box-sizing: border-box;">
-                    <div id="chat-search-dropdown"></div>
-                </div>
+                
 
                 <div id="messages-view"></div>
-                <button id="jump-down-btn" onclick="scrollToBottom()">↓</button>
+                <button id="jump-down-btn" onclick="scrollToBottom()">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <polyline points="19 12 12 19 5 12"></polyline>
+    </svg>
+</button>
                 
                 <div class="input-wrapper">
                     <div id="mentions-popup"></div>
@@ -2273,16 +2272,10 @@
                     view.appendChild(typingDiv);
                     renderTypingBubbles();
 
-                    if (isFirstLoadForChat) {
-                        if (chatScrollPositions[chatId] !== undefined) {
-                            view.scrollTop = chatScrollPositions[chatId];
-                        } else {
-                            view.scrollTop = view.scrollHeight; // INSTANT SNAP
-                        }
-                        isFirstLoadForChat = false;
-                    } else if (wasAtBottom) {
-                        view.scrollTop = view.scrollHeight; // INSTANT SNAP
-                    }
+                    if (isFirstLoadForChat || wasAtBottom) {
+    setTimeout(() => { view.scrollTop = view.scrollHeight; }, 50); 
+    isFirstLoadForChat = false;
+}
                 });
             } catch(e) {
                 console.error("Fatal Open Chat Error", e);
@@ -2354,16 +2347,33 @@ window.joinGartic = function() {
     const finalLink = link.startsWith('http') ? link : `https://${link}`;
     document.getElementById('gartic-link-input').value = '';
     
-    // Inject into the iframe instead of a new tab
+    // Inject into the iframe
     document.getElementById('gartic-frame').src = finalLink;
-    window.goToHome(); 
+    
+    if (activeChatId) {
+        // Split-screen mode!
+        document.getElementById('chat-area').style.display = 'flex';
+        document.getElementById('gartic-area').style.display = 'flex';
+        document.body.classList.add('gartic-split-mode');
+        document.body.classList.remove('gartic-full-mode');
+    } else {
+        // Full-screen mode from Home Screen
+        window.goToHome(); 
+    }
 };
 
 // Also, make sure your close button function is defined so you can exit the game!
 window.promptCloseGartic = function() {
-    window.isGarticMode = false;
-    document.getElementById('gartic-frame').src = "";
-    window.goToHome();
+    window.showConfirm(
+        "Are you sure you want to leave? You will not be able to rejoin this specific game session if you close it.",
+        () => {
+            window.isGarticMode = false;
+            document.getElementById('gartic-frame').src = "";
+            window.goToHome();
+        },
+        "Leave Game",
+        "Cancel"
+    );
 };
 
         // --- MINESWEEPER LOGIC (Google Style) ---

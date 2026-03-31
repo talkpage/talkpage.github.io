@@ -103,7 +103,7 @@
         .upload-btn-fake:hover { background: var(--accent); border-color: var(--accent); color: var(--bg-main); }
 
         /* --- APP LAYOUT --- */
-        #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; }
+        #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; flex-direction: row;}
         #app-layout.active { display: flex; }
 
         #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0; height: 100%;}
@@ -201,6 +201,10 @@
         .bubble-content { display: flex; flex-direction: column; }
         .bubble { padding: 12px 18px; font-size: 15px; line-height: 1.4; box-shadow: var(--glow); word-break: break-word; max-width: 100%; white-space: pre-wrap; transition: filter 0.5s; cursor: pointer; -webkit-tap-highlight-color: transparent;}
         
+        /* Auto-Linkification */
+        .bubble a { color: var(--accent); text-decoration: underline; pointer-events: auto; }
+        .bubble a:hover { filter: brightness(1.2); }
+
         /* SPOILER INVISIBLE INK */
         .spoiler-blur { filter: blur(6px); cursor: pointer; transition: filter 0.4s ease, opacity 0.4s ease; opacity: 0.8; user-select: none; }
         .spoiler-blur.revealed { filter: blur(0); opacity: 1; user-select: auto; }
@@ -258,33 +262,20 @@
         @keyframes typingAnim { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.4;} 40% { transform: scale(1); opacity: 1;} }
 
         /* --- FLOATING MODERN INPUT BOX --- */
-        .input-wrapper { 
-            position: relative; display: flex; flex-direction: column; background: transparent; 
-            flex-shrink: 0; padding: 10px 15px; padding-bottom: max(10px, env(safe-area-inset-bottom));
-        }
-        .input-box { 
-            display: flex; flex-direction: row; align-items: flex-end; gap: 12px; padding: 8px 12px; width: 100%; 
-            box-sizing: border-box; background: var(--bg-sidebar); border-radius: 28px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05), var(--glow); border: 1px solid var(--border-light);
-            backdrop-filter: var(--blur);
-        }
-        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 8px; flex-shrink: 0; }
+        .input-wrapper { display: flex; flex-direction: column; background: var(--bg-sidebar); border-top: 2px solid var(--border-dark); flex-shrink: 0; }
+        .input-box { display: flex; flex-direction: row; align-items: flex-end; gap: 15px; padding: 15px 30px 20px; width: 100%; box-sizing: border-box; }
+        .attach-icon-label { cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: color 0.2s; padding-bottom: 12px; flex-shrink: 0; }
         @media (hover: hover) and (pointer: fine) { .attach-icon-label:hover { color: var(--accent); } }
 
         #msg-input { 
-            flex: 1; min-height: 20px; max-height: 120px; overflow-y: auto; padding: 8px 10px; 
-            border-radius: 18px; border: none; background: transparent; 
-            color: var(--text-dark); outline: none; font-size: 15px; margin: 0; 
-            word-break: break-word; white-space: pre-wrap; line-height: 1.4; align-self: center;
+            flex: 1; min-height: 20px; max-height: 120px; overflow-y: auto; padding: 14px 20px; 
+            border-radius: 24px; border: 1px solid var(--border-dark); background: var(--bg-input); 
+            color: var(--text-dark); outline: none; font-size: 15px; margin: 0; box-shadow: var(--glow);
+            word-break: break-word; white-space: pre-wrap; line-height: 1.4;
         }
         #msg-input:empty:before { content: attr(placeholder); color: var(--text-muted); pointer-events: none; display: block;}
         
-        #send-btn { 
-            flex-shrink: 0; height: 36px; width: 36px; border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; 
-            background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer;
-            margin-bottom: 2px;
-        }
+        #send-btn { flex-shrink: 0; height: 48px; margin: 0; padding: 0 24px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; transition: background 0.2s, color 0.2s; background: var(--border-dark); color: var(--bg-main); font-weight: bold; border: none; cursor: pointer; width: auto;}
         
         /* MENTIONS SYSTEM */
         #mentions-popup { position: absolute; bottom: 100%; left: 30px; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2), var(--glow); max-height: 150px; overflow-y: auto; display: none; z-index: 100; width: 250px; margin-bottom: 10px; padding: 5px; }
@@ -471,53 +462,20 @@
                     <h2 id="home-greeting" style="font-size: 32px; margin-bottom: 10px; text-align: center;">Welcome to Talkpage</h2>
                     <div id="home-weather" style="color: var(--text-dark); font-size: 15px; font-weight: bold; margin-bottom: 30px; text-align: center; background: var(--bg-sidebar); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-light); box-shadow: var(--glow);">Loading weather...</div>
                     
-                    <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin: 0;">Select a conversation or start a new one.</p>
+                    <p style="color: var(--text-muted); font-size: 14px; text-align: center; margin: 0; margin-bottom: 15px;">Select a conversation or start a new one.</p>
                     
-                    <div style="display:flex; gap:15px; margin-top:20px; flex-wrap: wrap; justify-content: center;">
-                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('wordle')">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <rect x="2" y="2" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                                <rect x="9" y="2" width="6" height="6" rx="1" fill="#B59F3B"></rect>
-                                <rect x="16" y="2" width="6" height="6" rx="1" fill="#3A3A3C"></rect>
-                                <rect x="2" y="9" width="6" height="6" rx="1" fill="#3A3A3C"></rect>
-                                <rect x="9" y="9" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                                <rect x="16" y="9" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                                <rect x="2" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                                <rect x="9" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                                <rect x="16" y="16" width="6" height="6" rx="1" fill="#538D4E"></rect>
-                            </svg>
-                            Wordle
-                        </button>
-                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('connections')">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <rect x="2" y="2" width="9" height="9" rx="2" fill="#F9DF6D"></rect>
-                                <rect x="13" y="2" width="9" height="9" rx="2" fill="#A0C35A"></rect>
-                                <rect x="2" y="13" width="9" height="9" rx="2" fill="#B0C4EF"></rect>
-                                <rect x="13" y="13" width="9" height="9" rx="2" fill="#BA81C5"></rect>
-                            </svg>
-                            Connections
-                        </button>
-                        <button class="theme-pill" style="display:flex; align-items:center; gap:8px; font-size:14px; padding:10px 20px; box-shadow: var(--glow);" onclick="openWebGame('mini')">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
-                                <path d="M8 2v20"></path><path d="M16 2v20"></path>
-                                <path d="M2 8h20"></path><path d="M2 16h20"></path>
-                                <rect x="8" y="8" width="8" height="8" fill="currentColor"></rect>
-                            </svg>
-                            The Mini
-                        </button>
-                    </div>
+                    
                 </div>
 
-                <div style="width: 100%; padding: 20px; display: flex; justify-content: center; align-items: flex-end;">
-                    <div style="width: 100%; max-width: 800px; background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 12px; box-shadow: var(--glow); overflow: hidden;">
+                <div style="width: 100%; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; margin-top: auto;">
+                    <div style="width: 100%; max-width: 800px;">
                         
-                        <div onclick="toggleHomeDirectory()" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; cursor: pointer; background: var(--bg-sidebar); transition: background 0.2s;">
+                        <div onclick="toggleHomeDirectory()" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 25px; cursor: pointer; background: var(--bg-sidebar); border-radius: 12px; border: 1px solid var(--border-light); box-shadow: var(--glow); transition: transform 0.2s, background 0.2s;">
                             <h3 style="color: var(--text-dark); font-size: 16px; margin: 0;">Link Directory</h3>
                             <span id="dir-arrow" style="color:var(--text-muted); font-size: 12px; transition: transform 0.2s;">▼</span>
                         </div>
                         
-                        <div id="home-directory-content" style="display: none; padding: 25px; border-top: 1px solid var(--border-light);">
+                        <div id="home-directory-content" style="display: none; padding: 20px 0; margin-top: 10px;">
                             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px;">
                                 
                                 <div style="grid-column: 1 / -1;"><div class="dir-section-title" style="margin-top: 0;">General</div></div>
@@ -677,7 +635,7 @@
             <h3 id="confirm-msg" style="margin-bottom: 25px; line-height: 1.4;">Are you sure?</h3>
             <div style="display:flex; gap:10px; justify-content: center;">
                 <button class="btn-primary" id="confirm-yes-btn" style="background:#EE352E; border-color:#EE352E; color:#FFF;">Yes</button>
-                <button class="btn-primary btn-outline" onclick="toggleModal('confirm-modal', false)">Cancel</button>
+                <button class="btn-primary btn-outline" id="confirm-no-btn" onclick="toggleModal('confirm-modal', false)">Cancel</button>
             </div>
         </div>
     </div>
@@ -973,7 +931,6 @@
             if (view) view.scrollTo({ top: view.scrollHeight, behavior: 'smooth' });
         };
 
-
         // Close menus safely
         window.onclick = function(e) {
             if (e.target && e.target.closest && !e.target.closest('.msg-tools-wrapper')) {
@@ -1028,7 +985,7 @@
         };
 
         window.goToHome = function() {
-            if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
+            if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
                 const view = document.getElementById('messages-view');
                 if(view) chatScrollPositions[activeChatId] = view.scrollTop;
             }
@@ -1045,9 +1002,6 @@
             document.body.classList.add('mobile-chat-open');
             clearInterval(window.msTimerInterval);
             clearInterval(window.snakeInterval);
-            
-            // Restore padding if returning from a game
-            document.getElementById('messages-view').style.padding = '';
         };
 
         window.toggleHomeDirectory = function() {
@@ -1083,20 +1037,34 @@
                 const data = await res.json();
                 const temp = Math.round(data.current_weather.temperature);
                 const code = data.current_weather.weathercode;
+                const isDay = data.current_weather.is_day;
                 
                 let emoji = '🌤️';
-                if (code === 0) emoji = '☀️';
-                else if (code === 1 || code === 2) emoji = '⛅';
-                else if (code === 3) emoji = '☁️';
-                else if (code >= 45 && code <= 48) emoji = '🌫️';
-                else if (code >= 51 && code <= 67) emoji = '🌧️';
-                else if (code >= 71 && code <= 86) emoji = '❄️';
-                else if (code >= 95) emoji = '⛈️';
+                let colorTint = 'rgba(150, 150, 150, 0.05)';
+                
+                if (code === 0) { 
+                    emoji = isDay ? '☀️' : '🌙'; 
+                    colorTint = isDay ? 'rgba(255, 215, 0, 0.12)' : 'rgba(100, 120, 255, 0.08)';
+                }
+                else if (code === 1 || code === 2) { 
+                    emoji = isDay ? '⛅' : '☁️'; 
+                    colorTint = isDay ? 'rgba(200, 220, 255, 0.15)' : 'rgba(80, 90, 110, 0.1)';
+                }
+                else if (code === 3) { emoji = '☁️'; colorTint = 'rgba(150, 160, 170, 0.15)'; }
+                else if (code >= 45 && code <= 48) { emoji = '🌫️'; colorTint = 'rgba(200, 200, 200, 0.15)'; }
+                else if (code >= 51 && code <= 67) { emoji = '🌧️'; colorTint = 'rgba(100, 150, 200, 0.2)'; }
+                else if (code >= 71 && code <= 86) { emoji = '❄️'; colorTint = 'rgba(220, 240, 255, 0.25)'; }
+                else if (code >= 95) { emoji = '⛈️'; colorTint = 'rgba(120, 100, 180, 0.2)'; }
                 
                 const wEl = document.getElementById('home-weather');
                 if (wEl) {
                     wEl.innerHTML = `${emoji} Toronto: ${temp}°C`;
                     wEl.style.opacity = 1;
+                }
+
+                const noChatScreen = document.getElementById('no-chat-screen');
+                if (noChatScreen) {
+                     noChatScreen.style.backgroundImage = `linear-gradient(135deg, ${colorTint}, transparent 70%)`;
                 }
             } catch(e) {
                 console.log("Weather fetch failed.");
@@ -1123,12 +1091,44 @@
             }
         };
 
-        window.showConfirm = function(msg, callback) {
+        window.showConfirm = function(msg, yesCallback, yesText = "Yes", noText = "Cancel", noCallback = null) {
             document.getElementById('confirm-msg').innerText = msg;
+            
             const yesBtn = document.getElementById('confirm-yes-btn');
-            yesBtn.onclick = () => { toggleModal('confirm-modal', false); callback(); };
+            const noBtn = document.getElementById('confirm-no-btn');
+            
+            yesBtn.innerText = yesText;
+            noBtn.innerText = noText;
+            
+            // Dynamic styling based on action type
+            if (yesText !== "Yes") {
+                yesBtn.style.background = "var(--border-dark)";
+                yesBtn.style.borderColor = "var(--border-dark)";
+                yesBtn.style.color = "var(--bg-main)";
+            } else {
+                yesBtn.style.background = "#EE352E";
+                yesBtn.style.borderColor = "#EE352E";
+                yesBtn.style.color = "#FFF";
+            }
+            
+            yesBtn.onclick = () => { 
+                toggleModal('confirm-modal', false); 
+                yesBtn.innerText = "Yes"; 
+                noBtn.innerText = "Cancel"; 
+                yesCallback(); 
+            };
+            noBtn.onclick = () => { 
+                toggleModal('confirm-modal', false); 
+                yesBtn.innerText = "Yes"; 
+                noBtn.innerText = "Cancel"; 
+                if(noCallback) noCallback(); 
+            };
+            
             toggleModal('confirm-modal', true);
         };
+
+        // Custom Link Handler for Gartic Phone to prevent native browser popups
+        
 
         window.openLightbox = function(src) {
             document.getElementById('lightbox-img').src = src;
@@ -1365,7 +1365,7 @@
         };
 
         window.addEventListener('focus', () => {
-            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') window.markChatAsRead(activeChatId);
+            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') window.markChatAsRead(activeChatId);
         });
 
         // CONTACTS / FRIENDS ENGINE
@@ -1435,7 +1435,7 @@
                 });
                 
                 renderSidebar();
-                if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
+                if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
                     refreshActiveChatHeader();
                     window.updateReadReceiptsUI();
                 }
@@ -1607,7 +1607,7 @@
         };
 
         window.handleTyping = function() {
-            if (!activeChatId || activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
+            if (!activeChatId || activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
             if (!isTyping) {
                 isTyping = true;
                 updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: Date.now() }).catch(e=>e);
@@ -1652,7 +1652,7 @@
         }
 
         window.handleHeaderClick = function() {
-            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
+            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
             if(chat.isGroup) openGroupDetails(chat.id);
@@ -1672,7 +1672,7 @@
                 if (homeBtnIcon) homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
                 document.body.classList.add('mobile-chat-open');
 
-                if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') {
+                if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
                     const view = document.getElementById('messages-view');
                     if (view) chatScrollPositions[activeChatId] = view.scrollTop;
                 }
@@ -1692,7 +1692,7 @@
                 
                 const inputWrap = document.querySelector('.input-wrapper');
                 if(inputWrap) inputWrap.style.display = 'flex'; 
-                
+
                 cancelReply();
                 refreshActiveChatHeader();
                 window.markChatAsRead(chatId);
@@ -1797,11 +1797,19 @@
                                 safeMsgText = `<span class="spoiler-blur" onclick="this.classList.add('revealed')" title="Tap to reveal">${safeMsgText.substring(9)}</span>`;
                             }
 
-                            // MENTION ENGINE LINKIFY
+                            // MENTION & LINK ENGINE
                             const isImg = safeMsgText.startsWith('<img');
                             const isEmoji = !isImg && isOnlyEmojis(safeMsgText.replace(/<[^>]*>?/gm, '')); 
                             
                             if (!isImg && !isEmoji && !isSpoiler) {
+                                // Auto-linkify URLs & Intercept Gartic Phone
+                                const urlRegex = /(https?:\/\/[^\s<]+)/g;
+                                safeMsgText = safeMsgText.replace(urlRegex, (match, url) => {
+                                    
+                                    return `<a href="${url}" target="_blank">${url}</a>`;
+                                });
+                                
+                                // Auto-linkify Mentions
                                 safeMsgText = safeMsgText.replace(/@([a-zA-Z0-9_]+)/g, (match, p1) => {
                                     return `<span style="color:var(--accent); font-weight:bold; cursor:pointer;" onclick="openDirectChat('${p1}')">@${p1}</span>`;
                                 });
@@ -1950,7 +1958,7 @@
         };
 
         function refreshActiveChatHeader() {
-            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf' || activeChatId === 'wordle' || activeChatId === 'connections' || activeChatId === 'mini') return;
+            if(activeChatId === 'minesweeper' || activeChatId === 'snake' || activeChatId === 'slimerancher' || activeChatId === 'cyberwolf') return;
             const chat = chatsCache.find(c => c.id === activeChatId);
             if(!chat) return;
 
@@ -1974,29 +1982,25 @@
             await updateDoc(doc(db, "users", currentUser), { status: newStatus });
             usersCache[currentUser].status = newStatus;
             
-            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf' && activeChatId !== 'wordle' && activeChatId !== 'connections' && activeChatId !== 'mini') refreshActiveChatHeader();
+            if(activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') refreshActiveChatHeader();
         };
 
-        // --- WEB GAMES ENGINE ---
-        window.openWebGame = function(gameId) {
-            activeChatId = gameId;
-            document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('no-chat-screen').style.display = 'none';
-            document.getElementById('active-chat-screen').style.display = 'flex';
-            document.querySelector('.input-wrapper').style.display = 'none';
-            if(unsubMessages) unsubMessages();
+        // --- GARTIC PHONE ENGINE ---
+        window.openGartic = function() {
+            window.isGarticMode = true;
+            window.open("https://garticphone.com/en", "_blank");
+            window.goToHome(); 
+        };
 
-            let title = "", subtitle = "New York Times", url = "";
-            if (gameId === 'wordle') { title = "Wordle"; url = "https://www.nytimes.com/games/wordle/index.html"; }
-            else if (gameId === 'connections') { title = "Connections"; url = "https://www.nytimes.com/games/connections"; }
-            else if (gameId === 'mini') { title = "The Mini"; url = "https://www.nytimes.com/crosswords/game/mini"; }
-
-            document.getElementById('chat-title').innerText = title;
-            document.getElementById('chat-subtitle').innerText = subtitle;
+        window.joinGartic = function() {
+            const link = document.getElementById('gartic-link-input').value.trim();
+            if (!link) return;
+            window.isGarticMode = true;
             
-            const view = document.getElementById('messages-view');
-            view.style.padding = '0'; 
-            view.innerHTML = `<iframe src="${url}" style="width: 100%; height: 100%; border: none; background: var(--bg-main);"></iframe>`;
+            const finalLink = link.startsWith('http') ? link : `https://${link}`;
+            document.getElementById('gartic-link-input').value = '';
+            window.open(finalLink, '_blank');
+            window.goToHome(); 
         };
 
         // --- MINESWEEPER LOGIC (Google Style) ---

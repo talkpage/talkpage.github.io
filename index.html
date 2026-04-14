@@ -459,6 +459,73 @@
             .pointer-hint { display: none !important; }
         }
 
+
+        /* ===== SETTINGS REDESIGN ===== */
+        .settings-redesign { max-width: 440px; }
+        .settings-tabs { display: flex; gap: 4px; background: var(--bg-sidebar); border-radius: 10px; padding: 4px; margin-bottom: 20px; border: 1px solid var(--border-light); }
+        .stab { flex: 1; padding: 8px 4px; background: none; border: none; border-radius: 7px; font-size: 11px; font-weight: bold; color: var(--text-muted); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; font-family: var(--font-main); }
+        .stab:hover { color: var(--text-dark); }
+        .stab.active { background: var(--bg-main); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .settings-panel { display: none; animation: fadeUp 0.2s ease; }
+        .settings-panel.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .settings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--bg-sidebar); border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 10px; gap: 12px; }
+        .settings-row-label { font-size: 14px; font-weight: bold; color: var(--text-dark); display: block; line-height: 1.2; }
+        .settings-row-sub { font-size: 11px; color: var(--text-muted); display: block; margin-top: 3px; line-height: 1.3; }
+        .settings-text-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 12px; text-decoration: underline; font-family: var(--font-main); transition: color 0.15s; }
+        .settings-text-btn:hover { color: var(--accent); }
+
+        /* ===== PROFILE BANNER REDESIGN ===== */
+        .profile-banner { height: 82px; background: linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); position: relative; flex-shrink: 0; border-radius: 14px 14px 0 0; }
+        .profile-banner-avatar { position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%); width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-main); background: var(--border-dark); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #FFF !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.15s; }
+        .profile-banner-avatar:hover { transform: translateX(-50%) scale(1.05); }
+        .profile-banner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-banner-avatar span { color: #FFF !important; }
+        .profile-body-v2 { padding: 55px 25px 20px; }
+        .edit-form-section { margin-bottom: 18px; }
+        .edit-form-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+
+        /* ===== SIDEBAR UNREAD DOT ===== */
+        .sidebar-notif-dot { display: none; position: absolute; top: 1px; right: 1px; width: 9px; height: 9px; background: #EE352E; border-radius: 50%; border: 2px solid var(--bg-sidebar); pointer-events: none; }
+        .sb-actions button { position: relative; }
+
+        /* ===== NOTIFICATION PERMISSION BANNER ===== */
+        #notif-permission-banner { background: rgba(246,168,0,0.12); border: 1px solid var(--accent); border-radius: 10px; padding: 12px 15px; margin-bottom: 14px; font-size: 13px; color: var(--text-dark); line-height: 1.5; }
+
+        /* ── PROFILE CARD V3 ─────────────────────────────────── */
+        .profile-card-v3 { padding: 0; overflow: hidden; max-width: 480px; display: flex; flex-direction: column; max-height: 90vh; }
+        .pcv3-banner { height: 110px; min-height: 110px; background: linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); background-size: cover; background-position: center; position: relative; flex-shrink: 0; border-radius: 14px 14px 0 0; }
+        .pcv3-banner-edit-lbl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6px; color: rgba(255,255,255,0); font-size: 13px; font-weight: bold; cursor: pointer; transition: color 0.2s, background 0.2s; border-radius: 14px 14px 0 0; }
+        .pcv3-banner:hover .pcv3-banner-edit-lbl { color: #FFF; background: rgba(0,0,0,0.4); }
+        .pcv3-avatar-wrap { position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%); z-index: 2; }
+        .pcv3-avatar { width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-main); background: var(--border-dark); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; color: #FFF; box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
+        .pcv3-avatar span { color: #FFF !important; }
+        .pcv3-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .pcv3-avatar-edit-btn { position: absolute; inset: 0; background: rgba(0,0,0,0); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
+        .pcv3-avatar-wrap:hover .pcv3-avatar-edit-btn { background: rgba(0,0,0,0.45); }
+        .pcv3-spacer { height: 52px; flex-shrink: 0; }
+        .pcv3-body { overflow-y: auto; padding: 2px 26px 22px; -webkit-overflow-scrolling: touch; text-align: center; }
+        .pcv3-name { font-size: 21px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 4px; }
+        .pcv3-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        .pcv3-section { margin: 14px 0 0; }
+        .pcv3-section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 6px; text-align: left; }
+        .pcv3-bio-box { background: transparent; border: none; border-radius: 10px; padding: 12px 0; font-size: 14px; line-height: 1.55; color: var(--text-dark); text-align: left; }
+        .pcv3-song-box { background: var(--bg-sidebar); border: 1px solid var(--border-light); border-radius: 10px; overflow: hidden; }
+        .pcv3-song-box iframe { display: block; }
+        .pcv3-actions { display: flex; flex-direction: column; gap: 9px; margin-top: 18px; }
+        #pv-edit-btn:hover { color: var(--accent) !important; }
+        .pcv3-msg-btn { background: var(--accent); color: #000; border: none; border-radius: 9px; padding: 11px 20px; font-weight: bold; font-size: 14px; cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; font-family: var(--font-main); }
+        .pcv3-msg-btn:hover { opacity: 0.82; }
+        .pcv3-edit-form { overflow-y: auto; padding: 0 26px 22px; flex: 1; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; }
+        .pcv3-ef-section { margin-bottom: 14px; }
+        .pcv3-ef-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; display: block; }
+
+        /* ── TYPING BUBBLES ──────────────────────────────────── */
+        .typing-avatar-stack { display: flex; align-items: center; margin-right: 5px; flex-shrink: 0; }
+        .typing-av { width: 22px; height: 22px; border-radius: 50%; background: var(--border-dark); border: 2px solid var(--bg-main); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; color: #FFF; flex-shrink: 0; }
+        .typing-av span { color: #FFF !important; }
+        .typing-av img { width: 100%; height: 100%; object-fit: cover; }
+        .typing-wrapper { display: flex; align-items: flex-end; gap: 5px; padding: 4px 0; }
     </style>
 </head>
 <body>
@@ -519,10 +586,11 @@
                         </div>
                     </div>
                     <div class="sb-actions">
-                        <button class="theme-btn" onclick="toggleHomeChat()" title="Home / Chat">
+                        <button class="theme-btn" onclick="toggleHomeChat()" title="Home / Chat" style="position:relative;">
                             <svg id="home-btn-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
+                            <span id="sidebar-unread-dot" class="sidebar-notif-dot"></span>
                         </button>
                         <button class="theme-btn" onclick="openContacts()" title="Contacts">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -750,78 +818,6 @@
         </div>
     </div>
 
-            <div id="active-chat-screen">
-                <div id="pinned-msg-banner" onclick="jumpToPinnedMsg()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                    <span id="pinned-msg-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pinned Message</span>
-                    <button onclick="unpinMessage(event)" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:16px; margin-left:auto;">✕</button>
-                </div>
-
-                <div class="chat-header">
-                    <button class="mobile-back-btn" onclick="backToList()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    </button>
-                    <div class="chat-header-info" onclick="handleHeaderClick()">
-                        <h3 id="chat-title" class="clickable-name"></h3>
-                        <p id="chat-subtitle" style="font-size: 13px; color: var(--text-muted); margin:0;"></p>
-                    </div>
-                </div>
-
-                <div id="messages-view"></div>
-                <button id="jump-down-btn" onclick="scrollToBottom()">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <polyline points="19 12 12 19 5 12"></polyline>
-                    </svg>
-                </button>
-                
-                <div class="input-wrapper">
-                    <div id="mentions-popup"></div>
-
-                    <div id="reply-banner" style="display:none; padding: 10px 30px; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-light); font-size: 13px; color: var(--text-muted); align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; margin: 0 15px;">
-                        <div id="reply-banner-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; border-left: 3px solid var(--accent); padding-left: 10px;"></div>
-                        <button onclick="cancelReply()" style="background:none; border:none; cursor:pointer; font-weight:bold; color: var(--text-muted); font-size: 16px;">✕</button>
-                    </div>
-
-                    <div class="input-box">
-                        <label for="file-input" class="attach-icon-label" title="Attach Image">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21 15 16 10 5 21"></polyline>
-                            </svg>
-                        </label>
-                        <input type="file" id="file-input" style="display:none;" onchange="handleFileUpload(event)">
-                        
-                        <div class="attach-icon-label" title="Send a Doodle" onclick="toggleModal('doodle-modal', true)">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
-                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
-                                <path d="M2 2l7.586 7.586"></path>
-                                <circle cx="11" cy="11" r="2"></circle>
-                            </svg>
-                        </div>
-
-                        <div id="msg-input" contenteditable="true" placeholder="Type a message..." onkeydown="handleInputEnter(event)" oninput="handleInputColor()"></div>
-                        
-                        <button id="send-btn" onclick="sendMsg()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="gartic-area">
-            <div style="position: absolute; top: max(15px, env(safe-area-inset-top)); left: 15px; z-index: 50; display: flex; gap: 10px;">
-                <button onclick="promptCloseGartic()" style="background: rgba(0,0,0,0.6); color: #FFF; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px; font-weight: bold; font-size: 18px; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: background 0.2s;">✕</button>
-            </div>
-            <div style="flex: 1; width: 100%; overflow: hidden; position: relative;">
-                <iframe id="gartic-frame" src="" style="position: absolute; top: 0; left: 0; width: 100%; height: calc(100% + 70px); border: none; background: var(--bg-main);"></iframe>
-            </div>
-        </div>
-    </div>
-
     <div id="doodle-modal" class="modal-overlay">
         <div class="modal-card" style="padding: 20px;">
             <h3 style="text-align: center; margin-bottom: 15px;">Draw a Message</h3>
@@ -865,70 +861,131 @@
     </div>
 
     <div id="settings-modal" class="modal-overlay">
-        <div class="modal-card">
+        <div class="modal-card settings-redesign">
             <h2 style="margin-bottom: 20px; text-align: center;">Settings</h2>
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; background:var(--bg-sidebar); padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-light);">
-                <div style="display:flex; flex-direction:column;">
-                    <span style="font-weight:bold; font-size: 14px;">Smart Text Contrast</span>
-                    <span style="font-size: 11px; color: var(--text-muted);">Auto-adjust text color for bright bubbles</span>
+
+            <div class="settings-tabs">
+                <button class="stab active" onclick="switchSettingsTab('appearance', this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+                    Appearance
+                </button>
+                <button class="stab" onclick="switchSettingsTab('notifications', this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Notifications
+                </button>
+                <button class="stab" onclick="switchSettingsTab('account', this)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Account
+                </button>
+            </div>
+
+            <!-- ── APPEARANCE TAB ── -->
+            <div id="settings-panel-appearance" class="settings-panel active">
+
+                <div class="settings-row">
+                    <div>
+                        <span class="settings-row-label">Smart Text Contrast</span>
+                        <span class="settings-row-sub">Auto-adjust text color in bright bubbles</span>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="smart-contrast-toggle" onchange="toggleSmartContrast(this)">
+                      <span class="slider"></span>
+                    </label>
                 </div>
-                <label class="switch">
-                  <input type="checkbox" id="smart-contrast-toggle" onchange="toggleSmartContrast(this)">
-                  <span class="slider"></span>
-                </label>
-            </div>
 
-            <div class="custom-accent-container">
-                <span style="font-weight:bold; font-size: 14px;">Custom Accent Color</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <input type="color" id="accent-color-picker" class="color-picker-circle" onchange="setCustomAccent(event)" title="Choose color">
-                    <button onclick="resetCustomAccent()" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:12px; text-decoration:underline;">Reset</button>
+                <div class="settings-row" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                    <span class="settings-row-label">Accent Color</span>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <input type="color" id="accent-color-picker" class="color-picker-circle" onchange="setCustomAccent(event)" title="Choose accent color">
+                        <button onclick="resetCustomAccent()" class="settings-text-btn">Reset to default</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 5px;">
+                    <span class="settings-row-label" style="margin-bottom: 10px; display: block;">Theme</span>
+                    <div class="theme-grid">
+                        <button class="theme-pill" onclick="setTheme('default')">Light Mode</button>
+                        <button class="theme-pill" onclick="setTheme('dark')">Dark Mode</button>
+                        <button class="theme-pill" onclick="setTheme('midnight')">Midnight</button>
+                        <button class="theme-pill" onclick="setTheme('stranger')">Stranger Things</button>
+                        <button class="theme-pill" onclick="setTheme('rainbow')">Pastel Rainbow</button>
+                        <button class="theme-pill" onclick="setTheme('lesbian')">Lesbian</button>
+                        <button class="theme-pill" onclick="setTheme('bisexual')">Bi</button>
+                        <button class="theme-pill" onclick="setTheme('trans')">Trans</button>
+                        <button class="theme-pill" onclick="setTheme('byler')">Byler</button>
+                        <button class="theme-pill" onclick="setTheme('von-simon')">Von Simon</button>
+                    </div>
                 </div>
             </div>
 
-            
+            <!-- ── NOTIFICATIONS TAB ── -->
+            <div id="settings-panel-notifications" class="settings-panel">
+                <div id="notif-permission-banner" style="display:none;"></div>
 
-            <div class="theme-grid">
-                <button class="theme-pill" onclick="setTheme('default')">Light Mode</button>
-                <button class="theme-pill" onclick="setTheme('dark')">Dark Mode</button>
-                <button class="theme-pill" onclick="setTheme('midnight')">Midnight</button>
-                <button class="theme-pill" onclick="setTheme('stranger')">Stranger Things</button>
-                <button class="theme-pill" onclick="setTheme('rainbow')">Pastel Rainbow</button>
-                <button class="theme-pill" onclick="setTheme('lesbian')">Lesbian</button>
-                <button class="theme-pill" onclick="setTheme('bisexual')">Bi</button>
-                <button class="theme-pill" onclick="setTheme('trans')">Trans</button>
-                <button class="theme-pill" onclick="setTheme('byler')">Byler</button>
-                <button class="theme-pill" onclick="setTheme('von-simon')">Von Simon</button>
-            </div>
+                <div class="settings-row">
+                    <div>
+                        <span class="settings-row-label">Push Notifications</span>
+                        <span class="settings-row-sub">Get alerted when new messages arrive</span>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="push-notif-toggle" onchange="togglePushNotifications(this)">
+                      <span class="slider"></span>
+                    </label>
+                </div>
 
-            <hr style="border:0; border-top:1px solid var(--border-light); margin: 20px 0;">
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="togglePasswordSection()">
-                <h3 style="font-size: 16px; margin:0;">Change Password</h3>
-                <span id="pw-arrow" style="color:var(--text-muted); font-size: 12px;">▼</span>
-            </div>
-            
-            <div id="pw-change-section" style="display:none; margin-top:15px;">
-                <p id="pw-error" style="color: #EE352E; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
-                <p id="pw-success" style="color: #00933C; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;">Password successfully updated!</p>
-                
-                <div class="password-wrapper">
-                    <input type="password" id="old-pw" placeholder="Current Password">
-                    <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('old-pw', this)">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <div id="notif-request-btn-area" style="margin-bottom: 10px;">
+                    <button class="btn-primary btn-outline" style="width: 100%; font-size: 14px; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="requestNotificationPermission()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        Grant Browser Permission
                     </button>
+                    <p id="notif-status-text" style="text-align:center; font-size:12px; color:var(--text-muted); margin-top: 8px;"></p>
                 </div>
-                <div class="password-wrapper">
-                    <input type="password" id="new-pw" placeholder="New Password">
-                    <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                    </button>
-                </div>
-                <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
+
+
+
+                <button id="test-notif-btn" class="btn-primary btn-outline" style="width:100%; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:4px;" onclick="testNotification()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    Send Test Notification
+                </button>
+                <p style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:6px;">You have 3 seconds to switch tabs after clicking.</p>
             </div>
 
-            <button class="btn-primary" style="margin-top: 20px; border:none;" onclick="toggleModal('settings-modal', false)">Close</button>
+            <!-- ── ACCOUNT TAB ── -->
+            <div id="settings-panel-account" class="settings-panel">
+                <div style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; padding: 14px 15px; background:var(--bg-sidebar); border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 10px;" onclick="togglePasswordSection()">
+                    <div>
+                        <span class="settings-row-label">Change Password</span>
+                        <span class="settings-row-sub">Update your account password</span>
+                    </div>
+                    <span id="pw-arrow" style="color:var(--text-muted); font-size: 12px; transition: transform 0.2s; display:inline-block;">▼</span>
+                </div>
+
+                <div id="pw-change-section" style="display:none; margin-bottom:15px;">
+                    <p id="pw-error" style="color: #EE352E; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
+                    <p id="pw-success" style="color: #00933C; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;">Password successfully updated!</p>
+
+                    <div class="password-wrapper">
+                        <input type="password" id="old-pw" placeholder="Current Password">
+                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('old-pw', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
+                    <div class="password-wrapper">
+                        <input type="password" id="new-pw" placeholder="New Password">
+                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </button>
+                    </div>
+                    <button class="btn-primary btn-outline" style="width: 100%;" onclick="changeUserPassword()">Update Password</button>
+                </div>
+
+                <button class="btn-primary btn-outline" style="width:100%; border-color: #EE352E; color: #EE352E; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="logout()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Log Out
+                </button>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 20px; border:none;" onclick="toggleModal('settings-modal', false)">Done</button>
         </div>
     </div>
 
@@ -961,40 +1018,106 @@
     </div>
 
     <div id="profile-modal" class="modal-overlay">
-        <div class="modal-card popout-style" style="text-align: center;">
-            <div class="popout-avatar" id="pv-pic"></div>
-            
-            <div class="modal-content-scroll">
-                <h2 id="pv-name" style="margin-bottom: 2px;"></h2>
-                <div id="pv-pronouns" style="font-size: 13px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;"></div>
-                <div id="pv-handle" style="font-size: 14px; color: var(--text-muted); margin-bottom: 8px;"></div>
-                <a id="pv-link" href="#" target="_blank" style="font-size: 14px; color: var(--accent); margin-bottom: 15px; display: none; text-decoration: none; font-weight: bold;"></a>
-                
-                <div id="pv-status-container" style="margin-bottom: 20px;"></div>
-                
-                <div id="pv-bio" style="font-size: 15px; line-height: 1.5; margin-bottom: 25px; padding: 15px; background: var(--bg-sidebar); border-radius: 12px; text-align: left; border: 1px solid var(--border-light);"></div>
-                
-                <div id="edit-profile-form" style="display:none; text-align:left;">
-                    <div style="text-align:center; margin-bottom:15px;">
-                        <label for="edit-pic-input" class="upload-btn-fake">Change Photo</label>
-                        <input type="file" id="edit-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePic(event, 'pv-pic')">
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" id="edit-fname" placeholder="First Name" style="margin-bottom: 0;">
-                        <input type="text" id="edit-lname" placeholder="Last Name" style="margin-bottom: 0;">
-                    </div>
-                    <input type="text" id="edit-pronouns" placeholder="Pronouns (e.g. they/them)" style="margin-bottom: 10px;">
-                    <input type="text" id="edit-link" placeholder="Website Link (e.g. linktr.ee/...)" style="margin-bottom: 10px;">
-                    <textarea id="edit-bio" rows="3" placeholder="Write a short bio..."></textarea>
+        <div class="modal-card profile-card-v3">
+
+            <!-- ─── BANNER + AVATAR (always visible) ─── -->
+            <div class="pcv3-banner" id="pv-banner">
+                <label class="pcv3-banner-edit-lbl" id="pv-banner-edit-lbl" for="edit-banner-input" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Change Banner
+                </label>
+                <input type="file" id="edit-banner-input" accept="image/*" style="display:none;" onchange="handleBannerPic(event)">
+                <div class="pcv3-avatar-wrap">
+                    <div class="pcv3-avatar" id="pv-pic"></div>
+                    <label class="pcv3-avatar-edit-btn" id="pv-pic-edit-btn" for="edit-pic-input" style="display:none;" title="Change photo">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M20.94 11A1 1 0 0 0 20 10h-1.17L17.4 7.4A2 2 0 0 0 15.83 7H8.17a2 2 0 0 0-1.57.4L5.17 10H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-7.86A1 1 0 0 0 20.94 11z"/></svg>
+                    </label>
+                    <input type="file" id="edit-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePic(event, 'pv-pic')">
+                </div>
+            </div>
+
+            <!-- ─── VIEW MODE ─── -->
+            <div class="pcv3-spacer"></div>
+            <div class="pcv3-body" id="pv-view-body">
+                <div class="pcv3-name" id="pv-name"></div>
+                <div class="pcv3-meta">
+                    <span id="pv-handle" style="color:var(--text-muted); font-weight:700;"></span>
+                </div>
+                <div style="margin-bottom:4px;">
+                    <span id="pv-pronouns" style="display:none; font-size:13px; color:var(--text-muted); font-weight:400;"></span>
+                </div>
+                <a id="pv-link" href="#" target="_blank" style="font-size:13px; color:var(--accent); display:none; text-decoration:none; font-weight:bold; margin-bottom:6px; display:none;"></a>
+                <div id="pv-status-container" style="margin-top:10px; margin-bottom:12px;"></div>
+
+                <div class="pcv3-section" id="pv-bio-section">
+                    <div class="pcv3-section-title">Bio</div>
+                    <div id="pv-bio" class="pcv3-bio-box"></div>
                 </div>
 
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <button id="pv-edit-btn" class="btn-primary btn-outline" style="display:none; width:100%;" onclick="enableProfileEdit()">Edit Profile</button>
+                <div class="pcv3-section" id="pv-song-section" style="display:none;">
+                    <div class="pcv3-section-title">Profile Song</div>
+                    <div id="pv-song-content" class="pcv3-song-box"></div>
+                </div>
+
+                <div class="pcv3-actions">
+                    <button id="pv-msg-btn" class="pcv3-msg-btn" style="display:none;" onclick="pvStartChat()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Message
+                    </button>
+                    <button id="pv-edit-btn" class="btn-primary btn-outline" style="display:none; width:100%; border:none; background:transparent; color:var(--text-dark);" onclick="enableProfileEdit()">Edit Profile</button>
                     <button id="pv-save-btn" class="btn-primary" style="display:none; width:100%;" onclick="saveProfileEdit()">Save Changes</button>
-                    <button id="pv-logout-btn" class="btn-primary btn-outline" style="display:none; width:100%; border-color:#EE352E; color:#EE352E;" onclick="logout()">Log Out</button>
                     <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('profile-modal', false)">Close</button>
                 </div>
             </div>
+
+            <!-- ─── EDIT MODE ─── -->
+            <div id="edit-profile-form" style="display:none; flex:1; overflow-y:auto;">
+                <div class="pcv3-spacer" style="height:12px;"></div>
+                <div class="pcv3-edit-form">
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Name</span>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="edit-fname" placeholder="First Name" style="margin-bottom:0; flex:1;">
+                            <input type="text" id="edit-lname" placeholder="Last Name" style="margin-bottom:0; flex:1;">
+                        </div>
+                    </div>
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Status</span>
+                        <input type="text" id="edit-status" placeholder="What's on your mind?" maxlength="50">
+                    </div>
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Pronouns</span>
+                        <input type="text" id="edit-pronouns" placeholder="e.g. they/them, she/her">
+                    </div>
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Website</span>
+                        <input type="text" id="edit-link" placeholder="taylorswift.com">
+                    </div>
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Favorite Song</span>
+                        <input type="text" id="edit-song" placeholder="Labyrinth - Taylor Swift">
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                            e.g. open.spotify.com/track/...
+                        </div>
+                    </div>
+
+                    <div class="pcv3-ef-section">
+                        <span class="pcv3-ef-label">Bio</span>
+                        <textarea id="edit-bio" rows="3" placeholder="Write a short bio..."></textarea>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:9px; margin-top:6px;">
+                        <button id="pv-save-btn-edit" class="btn-primary" style="width:100%;" onclick="saveProfileEdit()">Save Changes</button>
+                        <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="cancelProfileEdit()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1029,6 +1152,68 @@
         </div>
     </div>
 
+    <!-- ─── UPDATES MODAL ─── -->
+    <div id="updates-modal" class="modal-overlay">
+        <div class="modal-card" style="max-width:420px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.3px;">Updates!!!</h2>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:18px; margin-bottom:24px;">
+                <div>
+                    <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Profiles</div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);">- Banner images <br>- Profile songs (use a spotify link for the best experience!)<br></div>
+                </div>
+                <div>
+                    <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Chats</div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);">- Notifcations!!!!<br>- typing bubbles should be working again</div>
+                </div>
+            </div>
+
+            <div>
+                <p>Talkpage (v36)<br>Updated April 13 2026<br><br></p>
+            </div>
+
+            <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('updates-modal', false)">Close</button>
+        </div>
+    </div>
+
+    <!-- ─── STAR FAB ─── -->
+    <button id="updates-fab" onclick="toggleModal('updates-modal', true)" title="What's New" style="
+        position: fixed; bottom: 24px; right: 24px; z-index: 3500;
+        width: 44px; height: 44px; border-radius: 50%;
+        background: var(--bg-sidebar); border: 2px solid var(--border-dark);
+        display: none; align-items: center; justify-content: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15), var(--glow);
+        transition: transform 0.15s ease-out, border-color 0.15s, box-shadow 0.15s;
+        cursor: pointer; color: var(--text-muted);
+    ">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+    </button>
+
+    <script>
+        // Show FAB only when app is active AND on homepage
+        window._updateFabVisibility = function() {
+            const fab = document.getElementById('updates-fab');
+            if (!fab) return;
+            const appActive = document.getElementById('app-layout')?.classList.contains('active');
+            fab.style.display = (appActive && window.isViewingHome) ? 'flex' : 'none';
+        };
+        const _fabObserver = new MutationObserver(window._updateFabVisibility);
+        const _appLayout = document.getElementById('app-layout');
+        if (_appLayout) _fabObserver.observe(_appLayout, { attributes: true, attributeFilter: ['class'] });
+
+        // Hover effect
+        const _fab = document.getElementById('updates-fab');
+        if (_fab) {
+            _fab.addEventListener('mouseenter', () => { _fab.style.transform = 'scale(1.1)'; _fab.style.borderColor = 'var(--accent)'; _fab.style.color = 'var(--accent)'; });
+            _fab.addEventListener('mouseleave', () => { _fab.style.transform = ''; _fab.style.borderColor = ''; _fab.style.color = ''; });
+        }
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1058,6 +1243,7 @@
         let isFirstLoadForChat = true;
         let pendingSignUpUser = null;
         let tempPicData = null; 
+        let tempBannerData = null;
         let groupMembers = [];
         let editingGroupChatId = null;
         let replyingToMsg = null;
@@ -1274,6 +1460,7 @@
                 window.isViewingHome = false;
                 homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
                 document.body.classList.add('mobile-chat-open');
+                if (window._updateFabVisibility) window._updateFabVisibility();
                 
                 document.querySelectorAll('.conv-item').forEach(el => {
                     if(el.getAttribute('onclick') && el.getAttribute('onclick').includes(activeChatId)) el.classList.add('active');
@@ -1300,6 +1487,7 @@
             if (homeBtnIcon) {
                 homeBtnIcon.innerHTML = `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>`;
             }
+            if (window._updateFabVisibility) window._updateFabVisibility();
             document.body.classList.add('mobile-chat-open');
             clearInterval(window.msTimerInterval);
             clearInterval(window.snakeInterval);
@@ -1547,24 +1735,35 @@
             else { sec.style.display = 'none'; arr.innerText = '▼'; }
         };
 
-        window.updateFavicon = function(color) {
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${encodeURIComponent(color)}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
-            const url = "data:image/svg+xml;charset=utf-8," + svg;
-            let link = document.getElementById('dynamic-favicon');
-            if(link) link.href = url;
+        window.updateFavicon = function(color, hasUnread) {
+            const chatIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${encodeURIComponent(color)}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+            const chatUrl = "data:image/svg+xml;charset=utf-8," + chatIcon;
 
             const canvas = document.createElement('canvas');
-            canvas.width = 192; canvas.height = 192;
+            canvas.width = 32; canvas.height = 32;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = "#E2E2E2"; 
-            ctx.fillRect(0, 0, 192, 192);
             const img = new Image();
             img.onload = () => {
-                ctx.drawImage(img, 36, 36, 120, 120);
+                ctx.clearRect(0, 0, 32, 32);
+                ctx.drawImage(img, 0, 0, 32, 32);
+                if (hasUnread) {
+                    ctx.fillStyle = '#EE352E';
+                    ctx.beginPath();
+                    ctx.arc(24, 8, 7, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.fillStyle = '#FFF';
+                    ctx.font = 'bold 8px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('!', 24, 8);
+                }
+                const pngUrl = canvas.toDataURL('image/png');
+                let link = document.getElementById('dynamic-favicon');
+                if (link) link.href = pngUrl;
                 let touchLink = document.getElementById('apple-touch-icon');
-                if (touchLink) touchLink.href = canvas.toDataURL('image/png');
+                if (touchLink) touchLink.href = pngUrl;
             };
-            img.src = url;
+            img.src = chatUrl;
         };
 
         // NEW: Injects the diagonal gradient glow matched to the exact theme color!
@@ -1603,11 +1802,19 @@
                 document.getElementById('accent-color-picker').value = savedCustomAccent;
                 window.updateFavicon(savedCustomAccent);
                 window.updateHomeGradient(savedCustomAccent);
+                if (currentUser) {
+                    updateDoc(doc(db, "users", currentUser), { accentColor: savedCustomAccent }).catch(() => {});
+                    if (usersCache[currentUser]) usersCache[currentUser].accentColor = savedCustomAccent;
+                }
             } else {
                 document.documentElement.style.setProperty('--accent', defaultColor);
                 document.getElementById('accent-color-picker').value = defaultColor;
                 window.updateFavicon(defaultColor);
                 window.updateHomeGradient(defaultColor);
+                if (currentUser) {
+                    updateDoc(doc(db, "users", currentUser), { accentColor: defaultColor }).catch(() => {});
+                    if (usersCache[currentUser]) usersCache[currentUser].accentColor = defaultColor;
+                }
             }
             localStorage.setItem('talkpage_theme', themeName); 
         };
@@ -1618,6 +1825,10 @@
             localStorage.setItem('talkpage_custom_accent', color);
             window.updateFavicon(color);
             window.updateHomeGradient(color);
+            if (currentUser) {
+                updateDoc(doc(db, "users", currentUser), { accentColor: color }).catch(() => {});
+                if (usersCache[currentUser]) usersCache[currentUser].accentColor = color;
+            }
         };
 
         window.resetCustomAccent = function() {
@@ -1671,6 +1882,12 @@
                 
                 if (profileSnap.exists()) {
                     usersCache[currentUser] = profileSnap.data();
+                    // Backfill accent color for existing users
+                    if (!usersCache[currentUser].accentColor) {
+                        const existingAccent = localStorage.getItem('talkpage_custom_accent') || '#F6A800';
+                        updateDoc(doc(db, "users", currentUser), { accentColor: existingAccent }).catch(() => {});
+                        usersCache[currentUser].accentColor = existingAccent;
+                    }
                     document.getElementById('loading-overlay').style.display = 'none';
                     document.getElementById('auth-screen').style.display = 'none';
                     document.getElementById('app-layout').classList.add('active');
@@ -1786,7 +2003,8 @@
             const now = new Date();
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             
-            const profileData = { fname, lname, bio, pic: tempPicData, joined: `${months[now.getMonth()]} ${now.getFullYear()}`, username: pendingSignUpUser };
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F6A800';
+            const profileData = { fname, lname, bio, pic: tempPicData, joined: `${months[now.getMonth()]} ${now.getFullYear()}`, username: pendingSignUpUser, accentColor };
             await setDoc(doc(db, "users", pendingSignUpUser), profileData);
             location.reload();
         };
@@ -1807,6 +2025,10 @@
                 const currentChat = chatsCache.find(c => c.id === chatId);
                 if (currentChat && (currentChat.unreadCount?.[currentUser] > 0 || !currentChat.readBy?.[currentUser])) {
                     updateDoc(doc(db, "chats", chatId), { [`readBy.${currentUser}`]: true, [`unreadCount.${currentUser}`]: 0 }).catch(e=>e);
+                    // Optimistically clear the unread count locally
+                    if (currentChat.unreadCount) currentChat.unreadCount[currentUser] = 0;
+                    if (currentChat.readBy) currentChat.readBy[currentUser] = true;
+                    window.updateTabTitle();
                 }
             }
         };
@@ -1870,8 +2092,11 @@
         function listenToChats() {
             const q = query(collection(db, "chats"), where("participants", "array-contains", currentUser));
             unsubChats = onSnapshot(q, (snapshot) => {
-                chatsCache = [];
-                snapshot.forEach((doc) => { chatsCache.push({ id: doc.id, ...doc.data() }); });
+                const newChats = [];
+                snapshot.forEach((doc) => { newChats.push({ id: doc.id, ...doc.data() }); });
+                // Check for new messages before updating cache
+                window.checkForNewNotifications(newChats);
+                chatsCache = newChats;
                 
                 // Sort by pinned status first, then by date
                 const p = (usersCache[currentUser] && usersCache[currentUser].pinnedChats) ? usersCache[currentUser].pinnedChats : [];
@@ -1976,6 +2201,9 @@
                     list.appendChild(item);
                 } catch(err) { console.error("Skipping malformed chat document"); }
             });
+
+            // Update tab title and unread badge after rendering
+            window.updateTabTitle();
         };
 
         window.toggleChatMenu = function(e, chatId) {
@@ -2130,6 +2358,7 @@
         window.openChat = async function(chatId) {
             try {
                 window.isViewingHome = false;
+                if (window._updateFabVisibility) window._updateFabVisibility();
                 const homeBtnIcon = document.getElementById('home-btn-icon');
                 if (homeBtnIcon) homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
                 document.body.classList.add('mobile-chat-open');
@@ -2368,7 +2597,8 @@
                             
                             let readReceiptHtml = '';
                             
-                            if (isMe) {
+                            // Only show read receipt on the LAST sent message
+                            if (isMe && isLastMsg) {
                                 const parts = Array.isArray(chat?.participants) ? chat.participants : [];
                                 const otherParts = parts.filter(p => p !== currentUser);
                                 let allRead = false;
@@ -2430,7 +2660,7 @@
 
                     const typingDiv = document.createElement('div');
                     typingDiv.id = 'typing-bubbles-container';
-                    view.appendChild(typingDiv);
+                    view.prepend(typingDiv);
                     renderTypingBubbles();
 
                     if (isFirstLoadForChat && allMessages.length > 0) {
@@ -2548,18 +2778,6 @@
             );
         };
 
-        window.promptCloseGartic = function() {
-            window.showConfirm(
-                "Are you sure you want to leave? You will not be able to rejoin this specific game session if you close it.",
-                () => {
-                    window.isGarticMode = false;
-                    document.getElementById('gartic-frame').src = "";
-                    window.goToHome();
-                },
-                "Leave Game",
-                "Cancel"
-            );
-        };
 
         // --- MINESWEEPER LOGIC (Google Style) ---
         window.msBoard = [];
@@ -3093,89 +3311,162 @@
             if(currentUser) window.viewProfile(currentUser);
         };
 
+        window._pvCurrentUser = null;
+
+        window.pvStartChat = function() {
+            toggleModal('profile-modal', false);
+            if (window._pvCurrentUser) openDirectChat(window._pvCurrentUser);
+        };
+
         window.viewProfile = async function(username) {
             let profile = usersCache[username];
-            
+
             if (!profile) {
                 try {
                     const snap = await getDoc(doc(db, "users", username));
-                    if (snap.exists()) {
-                        profile = snap.data();
-                        usersCache[username] = profile;
-                    } else return; 
+                    if (snap.exists()) { profile = snap.data(); usersCache[username] = profile; }
+                    else return;
                 } catch(e) { return; }
             }
 
+            window._pvCurrentUser = username;
+            const isMe = (username === currentUser);
+
+            // Banner
+            const bannerEl = document.getElementById('pv-banner');
+            if (profile.bannerPic) {
+                bannerEl.style.backgroundImage = `url('${profile.bannerPic}')`;
+            } else {
+                // Use the viewed user's accent color for the gradient
+                const userAccent = profile.accentColor || '#F6A800';
+                let hex = userAccent.replace('#', '');
+                if (hex.length === 3) hex = hex.split('').map(x => x+x).join('');
+                const r = parseInt(hex.substring(0,2), 16);
+                const g = parseInt(hex.substring(2,4), 16);
+                const b = parseInt(hex.substring(4,6), 16);
+                bannerEl.style.backgroundImage = `linear-gradient(135deg, rgba(${r},${g},${b},1) 0%, rgba(${Math.round(r*0.4)},${Math.round(g*0.4)},${Math.round(b*0.4)},0.85) 100%)`;
+            }
+            tempBannerData = profile.bannerPic || null;
+
+            // Avatar
             document.getElementById('pv-pic').innerHTML = getAvatarHTML(username, profile);
+
+            // Name / handle
             document.getElementById('pv-name').innerText = getFullName(username);
             document.getElementById('pv-handle').innerText = `@${username}`;
-            
-            // New Pronouns Field
-            const pPronouns = document.getElementById('pv-pronouns');
-            if(profile.pronouns) { pPronouns.innerText = profile.pronouns; pPronouns.style.display = 'block'; }
-            else { pPronouns.style.display = 'none'; }
-            
-            // New Website Field
-            const pLink = document.getElementById('pv-link');
-            if(profile.link) { 
-                pLink.innerText = profile.link.replace(/^https?:\/\//, ''); 
-                pLink.href = profile.link.startsWith('http') ? profile.link : `https://${profile.link}`;
-                pLink.style.display = 'block'; 
-            }
-            else { pLink.style.display = 'none'; }
-            
-            document.getElementById('pv-bio').innerText = profile.bio || "No bio available.";
-            
-            const isMe = (username === currentUser);
-            document.getElementById('pv-edit-btn').style.display = isMe ? 'block' : 'none';
-            document.getElementById('pv-logout-btn').style.display = isMe ? 'block' : 'none';
-            
-            let statusHtml = '';
-            if (isMe) {
-                statusHtml = `<input type="text" id="quick-status-input" value="${profile.status || ''}" placeholder="Set a status..." onblur="saveQuickStatus()" maxlength="50" style="background:transparent; border:none; border-bottom: 1px dashed var(--border-light); text-align:center; font-style:italic; color:var(--text-dark); font-size:14px; outline:none; padding:4px; width:80%; transition:0.2s;">`;
-            } else {
-                statusHtml = `<span style="font-style:italic; color:var(--text-muted); font-size:14px;">${profile.status || "No status"}</span>`;
-            }
-            document.getElementById('pv-status-container').innerHTML = statusHtml;
 
-            tempPicData = profile.pic || null; 
+            // Pronouns
+            const pPronouns = document.getElementById('pv-pronouns');
+            if (profile.pronouns) { pPronouns.innerText = profile.pronouns; pPronouns.style.display = 'inline'; }
+            else pPronouns.style.display = 'none';
+
+            // Link
+            const pLink = document.getElementById('pv-link');
+            if (profile.link) {
+                pLink.innerText = profile.link.replace(/^https?:\/\//, '');
+                pLink.href = profile.link.startsWith('http') ? profile.link : `https://${profile.link}`;
+                pLink.style.display = 'block';
+            } else pLink.style.display = 'none';
+
+            // Status
+            const statusContainer = document.getElementById('pv-status-container');
+            if (isMe) {
+                statusContainer.innerHTML = `<input type="text" id="quick-status-input" value="${(profile.status || '').replace(/"/g, '&quot;')}" placeholder="Set a status..." onblur="saveQuickStatus()" maxlength="50" style="background:transparent; border:none; border-bottom: 1px dashed var(--border-light); text-align:center; font-style:italic; color:var(--text-dark); font-size:14px; outline:none; padding:4px; width:80%; transition:0.2s;">`;
+            } else {
+                statusContainer.innerHTML = profile.status ? `<span style="font-style:italic; color:var(--text-muted); font-size:14px;">${profile.status}</span>` : '';
+            }
+
+            // Bio
+            document.getElementById('pv-bio').innerText = profile.bio || 'No bio yet.';
+
+            // Song (Spotify or plain text)
+            const songSection = document.getElementById('pv-song-section');
+            const songContent = document.getElementById('pv-song-content');
+            if (profile.song) {
+                const trackId = extractSpotifyTrackId(profile.song);
+                if (trackId) {
+                    const isDark = ['dark','midnight','stranger','bisexual','byler','von-simon'].some(t => document.body.classList.contains('theme-' + t));
+                    const embedUrl = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator${isDark ? '&theme=0' : ''}`;
+                    songContent.innerHTML = `<iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:10px; display:block;"></iframe>`;
+                } else {
+                    songContent.innerHTML = `<div style="padding:10px 14px; font-size:14px; color:var(--text-dark); text-align:left;">${profile.song.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+                }
+                songSection.style.display = 'block';
+            } else {
+                songSection.style.display = 'none';
+            }
+
+            // Edit overlay labels visible in edit mode only — hide for view
+            document.getElementById('pv-banner-edit-lbl').style.display = 'none';
+            document.getElementById('pv-pic-edit-btn').style.display = 'none';
+
+            // Buttons
+            document.getElementById('pv-edit-btn').style.display = isMe ? 'block' : 'none';
+            document.getElementById('pv-save-btn').style.display = 'none';
+
+            document.getElementById('pv-msg-btn').style.display = (!isMe) ? 'flex' : 'none';
+
+            // Show view body, hide edit form
+            document.getElementById('pv-view-body').style.display = 'block';
+            document.getElementById('edit-profile-form').style.display = 'none';
+
+            tempPicData = profile.pic || null;
             window.toggleModal('profile-modal', true);
         };
 
         window.enableProfileEdit = function() {
             const profile = usersCache[currentUser] || {};
-            document.getElementById('pv-bio').style.display = 'none';
-            document.getElementById('pv-edit-btn').style.display = 'none';
-            document.getElementById('pv-logout-btn').style.display = 'none';
-            document.getElementById('pv-status-container').style.display = 'none';
-            document.getElementById('pv-pronouns').style.display = 'none';
-            document.getElementById('pv-link').style.display = 'none';
-            
-            document.getElementById('edit-profile-form').style.display = 'block';
-            document.getElementById('pv-save-btn').style.display = 'block';
-            
-            document.getElementById('edit-fname').value = profile.fname || "";
-            document.getElementById('edit-lname').value = profile.lname || "";
-            document.getElementById('edit-pronouns').value = profile.pronouns || "";
-            document.getElementById('edit-link').value = profile.link || "";
-            document.getElementById('edit-bio').value = profile.bio || "";
+
+            // Hide view body, show edit form
+            document.getElementById('pv-view-body').style.display = 'none';
+            document.getElementById('edit-profile-form').style.display = 'flex';
+            document.getElementById('edit-profile-form').style.flexDirection = 'column';
+
+            // Show edit overlays on banner & avatar
+            document.getElementById('pv-banner-edit-lbl').style.display = 'flex';
+            document.getElementById('pv-pic-edit-btn').style.display = 'flex';
+
+            // Fill fields
+            document.getElementById('edit-fname').value = profile.fname || '';
+            document.getElementById('edit-lname').value = profile.lname || '';
+            document.getElementById('edit-status').value = profile.status || '';
+            document.getElementById('edit-pronouns').value = profile.pronouns || '';
+            document.getElementById('edit-link').value = profile.link || '';
+            document.getElementById('edit-song').value = profile.song || '';
+            document.getElementById('edit-bio').value = profile.bio || '';
+        };
+
+        window.cancelProfileEdit = function() {
+            document.getElementById('pv-view-body').style.display = 'block';
+            document.getElementById('edit-profile-form').style.display = 'none';
+            document.getElementById('pv-banner-edit-lbl').style.display = 'none';
+            document.getElementById('pv-pic-edit-btn').style.display = 'none';
         };
 
         window.saveProfileEdit = async function() {
             const fname = document.getElementById('edit-fname').value.trim();
             const lname = document.getElementById('edit-lname').value.trim();
+            const status = document.getElementById('edit-status').value.trim();
             const pronouns = document.getElementById('edit-pronouns').value.trim();
             const link = document.getElementById('edit-link').value.trim();
+            const song = document.getElementById('edit-song').value.trim();
             const bio = document.getElementById('edit-bio').value.trim();
 
+            const saveBtn = document.getElementById('pv-save-btn-edit');
+            if (saveBtn) { saveBtn.innerText = 'Saving...'; saveBtn.disabled = true; }
+
             await updateDoc(doc(db, "users", currentUser), {
-                fname, lname, pronouns, link, bio, pic: tempPicData
+                fname, lname, status, pronouns, link, song, bio,
+                pic: tempPicData,
+                bannerPic: tempBannerData
             });
 
-            usersCache[currentUser] = { ...usersCache[currentUser], fname, lname, pronouns, link, bio, pic: tempPicData };
+            usersCache[currentUser] = { ...usersCache[currentUser], fname, lname, status, pronouns, link, song, bio, pic: tempPicData, bannerPic: tempBannerData };
             document.getElementById('my-profile-icon').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser]);
             window.updateHomeGreeting();
-            
+
+            if (saveBtn) { saveBtn.innerText = 'Save Changes'; saveBtn.disabled = false; }
+
             toggleModal('profile-modal', false);
             if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') refreshActiveChatHeader();
         };
@@ -3328,6 +3619,7 @@
                 setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 300);
                 
                 if (id === 'new-chat-modal') {
+                    tempBannerData = null;
                     document.getElementById('user-search').value = '';
                     document.getElementById('search-dropdown').style.display = 'none';
                     document.getElementById('selected-users').innerHTML = '';
@@ -3339,12 +3631,13 @@
                 }
                 if (id === 'profile-modal') {
                     document.getElementById('edit-profile-form').style.display = 'none';
-                    document.getElementById('pv-bio').style.display = 'block';
-                    document.getElementById('pv-save-btn').style.display = 'none';
-                    document.getElementById('pv-edit-btn').style.display = 'block';
-                    document.getElementById('pv-status-container').style.display = 'block';
-                    document.getElementById('pv-pronouns').style.display = 'block';
-                    document.getElementById('pv-link').style.display = 'block';
+                    const vb = document.getElementById('pv-view-body');
+                    if (vb) vb.style.display = 'block';
+                    const bel = document.getElementById('pv-banner-edit-lbl');
+                    if (bel) bel.style.display = 'none';
+                    const ape = document.getElementById('pv-pic-edit-btn');
+                    if (ape) ape.style.display = 'none';
+                    tempBannerData = null;
                 }
                 if (id === 'settings-modal') {
                     document.getElementById('pw-change-section').style.display = 'none';
@@ -3353,6 +3646,9 @@
                     document.getElementById('new-pw').value = '';
                     document.getElementById('pw-error').style.display = 'none';
                     document.getElementById('pw-success').style.display = 'none';
+                    // Reset to first tab
+                    document.querySelectorAll('.stab').forEach((b, i) => b.classList.toggle('active', i === 0));
+                    document.querySelectorAll('.settings-panel').forEach((p, i) => p.classList.toggle('active', i === 0));
                 }
             }
         };
@@ -3402,7 +3698,222 @@
             document.getElementById('new-group-settings').style.display = groupMembers.length > 1 ? 'block' : 'none';
         };
 
-        function renderTypingBubbles() {}
+
+        // ── TAB TITLE & UNREAD BADGE ──────────────────────────────
+        window.updateTabTitle = function() {
+            if (!currentUser) return;
+            const totalUnread = chatsCache.reduce((sum, c) => {
+                return sum + ((c.unreadCount && c.unreadCount[currentUser]) ? c.unreadCount[currentUser] : 0);
+            }, 0);
+            document.title = totalUnread > 0 ? `[${totalUnread}] Talkpage` : 'Talkpage';
+            const dot = document.getElementById('sidebar-unread-dot');
+            if (dot) dot.style.display = totalUnread > 0 ? 'block' : 'none';
+            // Update favicon red dot
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F6A800';
+            window.updateFavicon(accentColor, totalUnread > 0);
+        };
+
+        // ── SETTINGS TAB SWITCHER ─────────────────────────────────
+        window.switchSettingsTab = function(tab, btn) {
+            document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.settings-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            const panel = document.getElementById('settings-panel-' + tab);
+            if (panel) panel.classList.add('active');
+            if (tab === 'notifications') window.updateNotifUI();
+        };
+
+        // ── NOTIFICATION SYSTEM ───────────────────────────────────
+        let pushNotifEnabled = localStorage.getItem('talkpage_push_notif') === 'true';
+        let notifSoundEnabled = localStorage.getItem('talkpage_notif_sound') !== 'false';
+        let prevUnreadState = {};
+
+        // Init toggles from localStorage
+        const pushToggle = document.getElementById('push-notif-toggle');
+        if (pushToggle) pushToggle.checked = pushNotifEnabled;
+        const soundToggle = document.getElementById('notif-sound-toggle');
+        if (soundToggle) soundToggle.checked = notifSoundEnabled;
+
+        window.togglePushNotifications = function(cb) {
+            pushNotifEnabled = cb.checked;
+            localStorage.setItem('talkpage_push_notif', cb.checked);
+            if (cb.checked && Notification.permission === 'default') {
+                window.requestNotificationPermission();
+            }
+            window.updateNotifUI();
+        };
+
+        window.toggleNotifSound = function(cb) {
+            notifSoundEnabled = cb.checked;
+            localStorage.setItem('talkpage_notif_sound', cb.checked);
+        };
+
+        window.requestNotificationPermission = async function() {
+            if (!('Notification' in window)) {
+                const st = document.getElementById('notif-status-text');
+                if (st) st.textContent = 'Notifications not supported in this browser.';
+                return;
+            }
+            await Notification.requestPermission();
+            window.updateNotifUI();
+        };
+        // alias with Promise return for testNotification
+        const _origReqPerm = window.requestNotificationPermission;
+        window.requestNotificationPermission = function() { return _origReqPerm(); };
+
+        window.updateNotifUI = function() {
+            if (!('Notification' in window)) return;
+            const statusEl = document.getElementById('notif-status-text');
+            const toggleEl = document.getElementById('push-notif-toggle');
+            const banner = document.getElementById('notif-permission-banner');
+            const requestArea = document.getElementById('notif-request-btn-area');
+            if (!statusEl) return;
+
+            const perm = Notification.permission;
+            if (perm === 'granted') {
+                statusEl.textContent = '✓ Notifications are enabled';
+                statusEl.style.color = '#00933C';
+                if (requestArea) requestArea.style.display = 'none';
+                if (banner) { banner.style.display = 'none'; }
+            } else if (perm === 'denied') {
+                statusEl.textContent = 'Permission denied — enable in browser settings.';
+                statusEl.style.color = '#EE352E';
+                if (banner) {
+                    banner.innerHTML = '⚠️ Notification permission was denied. To enable, open your browser\u2019s site settings and allow notifications for this page.';
+                    banner.style.display = 'block';
+                }
+                if (toggleEl) { toggleEl.checked = false; pushNotifEnabled = false; localStorage.setItem('talkpage_push_notif', 'false'); }
+            } else {
+                statusEl.textContent = 'Click to grant notification permission';
+                statusEl.style.color = 'var(--text-muted)';
+                if (requestArea) requestArea.style.display = 'block';
+                if (banner) banner.style.display = 'none';
+            }
+        };
+
+        function playNotifSound() {
+            // Notification sound removed
+        }
+
+        function showPushNotification(title, body) {
+            playNotifSound();
+            if (!pushNotifEnabled || !('Notification' in window) || Notification.permission !== 'granted') return;
+            try {
+                const n = new Notification(title, {
+                    body: body,
+                    icon: document.getElementById('dynamic-favicon')?.href || '',
+                    tag: 'talkpage-message',
+                    silent: true // We play our own sound
+                });
+                n.onclick = function() { window.focus(); n.close(); };
+                setTimeout(() => n.close(), 6000);
+            } catch(e) {}
+        }
+
+        window.checkForNewNotifications = function(newChats) {
+            if (!currentUser) return;
+            newChats.forEach(chat => {
+                const newCount = (chat.unreadCount && chat.unreadCount[currentUser]) ? chat.unreadCount[currentUser] : 0;
+                const oldCount = prevUnreadState[chat.id] || 0;
+                if (newCount > oldCount && chat.id !== activeChatId && Object.keys(prevUnreadState).length > 0) {
+                    const otherUser = chat.isGroup ? null : (Array.isArray(chat.participants) ? chat.participants.find(p => p !== currentUser) : null);
+                    const chatName = chat.isGroup ? (chat.name || 'Group Chat') : getFullName(otherUser || '');
+                    let msgPreview = chat.lastMessage || 'New message';
+                    if (msgPreview.startsWith('<')) msgPreview = '📎 Attachment';
+                    showPushNotification(chatName + ' — Talkpage', msgPreview);
+                }
+                prevUnreadState[chat.id] = newCount;
+            });
+        };
+
+        // ── BANNER UPLOAD ─────────────────────────────────────
+        window.handleBannerPic = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_W = 900, MAX_H = 350;
+                    let w = img.width, h = img.height;
+                    const ratio = Math.min(MAX_W / w, MAX_H / h);
+                    if (ratio < 1) { w = Math.round(w * ratio); h = Math.round(h * ratio); }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    tempBannerData = canvas.toDataURL('image/jpeg', 0.75);
+                    const bannerEl = document.getElementById('pv-banner');
+                    if (bannerEl) bannerEl.style.backgroundImage = `url('${tempBannerData}')`;
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // ── SPOTIFY HELPER ────────────────────────────────────
+        window.extractSpotifyTrackId = function(url) {
+            if (!url) return null;
+            const m = url.match(/spotify\.com\/(?:intl-[^/]+\/)?track\/([A-Za-z0-9]+)/);
+            return m ? m[1] : null;
+        };
+
+        // ── TEST NOTIFICATION ─────────────────────────────────
+        window.testNotification = function() {
+            if (!('Notification' in window)) { alert('Notifications are not supported in this browser.'); return; }
+            if (Notification.permission !== 'granted') {
+                window.requestNotificationPermission().then(() => {
+                    if (Notification.permission === 'granted') window.testNotification();
+                });
+                return;
+            }
+            const btn = document.getElementById('test-notif-btn');
+            if (!btn) return;
+            let t = 3;
+            btn.disabled = true;
+            const iv = setInterval(() => {
+                btn.innerText = `Sending in ${t--}...`;
+                if (t < 0) {
+                    clearInterval(iv);
+                    showPushNotification('Test Notification — Talkpage', 'Push notifications are working!');
+                    playNotifSound();
+                    btn.innerText = 'Send Test Notification';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        };
+
+                window.renderTypingBubbles = function() {
+            const container = document.getElementById('typing-bubbles-container');
+            if (!container || !activeChatId) return;
+            const chat = chatsCache.find(c => c.id === activeChatId);
+            if (!chat || !chat.typing) { container.innerHTML = ''; return; }
+
+            const now = Date.now();
+            const typists = Object.keys(chat.typing).filter(u => {
+                if (u === currentUser) return false;
+                const val = chat.typing[u];
+                return typeof val === 'number' && (now - val < 4000);
+            });
+
+            if (typists.length === 0) { container.innerHTML = ''; return; }
+
+            let avatarStack = '';
+            if (chat.isGroup) {
+                const shown = typists.slice(0, 3);
+                const stackItems = shown.map((u, i) =>
+                    `<div class="typing-av" style="margin-left:${i > 0 ? '-6px' : '0'}; z-index:${10 - i}; position:relative;">${getAvatarHTML(u)}</div>`
+                ).join('');
+                avatarStack = `<div class="typing-avatar-stack">${stackItems}</div>`;
+            }
+
+            container.innerHTML = `
+                <div class="typing-wrapper">
+                    ${avatarStack}
+                    <div class="typing-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>`;
+        };
 
     </script>
 </body>

@@ -546,6 +546,10 @@
         .skel-msg-recv  { height: 34px; border-radius: 18px; width: 32%; }
         .skel-msg-row { margin: 5px 30px; }
 
+        /* Remove white borders so the gradient ring fits perfectly */
+        .pcv3-avatar, #gd-pic, #home-big-avatar, .story-ring-inner { border: none !important; background: transparent !important; }
+        .story-ring { padding: 0 !important; background: transparent !important; box-shadow: none !important; }
+        
         /* ── STATUS / AVAILABILITY DOTS ────────────────────────── */
         .avail-dot { position: absolute; bottom: 0; right: 0; width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid var(--bg-sidebar); box-sizing: border-box; }
         .avail-dot-sm { width: 10px; height: 10px; border-width: 2px; }
@@ -593,8 +597,7 @@
         .tp-bubble-l { height: 6px; width: 16px; border-radius: 6px; }
 
         /* ── LOAD MORE BUTTON ──────────────────────────────────── */
-        #load-more-msgs { display: none; width: 100%; text-align: center; padding: 10px; font-size: 12px; font-weight: bold; color: var(--text-muted); background: none; border: none; cursor: pointer; font-family: var(--font-main); transition: color 0.15s; }
-        #load-more-msgs:hover { color: var(--accent); }
+        #load-more-msgs { display: none; width: 100%; text-align: center; padding: 10px; font-size: 12px; font-weight: bold; color: var(--text-muted); background: none; border: none; pointer-events: none; font-family: var(--font-main); }
         /* Sentinel element at top of messages-view (visual bottom due to column-reverse) */
         #load-more-sentinel { width: 1px; height: 1px; flex-shrink: 0; }
 
@@ -607,6 +610,90 @@
         .pv-avail-row { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 8px; }
         .pv-avail-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .pv-avail-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+
+
+        /* ── TALKPAGE STORIES ──────────────────────────────────────── */
+        /* Chat Story Reply Embed */
+        .chat-story-reply {
+            display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.15); 
+            padding: 8px; border-radius: 10px; margin-bottom: 8px; cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1); transition: background 0.2s;
+            width: fit-content; min-width: 150px;
+        }
+        .chat-story-reply:hover { background: rgba(0,0,0,0.25); }
+        .csr-thumb {
+            width: 34px; height: 54px; border-radius: 6px; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); position: relative;
+        }
+        .csr-thumb span {
+            color: #FFF; font-size: 7px; font-weight: bold; text-align: center;
+            padding: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.8); line-height: 1.2; word-break: break-word;
+        }
+        .csr-info { display: flex; flex-direction: column; justify-content: center; }
+        .csr-info strong { font-size: 12px; color: var(--accent); margin-bottom: 2px; }
+        .csr-info span { font-size: 11px; color: var(--text-muted); }
+        #stories-bar { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border-light); overflow-x: auto; flex-shrink: 0; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        #stories-bar::-webkit-scrollbar { display: none; }
+        .story-bubble { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; scroll-snap-align: start; }
+        .story-ring { width: 54px; height: 54px; border-radius: 50%; padding: 2px; background: var(--border-light); display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease-out; }
+        .story-ring.has-story { background: conic-gradient(var(--accent), #ff6b9d, var(--accent)); box-shadow: 0 0 8px rgba(246,168,0,0.5); }
+        .story-ring.seen-story { background: var(--border-light); }
+        .story-ring:hover { transform: scale(1.08); }
+        .story-ring-inner { width: 46px; height: 46px; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; overflow: hidden; font-weight: bold; font-size: 18px; }
+        .story-ring-inner img { width: 100%; height: 100%; object-fit: cover; }
+        .story-bubble-name { font-size: 10px; font-weight: 600; color: var(--text-muted); max-width: 58px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-add-btn { width: 54px; height: 54px; border-radius: 50%; border: 2px dashed var(--border-light); background: none; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer; flex-shrink: 0; transition: border-color 0.15s, color 0.15s; }
+        .story-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Story viewer overlay & Phone Card */
+        #story-viewer { position: fixed; inset: 0; z-index: 9000; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
+        #story-viewer.active { opacity: 1; }
+        #story-viewer-bg { position: absolute; inset: 0; background: #000 center/cover no-repeat; filter: blur(30px) brightness(0.3); transform: scale(1.1); }
+        .story-phone-card { position: relative; width: 100%; max-width: 400px; height: 100%; max-height: 85vh; background: #111; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 5; }
+        #story-viewer-header { position: absolute; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 16px 10px; display: flex; align-items: center; gap: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent); }
+        #story-viewer-progress { position: absolute; top: 8px; left: 10px; right: 10px; height: 3px; z-index: 11; display: flex; gap: 4px; }
+        .story-prog-seg { flex: 1; height: 3px; background: rgba(255,255,255,0.35); border-radius: 2px; overflow: hidden; }
+        .story-prog-fill { height: 100%; background: #fff; border-radius: 2px; transition: width linear; }
+        #story-viewer-nav-prev, #story-viewer-nav-next { position: absolute; top: 80px; bottom: 80px; z-index: 1; width: 40%; background: none; border: none; cursor: pointer; }
+        #story-viewer-nav-prev { left: 0; } #story-viewer-nav-next { right: 0; }
+
+        /* Story Bottom Bars (Like/Reply vs Views/Delete) */
+        .story-bottom-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; padding: 16px; display: flex; align-items: center; gap: 12px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
+        .story-reply-input { flex: 1; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 24px; padding: 10px 16px; color: #fff; font-size: 14px; outline: none; backdrop-filter: blur(5px); }
+        .story-reply-input::placeholder { color: rgba(255,255,255,0.7); }
+        .story-action-btn { background: none; border: none; color: #fff; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; transition: transform 0.15s; }
+        .story-action-btn:hover { transform: scale(1.05); }
+        .story-action-btn.liked svg { fill: #EE352E; stroke: #EE352E; }
+
+        /* Views Modal */
+        #story-views-modal { position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: var(--bg-main); border-radius: 20px 20px 0 0; z-index: 20; display: flex; flex-direction: column; padding: 20px; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #story-views-modal.open { transform: translateY(0); }
+        #story-viewer-close { position: absolute; top: 20px; right: 20px; z-index: 10; background: rgba(0,0,0,0.5); border-radius: 50%; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: background 0.2s; }
+        #story-viewer-close:hover { background: rgba(0,0,0,0.8); }
+        #story-viewer-pause { position: absolute; top: 20px; right: 74px; z-index: 10; background: rgba(0,0,0,0.5); border-radius: 50%; width: 44px; height: 44px; border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); transition: background 0.2s; }
+        #story-viewer-pause:hover { background: rgba(0,0,0,0.8); }
+
+        /* Story Creator Split-Screen Modal */
+        #story-creator { position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.2s ease; }
+        #story-creator.active { opacity: 1; }
+        #story-creator-card { flex-direction: row; max-width: 800px !important; width: 95%; padding: 0 !important; overflow: hidden; border: 2px solid var(--border-dark); border-radius: 20px; background: #111; position: relative; z-index: 1; display: flex; }
+        #sc-preview-pane { flex: 1; position: relative; background: #000; min-height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 20px; }
+        #sc-canvas { width: 100%; max-width: 320px; aspect-ratio: 9/16; background: linear-gradient(135deg, var(--accent), #333); position: relative; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #sc-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; z-index: 1; pointer-events: none; }
+        #sc-elements-container { position: absolute; inset: 0; z-index: 5; }
+        .sc-element { position: absolute; transform: translate(-50%, -50%); cursor: move; user-select: none; z-index: 10; transform-origin: center; display: flex; align-items: center; justify-content: center; }
+        .sc-element.selected { border: 2px dashed rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.5); border-radius: 8px; }
+        #sc-tools-pane { width: 280px; background: var(--bg-main); padding: 20px; display: flex; flex-direction: column; gap: 12px; border-left: 2px solid var(--border-dark); z-index: 10; }
+        
+        @media (max-width: 768px) {
+            #story-creator-card { flex-direction: column; height: 90vh; }
+            #sc-tools-pane { width: 100%; border-left: none; border-top: 2px solid var(--border-dark); padding: 15px; flex-shrink: 0; max-height: 45%; overflow-y: auto; }
+        }
+
+        /* Upload Preview Overlay */
+        #story-preview-container { display: none; flex-direction: column; align-items: center; justify-content: center; position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 8500; }
+        .story-preview-content { position: relative; width: 100%; max-width: 320px; height: 100%; max-height: 70vh; border-radius: 16px; overflow: hidden; background: #222; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
 
     </style>
 </head>
@@ -692,6 +779,18 @@
                         <button class="new-chat-btn" onclick="toggleModal('new-chat-modal', true)">+</button>
                     </div>
                 </div>
+            </div>
+
+            <!-- ── TALKPAGE STORIES ─────────────────────────────────── -->
+            <div id="stories-bar">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
+                    <button class="story-add-btn" id="story-add-btn" onclick="openStoryCreator()" title="Add Story">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    
+                    <span style="font-size:10px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onclick="handleYourStoryClick()" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Your Story</span>
+                </div>
+                <div id="friends-stories" style="display:flex;align-items:flex-start;gap:12px;"></div>
             </div>
 
             <div class="conv-list" id="conv-list">
@@ -854,9 +953,7 @@
                         <h3 id="chat-title" class="clickable-name"></h3>
                         <p id="chat-subtitle" style="font-size: 13px; color: var(--text-muted); margin:0;"></p>
                     </div>
-                    <button id="chat-info-btn" onclick="openChatInfo()" title="Chat info" style="background:none;border:none;color:var(--text-muted);padding:8px;display:flex;align-items:center;justify-content:center;transition:color 0.15s;flex-shrink:0;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                    </button>
+
                 </div>
 
                 <button id="load-more-msgs" onclick="loadMoreMessages()">Load earlier messages</button>
@@ -1230,7 +1327,7 @@
     <div id="group-details-modal" class="modal-overlay">
         <div class="modal-card" style="padding:0; overflow:hidden; max-width:440px; max-height:90vh; display:flex; flex-direction:column; border-radius:16px;">
             <!-- Banner -->
-            <div id="gd-banner" style="height:110px; background:linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); position:relative; flex-shrink:0; background-size:cover; background-position:center;">
+            <div id="gd-banner" style="height:110px; background:linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); position:relative; flex-shrink:0; background-size:cover; background-position:center; border-radius:16px 16px 0 0;">
                 <label for="gd-banner-input" id="gd-banner-edit-lbl" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:6px;color:rgba(255,255,255,0);font-size:13px;font-weight:bold;cursor:pointer;transition:color 0.2s,background 0.2s;border-radius:16px 16px 0 0;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     Change Banner
@@ -1269,7 +1366,8 @@
                 <div id="gd-members-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:12px;margin-bottom:20px;"></div>
 
                 <button class="btn-primary" style="width:100%;" onclick="saveGroupDetails()">Save Changes</button>
-                <button class="btn-primary btn-outline" style="margin-top:10px;border:none;width:100%;color:var(--text-muted);" onclick="toggleModal('group-details-modal', false)">Close</button>
+                <button class="btn-primary btn-outline" style="margin-top:10px;border:none;width:100%;border-color:#EE352E;color:#EE352E;" onclick="leaveGroupChat()">Leave Group</button>
+                <button class="btn-primary btn-outline" style="margin-top:6px;border:none;width:100%;color:var(--text-muted);" onclick="toggleModal('group-details-modal', false)">Close</button>
             </div>
         </div>
     </div>
@@ -1296,17 +1394,24 @@
 
             <div style="display:flex; flex-direction:column; gap:18px; margin-bottom:24px;">
                 <div>
+                    <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Introducing...</div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> <b>Talkpage Stories!</b></div><br>
+                    <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Stories</div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> ☆ Create stories with text, images and music!<br>☆ Like and reply to peoples stories!<br>☆ Stories expire after 24 hours<br></div>
+                
+                </div>
+                <div>
                     <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Profiles</div>
                     <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> ☆ Status Indicators <br></div>
                 </div>
                 <div>
                     <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Chats</div>
-                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> ☆ Banner Images (for group chats)<br> ☆ Chats loading should be faster now and smoother<br></div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> ☆ Banner Images (for group chats) <br> ☆ Chats loading should be faster now and smoother<br></div>
                 </div>
             </div>
 
             <div>
-                <p>Talkpage (v38)<br>Updated April 17 2026<br><br></p>
+                <p>Talkpage (v40)<br><i>Last Updated 19/04/2026</i><br><br></p>
             </div>
 
             <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('updates-modal', false)">Close</button>
@@ -1347,6 +1452,108 @@
             _fab.addEventListener('mouseleave', () => { _fab.style.transform = ''; _fab.style.borderColor = ''; _fab.style.color = ''; });
         }
     </script>
+
+
+    <div id="story-viewer">
+        <div id="story-viewer-bg"></div>
+        <button id="story-viewer-close" onclick="closeStoryViewer()">✕</button>
+        <button id="story-viewer-pause" onclick="toggleStoryPlayPause()">⏸</button>
+        
+        <div class="story-phone-card">
+        <div id="story-viewer-progress"></div>
+        <div id="story-viewer-header">
+            <div id="sv-avatar" style="width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;"></div>
+            <div>
+                <div id="sv-name" style="color:#fff;font-weight:700;font-size:14px; text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
+                <div id="sv-time" style="color:rgba(255,255,255,0.8);font-size:11px; text-shadow:0 1px 3px rgba(0,0,0,0.8);"></div>
+            </div>
+        </div>
+        
+        <div id="story-viewer-bar" class="story-bottom-bar" style="display:none;">
+            <input type="text" id="story-reply-input" class="story-reply-input" placeholder="Reply..." onkeydown="if(event.key==='Enter') sendStoryReply(event)" onclick="pauseStoryTimer()">
+            <button id="story-like-btn" class="story-action-btn" onclick="toggleStoryLike()">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+        </div>
+        <div id="story-owner-bar" class="story-bottom-bar" style="display:none; justify-content:space-between;">
+            <button class="story-action-btn" onclick="toggleViewsModal()" style="font-weight:bold;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span id="story-views-count">0 Views</span>
+            </button>
+            <button class="story-action-btn" onclick="deleteCurrentStory()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EE352E" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </div>
+
+        <div id="story-views-modal">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color:var(--text-dark); margin:0;">Viewers</h3>
+                <button onclick="toggleViewsModal()" style="background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer;">✕</button>
+            </div>
+            <div id="story-views-list" style="flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;"></div>
+        </div>
+        
+        <button id="story-viewer-nav-prev" onclick="storyNavPrev()"></button>
+        <button id="story-viewer-nav-next" onclick="storyNavNext()"></button>
+    </div>
+</div>
+
+<div id="story-creator">
+        <div id="story-creator-card">
+            <div id="sc-preview-pane">
+                <div id="sc-canvas">
+                    <img id="sc-bg-img" src="">
+                    <div id="sc-elements-container"></div>
+                </div>
+            </div>
+            
+            <div id="sc-tools-pane">
+                <h3 style="margin: 0 0 5px 0;">Create Story</h3>
+                
+                <button class="btn-primary" onclick="openSCTextInput()">Add Text</button>
+                <button class="btn-primary" onclick="document.getElementById('sc-img-input').click()">Add Image</button>
+                <input type="file" id="sc-img-input" accept="image/*" style="display:none;" onchange="handleSCAddImage(event)">
+                <button class="btn-primary" onclick="addSCMusic()">Add Music</button>
+
+                <div style="height:1px; background:var(--border-dark); margin: 5px 0;"></div>
+
+                <button class="btn-primary btn-outline" onclick="document.getElementById('sc-bg-input').click()">Set Background</button>
+                <input type="file" id="sc-bg-input" accept="image/*" style="display:none;" onchange="handleSCBackground(event)">
+                
+                <div id="sc-element-tools" style="display:none; background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-top:5px; border: 1px solid var(--border-dark);">
+                    <p style="font-size:12px; margin:0 0 8px 0; color:var(--text-muted);">Selected Item:</p>
+                    <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                        <button class="btn-primary" style="flex:1; padding:6px; font-size:12px;" onclick="changeElementSize(1.1)">Size +</button>
+                        <button class="btn-primary" style="flex:1; padding:6px; font-size:12px;" onclick="changeElementSize(0.9)">Size -</button>
+                        <button class="btn-primary" id="sc-edit-txt-btn" style="flex:1; padding:6px; font-size:12px;" onclick="editSelectedText()">Edit</button>
+                        <button class="btn-primary" style="flex:1; padding:6px; font-size:12px; background:#EE352E; border:none;" onclick="deleteSelectedElement()">Delete</button>
+                    </div>
+                </div>
+
+                <div style="flex:1;"></div>
+                <button class="btn-primary" onclick="submitStory()" id="sc-submit-btn" style="background: var(--accent); color:#000;">Post Story</button>
+                <button class="btn-primary btn-outline" onclick="closeStoryCreator()">Cancel</button>
+            </div>
+            
+            <div id="sc-text-modal" style="display:none; position:absolute; inset:0; z-index:50; background:rgba(0,0,0,0.85); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);">
+                <textarea id="sc-text-input-field" placeholder="Enter your text..." style="width:100%; max-width:320px; height:120px; border-radius:12px; padding:15px; font-size:18px; font-family:var(--font-main); border:2px solid var(--accent); outline:none; background:#111; color:#FFF; resize:none;"></textarea>
+                <div style="display:flex; gap:10px; margin-top:15px; width:100%; max-width:320px;">
+                    <button class="btn-primary" style="flex:1;" onclick="confirmSCText()">Done</button>
+                    <button class="btn-primary btn-outline" style="flex:1; color:#FFF; border-color:#FFF;" onclick="closeSCTextInput()">Cancel</button>
+                </div>
+            </div>
+
+            <div id="sc-music-modal" style="display:none; position:absolute; inset:0; z-index:50; background:rgba(0,0,0,0.85); flex-direction:column; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px);">
+                <p style="color:#FFF; font-family:var(--font-main); font-weight:bold; margin:0 0 10px 0; text-align:center;">Add Spotify Link</p>
+                <input type="text" id="sc-music-input-field" placeholder="Paste Track, Album, or Playlist URL..." style="width:100%; max-width:320px; border-radius:12px; padding:15px; font-size:16px; font-family:var(--font-main); border:2px solid #1DB954; outline:none; background:#111; color:#FFF;">
+                <div style="display:flex; gap:10px; margin-top:15px; width:100%; max-width:320px;">
+                    <button class="btn-primary" style="flex:1; background:#1DB954; color:#FFF; border:none;" onclick="confirmSCMusic()">Add Music</button>
+                    <button class="btn-primary btn-outline" style="flex:1; color:#FFF; border-color:#FFF;" onclick="closeSCMusicInput()">Cancel</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1732,9 +1939,9 @@
 
         window.updateHomeGreeting = function() {
             const hour = new Date().getHours();
-            let greeting = 'You look really pretty';
-            if (hour < 12) greeting = 'I love you';
-            else if (hour < 18) greeting = 'You’re SO FINE';
+            let greeting = 'Good evening';
+            if (hour < 12) greeting = 'Raya touches people, please be careful';
+            else if (hour < 18) greeting = 'Byler endgame';
             
             const profile = usersCache[currentUser] || {};
             const name = profile.fname || currentUser || '';
@@ -2064,7 +2271,8 @@
                     document.querySelectorAll('.avail-opt').forEach(b => b.classList.toggle('selected', b.getAttribute('data-av') === 'online'));
                     window._selectedAvailability = 'online';
                     fetchDirectory(); 
-                    listenToChats(); 
+                    listenToChats();
+                    listenToStories(); 
                     document.getElementById('my-profile-icon').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser]);
                     window.updateHomeGreeting();
                     window.fetchTorontoWeather();
@@ -2451,20 +2659,19 @@
         // We place a sentinel at DOM-end and observe it; when it enters
         // the viewport the user has scrolled to the top of history.
         window._loadMoreObserver = null;
+        window._loadMoreInProgress = false;
         window._setupLoadMoreSentinel = function() {
             if (window._loadMoreObserver) { window._loadMoreObserver.disconnect(); window._loadMoreObserver = null; }
             const sentinel = document.getElementById('load-more-sentinel');
-            const btn = document.getElementById('load-more-msgs');
-            if (!sentinel || !btn) return;
+            if (!sentinel) return;
             window._loadMoreObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting && window._hasMoreMessages) {
-                        btn.style.display = 'block';
-                    } else if (!entry.isIntersecting) {
-                        btn.style.display = 'none';
+                    if (entry.isIntersecting && window._hasMoreMessages && !window._loadMoreInProgress) {
+                        window._loadMoreInProgress = true;
+                        window.loadMoreMessages().finally(() => { window._loadMoreInProgress = false; });
                     }
                 });
-            }, { root: document.getElementById('messages-view'), threshold: 0 });
+            }, { root: document.getElementById('messages-view'), threshold: 0.1 });
             window._loadMoreObserver.observe(sentinel);
         };
 
@@ -2658,7 +2865,7 @@
                     const wasAtBottom = view.scrollTop <= 150; // column-reverse: 0 = bottom
                     view.innerHTML = '<div id="load-more-sentinel"></div>';
 
-                    // Show "load earlier" if we hit the limit — but only reveal via scroll sentinel
+                    // Load-more is auto-triggered by sentinel — hide button initially
                     const lmBtn = document.getElementById('load-more-msgs');
                     window._hasMoreMessages = snapshot.docs.length >= msgLimit;
                     if (lmBtn) lmBtn.style.display = 'none'; // always hidden until sentinel triggers
@@ -2852,7 +3059,7 @@
 
                             let avatarHtml = '';
                             if (chat && chat.isGroup && !isMe) {
-                                avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile)}</div>`;
+                                avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile, false)}</div>`;
                             }
 
                             const timeDiff = msgTime - lastTime;
@@ -3569,6 +3776,777 @@
             setTimeout(() => { openChat(chatRef.id); }, 300);
         };
 
+
+        // ════════════════════════════════════════════════════════════════
+        // TALKPAGE STORIES ENGINE
+        // ════════════════════════════════════════════════════════════════
+
+        let storiesCache = {};          
+        let storyViewerQueue = [];      
+        let storyViewerIdx = 0;
+        let storyViewerTimer = null;
+        let unsubStories = null;
+
+        function listenToStories() {
+            if (unsubStories) unsubStories();
+            const now = new Date();
+            const q = query(collection(db, "stories"), where("expiresAt", ">", now));
+            unsubStories = onSnapshot(q, (snap) => {
+                const fresh = {};
+                snap.forEach(d => {
+                    const s = { id: d.id, ...d.data() };
+                    const exp = s.expiresAt?.toMillis ? s.expiresAt.toMillis() : (s.expiresAt?.seconds * 1000);
+                    if (exp && exp < Date.now()) return;
+                    if (!fresh[s.author]) fresh[s.author] = [];
+                    fresh[s.author].push(s);
+                });
+                storiesCache = fresh;
+                renderStoriesBar();
+            });
+        }
+
+        function renderStoriesBar() {
+            const container = document.getElementById('friends-stories');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const myStories = storiesCache[currentUser] || [];
+            const addBtn = document.getElementById('story-add-btn');
+            if (addBtn) {
+                addBtn.style.borderStyle = myStories.length > 0 ? 'solid' : 'dashed';
+                addBtn.style.borderColor = myStories.length > 0 ? 'var(--accent)' : '';
+                addBtn.style.boxShadow = myStories.length > 0 ? '0 0 8px rgba(246,168,0,0.5)' : '';
+            }
+
+            const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
+            const peopleWithStories = Object.keys(storiesCache).filter(u => u !== currentUser && storiesCache[u].length > 0);
+
+            peopleWithStories.sort((a, b) => {
+                const aStories = storiesCache[a];
+                const bStories = storiesCache[b];
+                const aAllSeen = aStories.every(s => seen[s.id]);
+                const bAllSeen = bStories.every(s => seen[s.id]);
+                if (aAllSeen && !bAllSeen) return 1;
+                if (!aAllSeen && bAllSeen) return -1;
+                return 0;
+            });
+
+            peopleWithStories.forEach(username => {
+                const profile = usersCache[username] || {};
+                const bubble = document.createElement('div');
+                bubble.className = 'story-bubble';
+                bubble.onclick = () => openStoryViewer(username);
+                
+                // Use the new native avatar ring! (Passes 'true' to show it)
+                const ring = `<div style="width:54px;height:54px;">${getAvatarHTML(username, profile, true)}</div>`;
+                const name = `<span class="story-bubble-name">${profile.fname || username}</span>`;
+                
+                bubble.innerHTML = ring + name;
+                container.appendChild(bubble);
+            });
+        }
+
+        window.handleYourStoryClick = function() {
+            if (window.hasActiveStory && window.hasActiveStory(currentUser)) {
+                window.openStoryViewer(currentUser);
+            } else {
+                window.openStoryCreator();
+            }
+        };
+
+        window.openStoryViewer = function(username) {
+            const stories = storiesCache[username];
+            if (!stories || stories.length === 0) return;
+            storyViewerQueue = [...stories].sort((a, b) => {
+                const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+                const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+                return at - bt;
+            });
+            storyViewerIdx = 0;
+            const sv = document.getElementById('story-viewer');
+            sv.style.display = 'flex';
+            void sv.offsetWidth;
+            sv.style.opacity = '1';
+            showStoryAt(0);
+        };
+
+        let storyIsPaused = false;
+
+        window.showStoryAt = function(idx) {
+            if (storyViewerTimer) clearTimeout(storyViewerTimer);
+            const story = storyViewerQueue[idx];
+            if (!story) { closeStoryViewer(); return; }
+            
+            // Reset Pause Button State
+            storyIsPaused = false;
+            const pauseBtn = document.getElementById('story-viewer-pause');
+            if(pauseBtn) pauseBtn.innerHTML = '⏸';
+
+            const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
+            seen[story.id] = true;
+            try { localStorage.setItem('talkpage_seen_stories', JSON.stringify(seen)); } catch(e) {}
+
+            if (story.author !== currentUser) {
+                if (!story.views || !story.views.includes(currentUser)) {
+                    updateDoc(doc(db, "stories", story.id), { views: arrayUnion(currentUser) }).catch(e=>e);
+                    if (!story.views) story.views = [];
+                    story.views.push(currentUser); 
+                }
+            }
+
+            const profile = usersCache[story.author] || {};
+            document.getElementById('sv-avatar').innerHTML = getAvatarHTML(story.author, profile);
+            document.getElementById('sv-name').textContent = profile.fname ? `${profile.fname} ${profile.lname || ''}`.trim() : story.author;
+            const ms = story.createdAt?.toMillis ? story.createdAt.toMillis() : (story.createdAt?.seconds * 1000);
+            document.getElementById('sv-time').textContent = ms ? timeAgo(ms) : '';
+
+            let compContainer = document.getElementById('story-composite-view');
+            if(compContainer) compContainer.remove();
+            
+            compContainer = document.createElement('div');
+            compContainer.id = 'story-composite-view';
+            // CRITICAL: pointer-events: none lets clicks pass through the background to the nav buttons
+            compContainer.style.cssText = "position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; background: linear-gradient(135deg, var(--accent), #333);";
+            document.querySelector('.story-phone-card').appendChild(compContainer);
+
+            if (story.bgImage) {
+                const bg = document.createElement('img');
+                bg.src = story.bgImage;
+                bg.style.cssText = "position:absolute; width:100%; height:100%; object-fit:cover; z-index:1;";
+                compContainer.appendChild(bg);
+            }
+
+            if (story.elements) {
+                story.elements.forEach(elData => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.cssText = `position:absolute; left:${elData.left}; top:${elData.top}; transform:translate(-50%, -50%) scale(${elData.scale || 1}); z-index:2; pointer-events:none; display:flex; align-items:center; justify-content:center;`;
+                    
+                    if (elData.type === 'text') {
+                        const t = document.createElement('div');
+                        t.innerText = elData.content;
+                        t.style.cssText = `color:#FFF; font-size:28px; font-weight:bold; text-shadow:0 2px 8px rgba(0,0,0,0.8); white-space:pre-wrap; text-align:center; font-family:var(--font-main);`;
+                        wrapper.appendChild(t);
+                    } else if (elData.type === 'image') {
+                        const img = document.createElement('img');
+                        img.src = elData.content;
+                        img.style.cssText = `width:150px; height:auto; border-radius:8px;`;
+                        wrapper.appendChild(img);
+                    } else if (elData.type === 'music') {
+                        wrapper.style.zIndex = '9'; 
+                        
+                        const musicContainer = document.createElement('div');
+                        musicContainer.style.cssText = `position:relative; width: 300px; height: 86px; border-radius: 12px; overflow: hidden; background: #222; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 15px rgba(0,0,0,0.5);`;
+                        
+                        const loader = document.createElement('span');
+                        loader.innerText = '🎵 Loading Music...';
+                        loader.style.cssText = `color: var(--text-muted); font-size: 14px; font-weight: bold; position: absolute; z-index: 1;`;
+                        
+                        const iframe = document.createElement('iframe');
+                        iframe.src = elData.content;
+                        iframe.style.cssText = `width: 300px; height: 86px; border: none; position: absolute; z-index: 2; opacity: 0; transition: opacity 0.4s ease;`;
+                        iframe.setAttribute('allowtransparency', 'true');
+                        iframe.setAttribute('allow', 'encrypted-media');
+                        iframe.onload = () => { iframe.style.opacity = '1'; };
+                        
+                        musicContainer.appendChild(loader);
+                        musicContainer.appendChild(iframe);
+                        wrapper.appendChild(musicContainer);
+                        
+                        // Reactivate pointer events just for the music widget
+                        wrapper.style.pointerEvents = 'auto'; 
+                        // Stop clicks from tunneling through to the invisible nav buttons behind it
+                        wrapper.onclick = (e) => e.stopPropagation();
+                        wrapper.onmousedown = (e) => e.stopPropagation();
+                        wrapper.ontouchstart = (e) => e.stopPropagation();
+                    }
+                    compContainer.appendChild(wrapper);
+                });
+            }
+
+            const viewerBar = document.getElementById('story-viewer-bar');
+            const ownerBar = document.getElementById('story-owner-bar');
+            document.getElementById('story-views-modal').classList.remove('open');
+
+            if (story.author === currentUser) {
+                viewerBar.style.display = 'none';
+                ownerBar.style.display = 'flex';
+                const viewsCount = story.views ? story.views.length : 0;
+                document.getElementById('story-views-count').innerText = `${viewsCount} View${viewsCount !== 1 ? 's' : ''}`;
+                
+                const list = document.getElementById('story-views-list');
+                if (viewsCount > 0) {
+                    const heartSVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#EE352E" stroke="#EE352E" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+                    list.innerHTML = story.views.map(u => {
+                        const hasLiked = story.likes && story.likes[u];
+                        return `
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border-light);">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="width:36px; height:36px; border-radius:50%; overflow:hidden; background:var(--border-dark); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold; font-size:14px;">${getAvatarHTML(u, usersCache[u])}</div>
+                                <div style="font-weight:bold; color:var(--text-dark);">${getFullName(u)}</div>
+                            </div>
+                            ${hasLiked ? `<div>${heartSVG}</div>` : ''}
+                        </div>
+                    `}).join('');
+                } else {
+                    list.innerHTML = `<div style="color:var(--text-muted); text-align:center; padding: 20px;">No views yet</div>`;
+                }
+            } else {
+                ownerBar.style.display = 'none';
+                viewerBar.style.display = 'flex';
+                const likeBtn = document.getElementById('story-like-btn');
+                const isLiked = story.likes && story.likes[currentUser];
+                if (isLiked) likeBtn.classList.add('liked');
+                else likeBtn.classList.remove('liked');
+                document.getElementById('story-reply-input').value = '';
+            }
+
+            const prog = document.getElementById('story-viewer-progress');
+            prog.innerHTML = storyViewerQueue.map((_, i) => `<div class="story-prog-seg"><div class="story-prog-fill" id="prog-fill-${i}" style="width:${i < idx ? '100%' : '0%'}"></div></div>`).join('');
+            
+            const duration = 6000;
+            const fill = document.getElementById(`prog-fill-${idx}`);
+            if (fill) {
+                fill.style.transition = `width ${duration}ms linear`;
+                requestAnimationFrame(() => { requestAnimationFrame(() => { fill.style.width = '100%'; }); });
+            }
+
+            storyViewerTimer = setTimeout(() => storyNavNext(), duration);
+            renderStoriesBar(); 
+        };
+
+        window.toggleStoryPlayPause = function() {
+            const btn = document.getElementById('story-viewer-pause');
+            if (storyIsPaused) {
+                // It was paused, so we restart the slide
+                storyIsPaused = false;
+                btn.innerHTML = '⏸';
+                showStoryAt(storyViewerIdx);
+            } else {
+                // Pause it
+                storyIsPaused = true;
+                btn.innerHTML = '▶';
+                pauseStoryTimer();
+            }
+        };
+
+        window.storyNavNext = function() {
+            storyViewerIdx++;
+            if (storyViewerIdx >= storyViewerQueue.length) { closeStoryViewer(); return; }
+            showStoryAt(storyViewerIdx);
+        };
+        
+        window.storyNavPrev = function() {
+            storyViewerIdx = Math.max(0, storyViewerIdx - 1);
+            showStoryAt(storyViewerIdx);
+        };
+
+        window.closeStoryViewer = function() {
+            if (storyViewerTimer) clearTimeout(storyViewerTimer);
+            const svEl = document.getElementById('story-viewer');
+            svEl.style.opacity = '0';
+            setTimeout(() => { svEl.style.display = 'none'; }, 200);
+            document.getElementById('story-views-modal').classList.remove('open');
+        };
+
+        window.pauseStoryTimer = function() {
+            if (storyViewerTimer) clearTimeout(storyViewerTimer);
+            const fill = document.getElementById(`prog-fill-${storyViewerIdx}`);
+            if (fill) {
+                const computedWidth = window.getComputedStyle(fill).width;
+                fill.style.transition = 'none';
+                fill.style.width = computedWidth; 
+            }
+        };
+
+        window.toggleStoryLike = async function() {
+            const story = storyViewerQueue[storyViewerIdx];
+            if (!story) return;
+            const likeBtn = document.getElementById('story-like-btn');
+            const isLiked = likeBtn.classList.contains('liked');
+
+            if (isLiked) {
+                likeBtn.classList.remove('liked');
+                if(story.likes) delete story.likes[currentUser];
+                updateDoc(doc(db, "stories", story.id), { [`likes.${currentUser}`]: deleteField() }).catch(e=>e);
+            } else {
+                likeBtn.classList.add('liked');
+                if(!story.likes) story.likes = {};
+                story.likes[currentUser] = true;
+                updateDoc(doc(db, "stories", story.id), { [`likes.${currentUser}`]: true }).catch(e=>e);
+            }
+        };
+
+        window.sendStoryReply = async function(e) {
+            const input = document.getElementById('story-reply-input');
+            const text = input.value.trim();
+            const story = storyViewerQueue[storyViewerIdx];
+            if (!text || !story) return;
+
+            input.disabled = true;
+            
+            let chat = chatsCache.find(c => !c.isGroup && c.participants.includes(story.author));
+            let chatId = chat ? chat.id : null;
+
+            if (!chatId) {
+                const chatRef = await addDoc(collection(db, "chats"), {
+                    participants: [currentUser, story.author],
+                    isGroup: false, name: "", pic: null, updatedAt: serverTimestamp(), lastMessage: "Story Reply",
+                    readBy: { [currentUser]: true }, unreadCount: { [currentUser]: 0 }
+                });
+                chatId = chatRef.id;
+            }
+
+            // Build the visual thumbnail
+            let bgStyle = story.bgImage ? `background: url('${story.bgImage}') center/cover;` : `background: linear-gradient(135deg, var(--accent), #333);`;
+            let prevTxt = "";
+            if (story.elements && story.elements.length > 0) {
+                const txtEl = story.elements.find(el => el.type === 'text');
+                if (txtEl && txtEl.content) prevTxt = txtEl.content.substring(0, 15);
+            }
+            
+            // Package it as HTML for the chat window
+            const replyHTML = `<div class="chat-story-reply" onclick="openStoryFromChat('${story.author}', '${story.id}')"><div class="csr-thumb" style="${bgStyle}"><span>${prevTxt}</span></div><div class="csr-info"><strong>Replied to story</strong><span> </span></div></div><div style="margin-top:5px; font-size:15px;">${text}</div>`;
+
+            await addDoc(collection(db, "chats", chatId, "messages"), {
+                sender: currentUser, text: replyHTML, createdAt: serverTimestamp()
+            });
+            
+            let updates = { updatedAt: serverTimestamp(), lastMessage: "Story Reply", [`unreadCount.${story.author}`]: (chat?.unreadCount?.[story.author] || 0) + 1, [`readBy.${story.author}`]: false };
+            await updateDoc(doc(db, "chats", chatId), updates).catch(e=>e);
+
+            input.value = '';
+            input.disabled = false;
+            input.blur();
+            
+            const origPlaceholder = input.placeholder;
+            input.placeholder = "Sent!";
+            setTimeout(() => { input.placeholder = origPlaceholder; storyNavNext(); }, 1000);
+        };
+
+        window.toggleViewsModal = function() {
+            const modal = document.getElementById('story-views-modal');
+            if (modal.classList.contains('open')) {
+                modal.classList.remove('open');
+                showStoryAt(storyViewerIdx); 
+            } else {
+                window.pauseStoryTimer();
+                modal.classList.add('open');
+            }
+        };
+
+        window.deleteCurrentStory = async function() {
+            const story = storyViewerQueue[storyViewerIdx];
+            if (!story) return;
+            if (confirm("Permanently delete this story?")) {
+                await deleteDoc(doc(db, "stories", story.id));
+                storyNavNext(); 
+            }
+        };
+
+        // ── Story Composite Creator & Drag Logic ─────────────────────────
+        let scElements = [];
+        let scSelectedEl = null;
+        let dragTarget = null;
+        let dragOffset = {x:0, y:0};
+
+        window.openStoryCreator = function() {
+            scElements = [];
+            scSelectedEl = null;
+            if(document.getElementById('sc-element-tools')) document.getElementById('sc-element-tools').style.display = 'none';
+            const sc = document.getElementById('story-creator');
+            if (!sc) return;
+            sc.style.display = 'flex';
+            void sc.offsetWidth;
+            sc.style.opacity = '1';
+
+            document.getElementById('sc-bg-img').style.display = 'none';
+            document.getElementById('sc-bg-img').src = '';
+            document.getElementById('sc-elements-container').innerHTML = '';
+        };
+
+        window.closeStoryCreator = function() {
+            const sc = document.getElementById('story-creator');
+            sc.style.opacity = '0';
+            setTimeout(() => { sc.style.display = 'none'; }, 200);
+        };
+
+        function resizeImageFile(file, callback) {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX = 1080;
+                    let w = img.width, h = img.height;
+                    if (w > MAX || h > MAX) { 
+                        const r = Math.min(MAX/w, MAX/h); w = Math.round(w*r); h = Math.round(h*r); 
+                    }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        window.handleSCBackground = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            resizeImageFile(file, (dataUrl) => {
+                document.getElementById('sc-bg-img').src = dataUrl;
+                document.getElementById('sc-bg-img').style.display = 'block';
+            });
+        };
+
+        let editingTextElement = null;
+
+        window.openSCTextInput = function() {
+            editingTextElement = null;
+            document.getElementById('sc-text-input-field').value = '';
+            document.getElementById('sc-text-modal').style.display = 'flex';
+            document.getElementById('sc-text-input-field').focus();
+        };
+
+        window.closeSCTextInput = function() {
+            document.getElementById('sc-text-modal').style.display = 'none';
+        };
+
+        window.confirmSCText = function() {
+            const text = document.getElementById('sc-text-input-field').value.trim();
+            if (text) {
+                if (editingTextElement) {
+                    editingTextElement.innerText = text;
+                } else {
+                    createSCElement('text', text);
+                }
+            }
+            closeSCTextInput();
+        };
+
+        window.addSCText = window.openSCTextInput;
+
+        window.addSCMusic = function() {
+            document.getElementById('sc-music-input-field').value = '';
+            document.getElementById('sc-music-modal').style.display = 'flex';
+            document.getElementById('sc-music-input-field').focus();
+        };
+
+        window.closeSCMusicInput = function() {
+            document.getElementById('sc-music-modal').style.display = 'none';
+        };
+
+        window.confirmSCMusic = function() {
+            const url = document.getElementById('sc-music-input-field').value.trim();
+            if (!url) {
+                closeSCMusicInput();
+                return;
+            }
+            
+            // Smart Spotify Link Converter
+            let embedUrl = url;
+            if (url.includes('spotify.com')) {
+                // Extracts the type (track/album/playlist) and the ID
+                const match = url.match(/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+                if (match) {
+                    embedUrl = `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator&theme=0`;
+                }
+            }
+            
+            createSCElement('music', embedUrl);
+            closeSCMusicInput();
+        };
+
+        window.handleSCAddImage = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            resizeImageFile(file, (dataUrl) => {
+                createSCElement('image', dataUrl);
+            });
+        };
+
+        function createSCElement(type, content) {
+            const id = 'el-' + Date.now();
+            let el;
+            
+            if (type === 'text') {
+                el = document.createElement('div');
+                el.innerText = content;
+                el.style.cssText = `color: #FFF; font-size: 28px; font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.8); white-space: pre-wrap; text-align: center; font-family: var(--font-main);`;
+            } else if (type === 'image') {
+                el = document.createElement('img');
+                el.src = content;
+                el.style.cssText = `width: 150px; height: auto; border-radius: 8px; pointer-events: none;`;
+            } else if (type === 'music') {
+                // NEW: Loading Wrapper + Taller dimensions
+                el = document.createElement('div');
+                el.style.cssText = `position:relative; width: 300px; height: 86px; border-radius: 12px; overflow: hidden; background: #222; display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 15px rgba(0,0,0,0.5);`;
+                
+                const loader = document.createElement('span');
+                loader.innerText = 'Loading Music...';
+                loader.style.cssText = `color: var(--text-muted); font-size: 14px; font-weight: bold; position: absolute; z-index: 1;`;
+                
+                const iframe = document.createElement('iframe');
+                iframe.src = content;
+                // opacity 0 transitions to 1 when loaded. pointer-events none so you can drag it!
+                iframe.style.cssText = `width: 300px; height: 86px; border: none; position: absolute; z-index: 2; opacity: 0; transition: opacity 0.4s ease; pointer-events: none;`;
+                iframe.setAttribute('allowtransparency', 'true');
+                iframe.setAttribute('allow', 'encrypted-media');
+                iframe.onload = () => { iframe.style.opacity = '1'; };
+                
+                el.appendChild(loader);
+                el.appendChild(iframe);
+            }
+            
+            const wrapper = document.createElement('div');
+            wrapper.id = id;
+            wrapper.className = 'sc-element';
+            wrapper.dataset.type = type;
+            wrapper.dataset.scale = 1;
+            wrapper.style.left = '50%';
+            wrapper.style.top = '50%';
+            wrapper.style.transform = `translate(-50%, -50%) scale(1)`;
+            
+            wrapper.appendChild(el);
+            
+            setupDraggable(wrapper);
+            document.getElementById('sc-elements-container').appendChild(wrapper);
+            
+            scElements.push({ id, type, el: wrapper, contentEl: el, rawContent: content || "" });
+            selectElement(wrapper);
+            
+            if (type === 'image') document.getElementById('sc-img-input').value = '';
+        }
+
+        function selectElement(el) {
+            if (scSelectedEl) scSelectedEl.classList.remove('selected');
+            scSelectedEl = el;
+            if (scSelectedEl) {
+                scSelectedEl.classList.add('selected');
+                document.getElementById('sc-element-tools').style.display = 'block';
+                document.getElementById('sc-edit-txt-btn').style.display = scSelectedEl.dataset.type === 'text' ? 'block' : 'none';
+            } else {
+                document.getElementById('sc-element-tools').style.display = 'none';
+            }
+        }
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.id === 'sc-canvas' || e.target.id === 'sc-bg-img' || e.target.id === 'sc-elements-container' || e.target.id === 'sc-preview-pane') {
+                selectElement(null);
+            }
+        });
+
+        function setupDraggable(el) {
+            el.addEventListener('mousedown', (e) => { selectElement(el); startDrag(e, el); }, {passive: false});
+            el.addEventListener('touchstart', (e) => { selectElement(el); startDrag(e, el); }, {passive: false});
+        }
+
+        function startDrag(e, el) {
+            dragTarget = el;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const rect = dragTarget.getBoundingClientRect();
+            dragOffset.x = clientX - rect.left;
+            dragOffset.y = clientY - rect.top;
+            
+            document.addEventListener('mousemove', dragMove, {passive: false});
+            document.addEventListener('touchmove', dragMove, {passive: false});
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
+
+        function dragMove(e) {
+            if (!dragTarget) return;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const parentRect = document.getElementById('sc-canvas').getBoundingClientRect();
+            const scale = parseFloat(dragTarget.dataset.scale || 1);
+            const w = dragTarget.offsetWidth * scale;
+            const h = dragTarget.offsetHeight * scale;
+            
+            let newLeft = clientX - parentRect.left - dragOffset.x + (w/2);
+            let newTop = clientY - parentRect.top - dragOffset.y + (h/2);
+
+            dragTarget.style.left = (newLeft / parentRect.width * 100) + '%';
+            dragTarget.style.top = (newTop / parentRect.height * 100) + '%';
+            
+            e.preventDefault();
+        }
+
+        function endDrag() {
+            dragTarget = null;
+            document.removeEventListener('mousemove', dragMove);
+            document.removeEventListener('touchmove', dragMove);
+            document.removeEventListener('mouseup', endDrag);
+            document.removeEventListener('touchend', endDrag);
+        }
+
+        window.changeElementSize = function(multiplier) {
+            if (!scSelectedEl) return;
+            let currentScale = parseFloat(scSelectedEl.dataset.scale || 1);
+            currentScale *= multiplier;
+            scSelectedEl.dataset.scale = currentScale;
+            scSelectedEl.style.transform = `translate(-50%, -50%) scale(${currentScale})`;
+        };
+
+        window.editSelectedText = function() {
+            if (!scSelectedEl || scSelectedEl.dataset.type !== 'text') return;
+            const contentEl = scSelectedEl.querySelector('div');
+            editingTextElement = contentEl;
+            document.getElementById('sc-text-input-field').value = contentEl.innerText;
+            document.getElementById('sc-text-modal').style.display = 'flex';
+            document.getElementById('sc-text-input-field').focus();
+        };
+
+        window.deleteSelectedElement = function() {
+            if (!scSelectedEl) return;
+            scSelectedEl.remove();
+            scElements = scElements.filter(obj => obj.id !== scSelectedEl.id);
+            selectElement(null);
+        };
+
+        window.submitStory = async function() {
+            selectElement(null); 
+            const btn = document.getElementById('sc-submit-btn');
+            if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+            try {
+                const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); 
+                const bgImg = document.getElementById('sc-bg-img');
+                
+                // Sanitizer map: absolutely NO undefined variables allowed
+                const elements = scElements.map(obj => {
+                    let finalContent = '';
+                    if (obj.type === 'text') finalContent = obj.contentEl.innerText || '';
+                    else if (obj.type === 'image') finalContent = obj.contentEl.src || '';
+                    else if (obj.type === 'music') finalContent = obj.rawContent || '';
+                    
+                    return {
+                        type: obj.type || 'text',
+                        content: finalContent,
+                        left: obj.el.style.left || '50%',
+                        top: obj.el.style.top || '50%',
+                        scale: obj.el.dataset.scale || 1
+                    };
+                });
+
+                const storyData = { 
+                    author: currentUser, 
+                    createdAt: serverTimestamp(), 
+                    expiresAt,
+                    type: 'composite',
+                    bgImage: (bgImg && bgImg.src && bgImg.src.startsWith('data:')) ? bgImg.src : null,
+                    elements: elements
+                };
+
+                await addDoc(collection(db, "stories"), storyData);
+                closeStoryCreator();
+            } catch(e) {
+                console.error("Story save error: ", e);
+                alert('Could not share story. Try again.');
+            } finally {
+                if (btn) { btn.textContent = 'Post Story'; btn.disabled = false; }
+            }
+        };
+
+        window.submitStory = async function() {
+            selectElement(null); 
+            const btn = document.getElementById('sc-submit-btn');
+            if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+            
+            try {
+                const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); 
+                const bgImg = document.getElementById('sc-bg-img');
+                
+                // Aggressive Sanitization: Force every value to be a standard string or number
+                const elements = scElements.map(obj => {
+                    let finalContent = '';
+                    if (obj.type === 'text') finalContent = obj.contentEl.innerText || '';
+                    else if (obj.type === 'image') finalContent = obj.contentEl.src || '';
+                    else if (obj.type === 'music') finalContent = obj.rawContent || '';
+                    
+                    return {
+                        type: String(obj.type || 'text'),
+                        content: String(finalContent),
+                        left: String(obj.el.style.left || '50%'),
+                        top: String(obj.el.style.top || '50%'),
+                        scale: Number(obj.el.dataset.scale || 1)
+                    };
+                });
+
+                let storyData = { 
+                    author: currentUser, 
+                    createdAt: serverTimestamp(), 
+                    expiresAt: expiresAt,
+                    type: 'composite',
+                    elements: elements
+                };
+
+                // Only attach the background image if it actually exists (prevents 'null' crashes)
+                if (bgImg && bgImg.src && bgImg.src.startsWith('data:')) {
+                    storyData.bgImage = bgImg.src;
+                }
+
+                await addDoc(collection(db, "stories"), storyData);
+                closeStoryCreator();
+                
+            } catch(e) {
+                console.error("Story save error details: ", e);
+                // This will now pop up on your screen with the exact database reason!
+                alert('Upload Failed: ' + e.message); 
+            } finally {
+                if (btn) { btn.textContent = 'Post Story'; btn.disabled = false; }
+            }
+        };
+
+        function timeAgo(ms) {
+            const diff = Date.now() - ms;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'Just now';
+            if (mins < 60) return `${mins}m ago`;
+            const hrs = Math.floor(mins / 60);
+            if (hrs < 24) return `${hrs}h ago`;
+            return 'Yesterday';
+        }
+
+        window.openStoryFromChat = function(author, storyId) {
+            const stories = storiesCache[author];
+            if (!stories || stories.length === 0) {
+                alert("This story has expired.");
+                return;
+            }
+            
+            const targetIdx = stories.findIndex(s => s.id === storyId);
+            if (targetIdx === -1) {
+                alert("This story has expired.");
+                return;
+            }
+
+            storyViewerQueue = [...stories].sort((a, b) => {
+                const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+                const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+                return at - bt;
+            });
+            
+            storyViewerIdx = storyViewerQueue.findIndex(s => s.id === storyId);
+            if (storyViewerIdx === -1) storyViewerIdx = 0;
+
+            const sv = document.getElementById('story-viewer');
+            sv.style.display = 'flex';
+            void sv.offsetWidth;
+            sv.style.opacity = '1';
+            showStoryAt(storyViewerIdx);
+        };
+
+        window.hasActiveStory = function(username) {
+            return !!(storiesCache[username] && storiesCache[username].length > 0);
+        };
+
+        // END STORIES ENGINE
+
+
+
         // --- PROFILE VIEW / EDITING ---
         window.viewMyProfile = function() {
             if(currentUser) window.viewProfile(currentUser);
@@ -3612,7 +4590,15 @@
             tempBannerData = profile.bannerPic || null;
 
             // Avatar
-            document.getElementById('pv-pic').innerHTML = getAvatarHTML(username, profile);
+            const pvPic = document.getElementById('pv-pic');
+            if (window.hasActiveStory && window.hasActiveStory(username)) {
+                pvPic.style.cursor = 'pointer';
+                pvPic.onclick = () => { toggleModal('profile-modal', false); openStoryViewer(username); };
+            } else {
+                pvPic.onclick = null;
+                pvPic.style.cursor = '';
+            }
+            pvPic.innerHTML = getAvatarHTML(username, profile);
 
             // Name / handle
             document.getElementById('pv-name').innerText = getFullName(username);
@@ -3762,15 +4748,17 @@
 
             const nameToUse = chat.name || "Group";
 
-            // Banner
+            // Banner — always use background shorthand to avoid the glitch where
+            // setting backgroundImage clears the gradient set via background property
             const bannerEl = document.getElementById('gd-banner');
             if (chat.bannerPic) {
-                bannerEl.style.backgroundImage = `url('${chat.bannerPic}')`;
+                bannerEl.style.background = `url('${chat.bannerPic}') center center / cover no-repeat`;
             } else {
-                bannerEl.style.backgroundImage = 'linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%)';
+                bannerEl.style.background = 'linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%)';
             }
-            bannerEl.onmouseover = () => { document.getElementById('gd-banner-edit-lbl').style.color = '#FFF'; bannerEl.style.background = bannerEl.style.background; document.getElementById('gd-banner-edit-lbl').style.background = 'rgba(0,0,0,0.4)'; };
-            bannerEl.onmouseout  = () => { document.getElementById('gd-banner-edit-lbl').style.color = 'rgba(255,255,255,0)'; document.getElementById('gd-banner-edit-lbl').style.background = 'transparent'; };
+            const gdLbl = document.getElementById('gd-banner-edit-lbl');
+            bannerEl.onmouseover = () => { gdLbl.style.color = '#FFF'; gdLbl.style.background = 'rgba(0,0,0,0.4)'; };
+            bannerEl.onmouseout  = () => { gdLbl.style.color = 'rgba(255,255,255,0)'; gdLbl.style.background = 'transparent'; };
 
             // Avatar
             const picEl = document.getElementById('gd-pic');
@@ -3829,7 +4817,7 @@
                     canvas.width = w; canvas.height = h;
                     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                     const data = canvas.toDataURL('image/jpeg', 0.75);
-                    document.getElementById('gd-banner').style.backgroundImage = `url('${data}')`;
+                    document.getElementById('gd-banner').style.background = `url('${data}') center center / cover no-repeat`;
                     // Store on the chat doc
                     if (editingGroupChatId) updateDoc(doc(db, "chats", editingGroupChatId), { bannerPic: data }).catch(()=>{});
                 };
@@ -3871,7 +4859,10 @@
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                     ${[
-            
+                        { icon:'💬', label:'Messages', val: msgCount + '+' },
+                        { icon:'📅', label:'Chat started', val: createdStr },
+                        { icon:'📝', label:'Status', val: profile.status ? `"${profile.status}"` : '—' },
+                        { icon:'🎂', label:'Joined', val: profile.joined || '—' },
                     ].map(s => `<div style="background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:10px;padding:12px;"><div style="font-size:18px;margin-bottom:4px;">${s.icon}</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:800;margin-bottom:2px;">${s.label}</div><div style="font-size:13px;font-weight:700;color:var(--text-dark);">${s.val}</div></div>`).join('')}
                 </div>
             `;
@@ -3891,6 +4882,28 @@
 
             await updateDoc(doc(db, "chats", editingGroupChatId), updates);
             toggleModal('group-details-modal', false);
+        };
+
+        window.leaveGroupChat = async function() {
+            const chatId = editingGroupChatId || activeChatId;
+            if (!chatId) return;
+            const chat = chatsCache.find(c => c.id === chatId);
+            if (!chat) return;
+            const confirmed = confirm(`Leave "${chat.name || 'this group'}"? You won't receive any more messages.`);
+            if (!confirmed) return;
+            try {
+                await updateDoc(doc(db, "chats", chatId), {
+                    participants: arrayRemove(currentUser), updatedAt: serverTimestamp()
+                });
+                await addDoc(collection(db, "chats", chatId, "messages"), {
+                    sender: "System", text: `${getFullName(currentUser)} left the group.`, createdAt: serverTimestamp()
+                });
+                toggleModal('group-details-modal', false);
+                window.goToHome();
+            } catch(e) {
+                console.error("leaveGroupChat error:", e);
+                alert("Couldn't leave the group. Try again.");
+            }
         };
 
         window.kickUser = async function(username) {
@@ -3980,11 +4993,32 @@
             } catch(e) { return "Unknown"; }
         };
 
-        window.getAvatarHTML = function(username, profileObj) {
+        window.getAvatarHTML = function(username, profileObj, showRing = true) {
             try {
-                const p = profileObj || usersCache[username];
-                if (p && p.pic && typeof p.pic === 'string' && p.pic.length > 10) return `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-                return `<span>${username ? String(username).charAt(0).toUpperCase() : "?"}</span>`;
+                const p = profileObj || usersCache[username] || {};
+                let inner = `<span style="color:#FFF;font-weight:bold;font-size:inherit;display:flex;align-items:center;justify-content:center;height:100%;">${username ? String(username).charAt(0).toUpperCase() : "?"}</span>`;
+                if (p && p.pic && typeof p.pic === 'string' && p.pic.length > 10) {
+                    inner = `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
+                }
+
+                if (showRing && window.hasActiveStory && window.hasActiveStory(username)) {
+                    const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
+                    const stories = storiesCache[username] || [];
+                    const allSeen = stories.length > 0 && stories.every(s => seen[s.id]);
+                    
+                    const ringBg = allSeen ? 'var(--border-light)' : 'conic-gradient(var(--accent), #ff6b9d, var(--accent))';
+                    const ringShadow = allSeen ? 'none' : '0 0 8px rgba(246,168,0,0.5)';
+                    
+                    return `
+                    <div style="width:100%; height:100%; border-radius:50%; padding:3px; background:${ringBg}; box-shadow:${ringShadow}; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
+                        <div style="width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--border-dark);">
+                            ${inner}
+                        </div>
+                    </div>`;
+                }
+                
+                return `<div style="width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--border-dark);">${inner}</div>`;
+                
             } catch(e) { return `<span>?</span>`; }
         };
 
@@ -4433,7 +5467,7 @@
         window.loadMoreMessages = async function() {
             if (!activeChatId || !msgOldestDoc) return;
             const btn = document.getElementById('load-more-msgs');
-            if (btn) { btn.textContent = 'Loading...'; btn.disabled = true; }
+            if (btn) { btn.textContent = '↑ Loading earlier messages...'; btn.style.display = 'block'; }
 
             try {
                 const msgRef = collection(db, "chats", activeChatId, "messages");
@@ -4441,7 +5475,8 @@
                 const snap   = await new Promise(res => { const u = onSnapshot(olderQ, s => { u(); res(s); }); });
 
                 if (snap.empty) {
-                    if (btn) { btn.textContent = 'No earlier messages'; btn.disabled = true; }
+                    window._hasMoreMessages = false;
+                    if (btn) { btn.textContent = '— No more messages —'; btn.style.display = 'block'; btn.style.pointerEvents = 'none'; }
                     return;
                 }
                 msgOldestDoc = snap.docs[snap.docs.length - 1];
@@ -4530,7 +5565,7 @@
                         const toolsHtml = `<div class="msg-tools-wrapper"><button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button><div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;"><div class="emoji-row"><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button></div><div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div><div class="menu-item" onclick="pinMessage('${msg.id}')">${chat?.pinnedMessage === msg.id ? 'Unpin' : 'Pin Message'}</div>${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}</div></div>`;
 
                         let avatarHtml = '';
-                        if (chat && chat.isGroup && !isMe) avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile)}</div>`;
+                        if (chat && chat.isGroup && !isMe) avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile, false)}</div>`;
 
                         const timeDiff = msgTime - lastTime;
                         const isClumped = (msg.sender === lastSender) && (Math.abs(timeDiff) < 5 * 60 * 1000);
@@ -4562,16 +5597,16 @@
 
                 if (snap.docs.length < 40) {
                     window._hasMoreMessages = false;
-                    if (btn) { btn.textContent = 'No earlier messages'; btn.disabled = true; }
+                    if (btn) { btn.textContent = '— No more messages —'; btn.style.display = 'block'; btn.style.pointerEvents = 'none'; }
                 } else {
                     window._hasMoreMessages = true;
-                    if (btn) { btn.textContent = 'Load earlier messages'; btn.disabled = false; }
-                    // Re-observe sentinel so button hides again until user scrolls further up
+                    if (btn) { btn.textContent = ''; btn.style.display = 'none'; }
+                    // Re-observe sentinel for the next batch
                     window._setupLoadMoreSentinel();
                 }
             } catch(e) {
                 console.error('loadMoreMessages error', e);
-                if (btn) { btn.textContent = 'Load earlier messages'; btn.disabled = false; }
+                if (btn) { btn.style.display = 'none'; }
             }
         };
 

@@ -943,11 +943,11 @@
             <div id="stories-bar">
                 <!-- Your story is the first item in the single scrollable row -->
                 <div class="story-bubble" id="my-story-bubble" style="scroll-snap-align:start;">
-                    <button class="story-add-btn" id="story-add-btn" onclick="handleYourStoryClick()" title="Your Story">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    </button>
-                    <span class="story-bubble-name">Your Story</span>
-                </div>
+    <button class="story-add-btn" id="story-add-btn" onclick="openStoryCreator()" title="Your Story">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <span class="story-bubble-name" onclick="handleYourStoryClick()" style="cursor:pointer;">Your Story</span>
+</div>
                 <!-- Friend stories appended by JS -->
                 <div id="friends-stories" style="display:contents;"></div>
             </div>
@@ -4111,7 +4111,9 @@
             if (addBtn) {
                 addBtn.style.borderStyle = myStories.length > 0 ? 'solid' : 'dashed';
                 addBtn.style.borderColor = myStories.length > 0 ? 'var(--accent)' : '';
-                addBtn.style.boxShadow = myStories.length > 0 ? '0 0 8px rgba(246,168,0,0.5)' : '';
+                
+                // CHANGE THIS LINE: Forces the button to always open the creator
+                addBtn.onclick = () => window.openStoryCreator(); 
             }
 
             const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
@@ -4143,12 +4145,14 @@
         }
 
         window.handleYourStoryClick = function() {
-            if (window.hasActiveStory && window.hasActiveStory(currentUser)) {
-                window.openStoryViewer(currentUser);
-            } else {
-                window.openStoryCreator();
-            }
-        };
+    // This function is now only for the TEXT link
+    if (window.hasActiveStory && window.hasActiveStory(currentUser)) {
+        window.openStoryViewer(currentUser);
+    } else {
+        // Fallback: If no story exists, clicking the text also opens the creator
+        window.openStoryCreator();
+    }
+};
 
         window.openStoryViewer = function(username) {
             const stories = storiesCache[username];

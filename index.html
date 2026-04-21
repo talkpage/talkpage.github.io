@@ -612,6 +612,32 @@
         .pv-avail-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
 
 
+        /* ── UI POLISH FIXES ── */
+        /* Forces the whole screen to scroll so the header moves naturally with the posts */
+        #page-screen { overflow-y: auto !important; justify-content: flex-start !important; }
+        #page-body { overflow-y: visible !important; height: auto !important; flex: none !important; padding-bottom: 60px !important; }
+        
+        #page-header { background: transparent !important; border: none !important; box-shadow: none !important; padding: 40px 20px 10px 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative; height: auto !important; min-height: fit-content !important; flex-shrink: 0 !important; }
+        
+        #page-header button[onclick*="closePage"], .page-back-btn { display: none !important; } 
+        
+        #stories-bar { padding-left: 20px !important; } 
+        
+        /* Make posts thinner on web and perfectly centered */
+        .page-post { max-width: 600px !important; margin: 0 auto 20px auto !important; width: 100% !important; box-sizing: border-box; }
+        
+        /* Removes comment bubbles and prepares for infinite replies */
+        .page-comment-item { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start; background: transparent !important; border: none !important; padding: 0 !important; }
+        .page-comment-reply-btn { font-size: 11px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; margin-top: 2px; font-weight: 700; transition: color 0.15s; }
+        .page-comment-reply-btn:hover { color: var(--accent); }
+
+        #stories-bar { padding-left: 20px !important; } /* Aligns Your Story nicer */
+        
+        /* Removes comment bubbles and prepares for infinite replies */
+        .page-comment-item { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start; background: transparent !important; border: none !important; padding: 0 !important; }
+        .page-comment-reply-btn { font-size: 11px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; margin-top: 2px; font-weight: 700; transition: color 0.15s; }
+        .page-comment-reply-btn:hover { color: var(--accent); }
+        
         /* ── TALKPAGE STORIES ──────────────────────────────────────── */
         /* Chat Story Reply Embed */
         .chat-story-reply {
@@ -633,7 +659,7 @@
         .csr-info { display: flex; flex-direction: column; justify-content: center; }
         .csr-info strong { font-size: 12px; color: var(--accent); margin-bottom: 2px; }
         .csr-info span { font-size: 11px; color: var(--text-muted); }
-        #stories-bar { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border-light); overflow-x: auto; flex-shrink: 0; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        #stories-bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border-light); overflow-x: auto; flex-shrink: 0; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; }
         #stories-bar::-webkit-scrollbar { display: none; }
         .story-bubble { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; scroll-snap-align: start; }
         .story-ring { width: 54px; height: 54px; border-radius: 50%; padding: 2px; background: var(--border-light); display: flex; align-items: center; justify-content: center; transition: transform 0.15s ease-out; }
@@ -695,6 +721,135 @@
         #story-preview-container { display: none; flex-direction: column; align-items: center; justify-content: center; position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 8500; }
         .story-preview-content { position: relative; width: 100%; max-width: 320px; height: 100%; max-height: 70vh; border-radius: 16px; overflow: hidden; background: #222; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
 
+
+        /* ── SIDEBAR MODE DROPDOWN ──────────────────────────── */
+        #sidebar-mode-menu { position: absolute; top: calc(100% + 4px); left: 0; background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.18); z-index: 200; min-width: 130px; overflow: hidden; animation: fadeUp 0.15s ease; }
+        .sm-opt { display: flex; align-items: center; gap: 9px; padding: 11px 14px; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--text-dark); font-family: var(--font-main); transition: background 0.1s; }
+        .sm-opt:hover { background: var(--bg-sidebar); color: var(--accent); }
+        .sm-opt.active { background: var(--bg-sidebar); color: var(--accent); }
+        .sb-title-area { position: relative; }
+
+        /* ── PAGES LIST ──────────────────────────────────────── */
+        #pages-list { flex: 1; overflow-y: auto; display: none; -webkit-overflow-scrolling: touch; padding-bottom: 20px; }
+        #pages-list .conv-item { cursor: pointer; }
+
+        /* ── PAGE VIEWER ─────────────────────────────────────── */
+        #page-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-main); height: 100%; overflow: hidden; position: relative; }
+        #page-header { border-bottom: 1px solid var(--border-light); display: flex; align-items: center; background: var(--bg-sidebar); flex-shrink: 0; height: calc(84px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 20px 0; gap: 12px; }
+        #page-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; flex: 1; }
+        #page-title .page-name-accent { color: var(--accent); }
+        #page-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 24px 28px; display: flex; flex-direction: column; gap: 22px; }
+        .page-post { background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 14px; padding: 20px; transition: box-shadow 0.15s; }
+        .page-post:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+        .page-post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .page-post-av { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #FFF; font-size: 14px; }
+        .page-post-meta { flex: 1; }
+        .page-post-name { font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .page-post-time { font-size: 11px; color: var(--text-muted); }
+        .page-post-text { font-size: 15px; line-height: 1.6; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; }
+        .page-post-img { max-width: 100%; border-radius: 10px; margin-top: 12px; display: block; cursor: pointer; transition: opacity 0.15s; }
+        .page-post-img:hover { opacity: 0.92; }
+        .page-post-song { margin-top: 12px; border-radius: 10px; overflow: hidden; }
+        .page-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: var(--text-muted); font-size: 15px; font-style: italic; text-align: center; padding: 60px 30px; gap: 14px; }
+
+        /* ── PAGE COMPOSER MODAL ─────────────────────────────── */
+        #page-composer-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.2s ease; }
+        #page-composer-overlay.active { display: flex; opacity: 1; }
+        #page-composer-modal { width: 92%; max-width: 560px; max-height: 90vh; background: var(--bg-main); border-radius: 18px; border: 1.5px solid var(--border-dark); box-shadow: 0 20px 60px rgba(0,0,0,0.4); display: flex; flex-direction: column; overflow: hidden; transform: scale(0.96) translateY(8px); transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #page-composer-overlay.active #page-composer-modal { transform: scale(1) translateY(0); }
+        .pcm-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 0; flex-shrink: 0; }
+        .pcm-header h3 { font-size: 15px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.3px; }
+        .pcm-close { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; transition: color 0.15s; display: flex; align-items: center; justify-content: center; }
+        .pcm-close:hover { color: var(--text-dark); }
+        .pcm-tabs { display: flex; gap: 0; margin: 12px 20px 0; background: var(--bg-sidebar); border-radius: 10px; padding: 3px; border: 1px solid var(--border-light); flex-shrink: 0; }
+        .pc-tab { flex: 1; padding: 8px 4px; border: none; background: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--text-muted); font-family: var(--font-main); transition: all 0.15s; }
+        .pc-tab.active { background: var(--bg-main); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .pcm-body { flex: 1; overflow-y: auto; padding: 16px 20px; -webkit-overflow-scrolling: touch; }
+        /* Post preview card inside composer */
+        .pcm-preview-card { background: var(--bg-sidebar); border: 1px solid var(--border-light); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+        .pcm-preview-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .pcm-preview-av { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #FFF; font-size: 13px; }
+        .pcm-preview-meta { flex: 1; }
+        .pcm-preview-name { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+        .pcm-preview-time { font-size: 11px; color: var(--text-muted); }
+        .pcm-preview-content { font-size: 14px; line-height: 1.55; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; min-height: 20px; }
+        .pcm-preview-img { max-width: 100%; border-radius: 8px; margin-top: 10px; display: none; }
+        .pcm-preview-song { margin-top: 10px; border-radius: 8px; overflow: hidden; display: none; }
+        /* Input area below preview */
+        .pcm-input-section { margin-bottom: 10px; }
+        .pcm-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; display: block; }
+        .pc-textarea { width: 100%; min-height: 70px; border: 1px solid var(--border-light); border-radius: 10px; padding: 10px 12px; font-size: 14px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); resize: none; outline: none; transition: border-color 0.15s; }
+        .pc-textarea:focus { border-color: var(--accent); }
+        .pc-img-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .pc-img-preview { max-height: 60px; border-radius: 6px; display: none; }
+        .pc-song-input { width: 100%; border: 1px solid var(--border-light); border-radius: 10px; padding: 10px 14px; font-size: 14px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); outline: none; transition: border-color 0.15s; }
+        .pc-song-input:focus { border-color: #1DB954; }
+        .pcm-footer { padding: 12px 20px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; background: var(--bg-main); }
+        .pc-post-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+
+        /* ── PAGE POST INTERACTIONS ─────────────────────────── */
+        .page-post-actions { display: flex; align-items: center; gap: 16px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+        .page-action-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 13px; font-weight: 700; font-family: var(--font-main); transition: color 0.15s; padding: 4px 0; }
+        .page-action-btn:hover { color: var(--accent); }
+        .page-action-btn.liked { color: #EE352E; }
+        .page-action-btn.liked svg { fill: #EE352E; stroke: #EE352E; }
+        .page-comments-area { margin-top: 12px; display: none; }
+        .page-comments-area.open { display: block; }
+        .page-comment { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+        .page-comment-av { width: 28px; height: 28px; border-radius: 50%; background: var(--border-dark); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; color: #FFF; }
+        .page-comment-av img { width:100%; height:100%; object-fit:cover; }
+        .page-comment-body { flex:1; background: var(--bg-sidebar); border-radius: 10px; padding: 8px 12px; }
+        .page-comment-name { font-size: 12px; font-weight: 800; color: var(--text-dark); margin-bottom: 3px; }
+        .page-comment-text { font-size: 13px; color: var(--text-dark); line-height: 1.45; word-break: break-word; }
+        .page-comment-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+        .page-comment-input { flex: 1; border: 1px solid var(--border-light); border-radius: 20px; padding: 8px 14px; font-size: 13px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); outline: none; transition: border-color 0.15s; }
+        .page-comment-input:focus { border-color: var(--accent); }
+        .page-comment-send { background: var(--accent); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: opacity 0.15s; color: #000; }
+        .page-comment-send:hover { opacity: 0.8; }
+        .page-comment-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+        .page-comment-action { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; font-family: var(--font-main); padding: 0; transition: color 0.15s; display: flex; align-items: center; gap: 4px; }
+        .page-comment-action:hover { color: var(--accent); }
+        .page-comment-action.liked { color: #EE352E; }
+        .page-comment-replies { margin-top: 8px; margin-left: 0; padding-left: 12px; border-left: 2px solid var(--border-light); display: none; }
+        .page-comment-replies.open { display: block; }
+        .page-reply-input-row { display: flex; gap: 6px; align-items: center; margin-top: 6px; margin-bottom: 6px; }
+        .page-reply-input { flex: 1; border: 1px solid var(--border-light); border-radius: 16px; padding: 6px 12px; font-size: 12px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); outline: none; transition: border-color 0.15s; }
+        .page-reply-input:focus { border-color: var(--accent); }
+
+        /* ── PAGE BG PICKER ──────────────────────────────────── */
+        #page-bg-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 8px; transition: color 0.15s; display: none; }
+        #page-bg-btn:hover { color: var(--accent); }
+        .page-header-actions { display: flex; align-items: center; gap: 4px; position: relative; }
+        #page-bg-picker { display: none; position: absolute; right: 0; top: calc(100% + 4px); background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 14px; padding: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); z-index: 600; min-width: 230px; }
+        #page-bg-picker h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; font-weight: 800; }
+        .pbg-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        .pbg-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        .pbg-swatch:hover { transform: scale(1.15); }
+        .pbg-swatch.active { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+        .pbg-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; margin-top: 4px; display: block; }
+
+        /* ── ADMIN PANEL ─────────────────────────────────────── */
+        #admin-panel { position: fixed; inset: 0; z-index: 9000; background: #0a0a0a; color: #fff; display: none; flex-direction: column; font-family: var(--font-main); }
+        #admin-panel.active { display: flex; }
+        .admin-header { padding: 30px 30px 20px; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .admin-header h1 { font-size: 20px; color: var(--accent); letter-spacing: -0.5px; }
+        .admin-header span { font-size: 12px; color: #555; font-weight: 600; }
+        .admin-body { flex: 1; overflow-y: auto; padding: 24px 30px; }
+        .admin-section { margin-bottom: 30px; }
+        .admin-section h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #555; margin-bottom: 14px; font-weight: 800; }
+        .admin-user-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #111; border-radius: 10px; margin-bottom: 8px; border: 1px solid #1a1a1a; }
+        .admin-user-av { width: 38px; height: 38px; border-radius: 50%; background: #222; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #fff; }
+        .admin-user-av img { width: 100%; height: 100%; object-fit: cover; }
+        .admin-user-info { flex: 1; }
+        .admin-user-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .admin-user-handle { font-size: 12px; color: #555; }
+        .admin-del-btn { background: #EE352E; border: none; color: #fff; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; transition: opacity 0.15s; font-family: var(--font-main); }
+        .admin-del-btn:hover { opacity: 0.8; }
+        .admin-story-textarea { width: 100%; min-height: 80px; background: #111; border: 1px solid #333; border-radius: 10px; padding: 12px; font-size: 14px; font-family: var(--font-main); color: #fff; outline: none; resize: none; transition: border-color 0.15s; margin-bottom: 10px; }
+        .admin-story-textarea:focus { border-color: var(--accent); }
+        .admin-logout { background: none; border: 1px solid #333; color: #888; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; }
+        .admin-logout:hover { border-color: #EE352E; color: #EE352E; }
+
     </style>
 </head>
 <body>
@@ -754,7 +909,10 @@
                         </div>
                         <div class="sb-title-area">
                             <h1>Talkpage</h1>
-                            <span>Chats</span>
+                            <button id="sidebar-mode-btn" onclick="toggleSidebarModeMenu(event)" style="display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:0;font-family:var(--font-main);">
+                                <span id="sidebar-mode-label" style="font-size:11px;color:var(--text-muted);font-weight:bold;text-transform:uppercase;letter-spacing:1px;">Chats</span>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+                            </button>
                         </div>
                     </div>
                     <div class="sb-actions">
@@ -783,19 +941,23 @@
 
             <!-- ── TALKPAGE STORIES ─────────────────────────────────── -->
             <div id="stories-bar">
-                <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;">
-                    <button class="story-add-btn" id="story-add-btn" onclick="openStoryCreator()" title="Add Story">
+                <!-- Your story is the first item in the single scrollable row -->
+                <div class="story-bubble" id="my-story-bubble" style="scroll-snap-align:start;">
+                    <button class="story-add-btn" id="story-add-btn" onclick="handleYourStoryClick()" title="Your Story">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </button>
-                    
-                    <span style="font-size:10px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:color 0.15s;" onclick="handleYourStoryClick()" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Your Story</span>
+                    <span class="story-bubble-name">Your Story</span>
                 </div>
-                <div id="friends-stories" style="display:flex;align-items:flex-start;gap:12px;"></div>
+                <!-- Friend stories appended by JS -->
+                <div id="friends-stories" style="display:contents;"></div>
             </div>
 
             <div class="conv-list" id="conv-list">
                 <div style="padding:20px; text-align:center; color:var(--text-muted);">Loading chats...</div>
             </div>
+
+            <!-- Pages user list (shown in Pages mode) -->
+            <div id="pages-list"></div>
         </div>
 
         <div id="chat-area">
@@ -1000,7 +1162,90 @@
                     </div>
                 </div>
             </div>
-        </div> <div id="gartic-area">
+        </div>
+
+        <!-- ─── PAGE VIEWER ─── -->
+        <div id="page-screen">
+            <div id="page-header">
+                <button class="mobile-back-btn" onclick="closePage()" style="display:flex;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                </button>
+                <div id="page-title"></div>
+                <div class="page-header-actions">
+                    <button id="page-bg-btn" onclick="togglePageBgPicker(event)" title="Customize background">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button id="page-edit-btn" onclick="togglePageComposer()" style="display:none;background:none;border:none;cursor:pointer;color:var(--text-muted);padding:8px;transition:color 0.15s;" title="New post">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div id="page-bg-picker">
+                        <h4>Page Background</h4>
+                        <div class="pbg-swatches" id="pbg-swatches"></div>
+                        <span class="pbg-label">Custom Color</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input type="color" id="pbg-custom-color" class="color-picker-circle" value="#ffffff" oninput="applyPageBg('color', this.value)" style="width:36px;height:36px;">
+                            <span style="font-size:12px; color:var(--text-muted);">Pick any color</span>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <span class="pbg-label">Background Image</span>
+                            <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--text-dark);transition:border-color 0.15s;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                Upload Image
+                                <input type="file" id="pbg-img-input" accept="image/*" style="display:none;" onchange="handlePageBgImage(event)">
+                            </label>
+                        </div>
+                        <button onclick="applyPageBg('reset')" style="margin-top:12px;width:100%;background:none;border:1px solid var(--border-light);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-muted);font-family:var(--font-main);transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-light)'">Reset to Default</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body"></div>
+        </div>
+
+        <!-- ─── PAGE COMPOSER MODAL OVERLAY ─── -->
+        <div id="page-composer-overlay" onclick="if(event.target===this)closePageComposer()">
+            <div id="page-composer-modal" onclick="event.stopPropagation()">
+                <div class="pcm-header">
+                    <h3 style="font-size:16px; font-weight:700;">Create Post</h3>
+                    <button class="pcm-close" onclick="closePageComposer()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                
+                <div class="pcm-body" style="padding:15px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; max-height:60vh;">
+                    <div style="display:flex; gap:12px;">
+                        <div id="pc-unified-avatar" style="width:40px; height:40px; border-radius:50%; flex-shrink:0; background:var(--border-light); overflow:hidden;"></div>
+                        <textarea id="pc-unified-text" placeholder="What's on your mind? Mention friends with @username" style="flex:1; border:none; background:transparent; font-family:var(--font-main); font-size:16px; color:var(--text-dark); resize:none; outline:none; min-height:80px; padding-top:8px;"></textarea>
+                    </div>
+                    
+                    <div id="pc-img-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
+                        <img id="pc-img-preview" style="width:100%; max-height:300px; object-fit:contain; border-radius:12px; background:#111;">
+                        <button onclick="clearPcImage()" style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px);">✕</button>
+                    </div>
+                    
+                    <div id="pc-song-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
+                        <iframe id="pc-song-iframe" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px; border:none; background:#111;"></iframe>
+                        <button onclick="clearPcSong()" style="position:absolute; top:25px; right:-10px; background:var(--bg-main); color:var(--text-dark); border:1px solid var(--border-light); border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✕</button>
+                    </div>
+                </div>
+                
+                <div class="pcm-footer" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-light); padding:12px 20px; background:var(--bg-main);">
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-primary btn-outline" onclick="document.getElementById('pc-img-input').click()" style="padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:5px; width:auto;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Image
+                        </button>
+                        <input type="file" id="pc-img-input" accept="image/*" style="display:none;" onchange="handlePcImage(event)">
+                        
+                        <button class="btn-primary btn-outline" onclick="promptPcSong()" style="padding:8px 12px; font-size:13px; color:#1DB954; border-color:#1DB954; display:flex; align-items:center; gap:5px; width:auto;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Music
+                        </button>
+                    </div>
+                    <button id="pc-submit-btn" class="btn-primary" style="width:auto; padding:8px 24px;" onclick="submitPagePost()">Post</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gartic-area">
             <div style="position: absolute; top: max(15px, env(safe-area-inset-top)); left: 15px; z-index: 50; display: flex; gap: 10px;">
                 <button onclick="promptCloseGartic()" style="background: rgba(0,0,0,0.6); color: #FFF; border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 40px; height: 40px; font-weight: bold; font-size: 18px; cursor: pointer; backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; transition: background 0.2s;" title="Close Game">✕</button>
                 <button onclick="window.open(document.getElementById('gartic-frame').src, '_blank')" style="background: rgba(0,0,0,0.6); color: #FFF; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 0 15px; font-weight: bold; font-size: 14px; cursor: pointer; backdrop-filter: blur(5px); transition: background 0.2s;" title="Open in New Tab">↗ Open in New Tab</button>
@@ -1158,14 +1403,14 @@
                     <p id="pw-success" style="color: #00933C; font-size: 13px; display: none; margin-bottom: 10px; font-weight: bold;">Password successfully updated!</p>
 
                     <div class="password-wrapper">
-                        <input type="password" id="old-pw" placeholder="Current Password">
-                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('old-pw', this)">
+                        <input type="password" id="new-pw" placeholder="New Password">
+                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
                     </div>
                     <div class="password-wrapper">
-                        <input type="password" id="new-pw" placeholder="New Password">
-                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw', this)">
+                        <input type="password" id="new-pw-confirm" placeholder="Confirm New Password">
+                        <button type="button" class="pw-toggle" onclick="togglePasswordVisibility('new-pw-confirm', this)">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
                     </div>
@@ -1256,6 +1501,10 @@
                     <button id="pv-msg-btn" class="pcv3-msg-btn" style="display:none;" onclick="pvStartChat()">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         Message
+                    </button>
+                    <button id="pv-page-btn" class="pcv3-msg-btn" style="display:none;background:var(--bg-sidebar);color:var(--text-dark);border:1px solid var(--border-light);" onclick="pvViewPage()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        View Page
                     </button>
                     <button id="pv-edit-btn" class="btn-primary btn-outline" style="display:none; width:100%; border:none; background:transparent; color:var(--text-dark);" onclick="enableProfileEdit()">Edit Profile</button>
                     <button id="pv-save-btn" class="btn-primary" style="display:none; width:100%;" onclick="saveProfileEdit()">Save Changes</button>
@@ -1395,7 +1644,11 @@
             <div style="display:flex; flex-direction:column; gap:18px; margin-bottom:24px;">
                 <div>
                     <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Introducing...</div>
-                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> <b>Talkpage Stories!</b></div><br>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> <b>Userpages!</b></div><br>
+
+                    <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Userpages</div>
+                    <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> <i>Acess by clicking the drop down beside "Chats" underneath "Talkpage"!</i><br><br>☆ Share your thoughts with a post!<br>☆ Upload images, add a song, or just type something!<br>☆ Like and reply to peoples posts!<br>☆ Customize your pages!<br>☆ Mention friends with "@"!<br><br></div>
+                
                     <div style="font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">Stories</div>
                     <div style="font-size:14px; line-height:1.6; color:var(--text-dark);"> ☆ Create stories with text, images and music!<br>☆ Like and reply to peoples stories!<br>☆ Stories expire after 24 hours<br></div>
                 
@@ -1411,7 +1664,7 @@
             </div>
 
             <div>
-                <p>Talkpage (v40)<br><i>Last Updated 19/04/2026</i><br><br></p>
+                <p>Talkpage (44)<br><i>Last Updated 21/04/2026</i><br><br></p>
             </div>
 
             <button class="btn-primary btn-outline" style="border:none; width:100%; color:var(--text-muted);" onclick="toggleModal('updates-modal', false)">Close</button>
@@ -1439,7 +1692,15 @@
             const fab = document.getElementById('updates-fab');
             if (!fab) return;
             const appActive = document.getElementById('app-layout')?.classList.contains('active');
-            fab.style.display = (appActive && window.isViewingHome) ? 'flex' : 'none';
+            
+            // Only show if we are on the home screen AND we are NOT in the Pages tab
+            const isChatsMode = (window.sidebarMode === 'chats' || !window.sidebarMode);
+            
+            if (appActive && window.isViewingHome && isChatsMode) {
+                fab.style.display = 'flex';
+            } else {
+                fab.style.display = 'none';
+            }
         };
         const _fabObserver = new MutationObserver(window._updateFabVisibility);
         const _appLayout = document.getElementById('app-layout');
@@ -1552,6 +1813,28 @@
                 </div>
             </div>
             
+        </div>
+    </div>
+
+    <div id="admin-panel">
+        <div class="admin-header">
+            <div>
+                <h1>Talkpage Admin</h1>
+                <span>Restricted access — handle with care</span>
+            </div>
+            <button class="admin-logout" onclick="exitAdminMode()">Exit Admin</button>
+        </div>
+        <div class="admin-body">
+            <div class="admin-section">
+                <h2>Official Announcement</h2>
+                <textarea class="admin-story-textarea" id="admin-announcement-text" placeholder="Write an announcement to all users..."></textarea>
+                <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color:#000;" onclick="postAdminAnnouncement()">Post to All Users</button>
+                <p style="font-size:11px;color:#555;margin-top:8px;text-align:center;">Posts as an official Talkpage announcement visible to all users.</p>
+            </div>
+            <div class="admin-section">
+                <h2>Registered Users</h2>
+                <div id="admin-users-list"><p style="color:#555;font-size:13px;">Loading users...</p></div>
+            </div>
         </div>
     </div>
 
@@ -1928,7 +2211,7 @@
                 console.warn("Quote fetch failed:", e);
                 const fallbackQuotes = [
                     "there's been an issue with the quotes ANDREW FIX IT",
-                    "That's certainly a decision and certainly a decision you decided to take - Andrew, 2025"
+                    "ANDREW YOU FUCKING IDIOT YOU MESSED SOMETHING UP AND NOW THIS MESSAGE HAS APPEARED SO IF YOU SEE THIS I FUCKING FUCKED SOMETHING UP WITH THE QUOTES LOL"
                 ];
                 finalQuote = fallbackQuotes[Math.abs(todayKey.length) % fallbackQuotes.length];
             }
@@ -1940,8 +2223,8 @@
         window.updateHomeGreeting = function() {
             const hour = new Date().getHours();
             let greeting = 'Good evening';
-            if (hour < 12) greeting = 'Raya touches people, please be careful';
-            else if (hour < 18) greeting = 'Byler endgame';
+            if (hour < 12) greeting = 'Morning';
+            else if (hour < 18) greeting = 'Afternoon';
             
             const profile = usersCache[currentUser] || {};
             const name = profile.fname || currentUser || '';
@@ -2306,6 +2589,14 @@
             const err = document.getElementById('auth-error');
 
             if (!u || !p) { err.innerText = "Please fill out both fields."; err.style.display = 'block'; return; }
+
+            // ── ADMIN LOGIN ───────────────────────────────────
+            if (u === 'talkpage' && p === 'BylerEndgame07') {
+                document.getElementById('auth-screen').style.display = 'none';
+                openAdminPanel();
+                return;
+            }
+
             const email = `${u}@talkpage.com`;
 
             err.style.display = 'none';
@@ -2314,7 +2605,10 @@
 
             try {
                 if (action === 'login') await signInWithEmailAndPassword(auth, email, p);
-                else if (action === 'signup') await createUserWithEmailAndPassword(auth, email, p);
+                else if (action === 'signup') {
+                    if (u === 'talkpage') { err.innerText = "That username is reserved."; err.style.display = 'block'; document.getElementById('login-btn').disabled = false; document.getElementById('signup-btn').disabled = false; return; }
+                    await createUserWithEmailAndPassword(auth, email, p);
+                }
             } catch (error) {
                 if(error.code === 'auth/email-already-in-use') err.innerText = "Username taken! Try logging in.";
                 else if(error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') err.innerText = "Invalid username or password.";
@@ -2328,25 +2622,27 @@
         window.logout = function() { signOut(auth).then(() => { location.reload(); }); };
 
         window.changeUserPassword = async function() {
-            const oldPw = document.getElementById('old-pw').value;
             const newPw = document.getElementById('new-pw').value;
+            const confirmPw = document.getElementById('new-pw-confirm').value;
             const errEl = document.getElementById('pw-error');
             const succEl = document.getElementById('pw-success');
             errEl.style.display = 'none'; succEl.style.display = 'none';
-            
-            if(!oldPw || !newPw) { errEl.innerText = "Fill in both password fields."; errEl.style.display = 'block'; return; }
-            
+
+            if (!newPw || !confirmPw) { errEl.innerText = "Please fill in both fields."; errEl.style.display = 'block'; return; }
+            if (newPw !== confirmPw) { errEl.innerText = "Passwords do not match."; errEl.style.display = 'block'; return; }
+            if (newPw.length < 6) { errEl.innerText = "Password must be at least 6 characters."; errEl.style.display = 'block'; return; }
+
             try {
-                const user = auth.currentUser;
-                const credential = EmailAuthProvider.credential(user.email, oldPw);
-                await reauthenticateWithCredential(user, credential);
-                await updatePassword(user, newPw);
+                await updatePassword(auth.currentUser, newPw);
                 succEl.style.display = 'block';
-                document.getElementById('old-pw').value = '';
                 document.getElementById('new-pw').value = '';
+                document.getElementById('new-pw-confirm').value = '';
             } catch(e) {
-                if(e.code === 'auth/invalid-credential') errEl.innerText = "Current password is incorrect.";
-                else errEl.innerText = e.message;
+                if (e.code === 'auth/requires-recent-login') {
+                    errEl.innerText = "Session expired. Please log out and back in, then try again.";
+                } else {
+                    errEl.innerText = e.message;
+                }
                 errEl.style.display = 'block';
             }
         };
@@ -4243,10 +4539,8 @@
                 return;
             }
             
-            // Smart Spotify Link Converter
             let embedUrl = url;
-            if (url.includes('spotify.com')) {
-                // Extracts the type (track/album/playlist) and the ID
+            if (url.includes('spotify.com/')) {
                 const match = url.match(/(track|album|playlist)\/([a-zA-Z0-9]+)/);
                 if (match) {
                     embedUrl = `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator&theme=0`;
@@ -4559,6 +4853,14 @@
             if (window._pvCurrentUser) openDirectChat(window._pvCurrentUser);
         };
 
+        window.pvViewPage = function() {
+            toggleModal('profile-modal', false);
+            if (window._pvCurrentUser) {
+                setSidebarMode('pages');
+                setTimeout(() => openPage(window._pvCurrentUser), 50);
+            }
+        };
+
         window.viewProfile = async function(username) {
             let profile = usersCache[username];
 
@@ -4667,6 +4969,7 @@
             document.getElementById('pv-save-btn').style.display = 'none';
 
             document.getElementById('pv-msg-btn').style.display = (!isMe) ? 'flex' : 'none';
+            document.getElementById('pv-page-btn').style.display = 'flex';
 
             // Show view body, hide edit form
             document.getElementById('pv-view-body').style.display = 'block';
@@ -5057,8 +5360,9 @@
                 if (id === 'settings-modal') {
                     document.getElementById('pw-change-section').style.display = 'none';
                     document.getElementById('pw-arrow').innerText = '▼';
-                    document.getElementById('old-pw').value = '';
                     document.getElementById('new-pw').value = '';
+                    const cpf = document.getElementById('new-pw-confirm');
+                    if (cpf) cpf.value = '';
                     document.getElementById('pw-error').style.display = 'none';
                     document.getElementById('pw-success').style.display = 'none';
                     // Reset to first tab
@@ -5618,6 +5922,889 @@
         window.setTheme = function(name) {
             _origSetTheme(name);
             window.updateThemePickerBtn();
+        };
+
+
+        // ════════════════════════════════════════════════════════
+        // ──  TALKPAGE PAGES  ────────────────────────────────────
+        // ════════════════════════════════════════════════════════
+
+        let sidebarMode = 'chats'; 
+        let activePageUser = null;
+        let unsubPagePosts = null;
+
+        // ── SIDEBAR MODE SWITCHER ─────────────────────────────────
+        window.toggleSidebarModeMenu = function(e) {
+            e.stopPropagation();
+            const existing = document.getElementById('sidebar-mode-menu');
+            if (existing) { existing.remove(); return; }
+
+            const menu = document.createElement('div');
+            menu.id = 'sidebar-mode-menu';
+            menu.innerHTML = `
+                <div class="sm-opt${sidebarMode==='chats'?' active':''}" onclick="setSidebarMode('chats')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Chats
+                </div>
+                <div class="sm-opt${sidebarMode==='pages'?' active':''}" onclick="setSidebarMode('pages')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Pages
+                </div>
+            `;
+            const btn = document.getElementById('sidebar-mode-btn');
+            btn.parentElement.style.position = 'relative';
+            btn.parentElement.appendChild(menu);
+
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu() {
+                    menu.remove();
+                    document.removeEventListener('click', closeMenu);
+                });
+            }, 0);
+        };
+
+        window.sidebarMode = 'chats'; // Global state
+
+        window.setSidebarMode = function(mode) {
+            const menu = document.getElementById('sidebar-mode-menu');
+            if (menu) menu.remove();
+            window.sidebarMode = mode;
+            const lbl = document.getElementById('sidebar-mode-label');
+            if (lbl) lbl.textContent = mode === 'chats' ? 'Chats' : 'Pages';
+
+            const convList = document.getElementById('conv-list');
+            const pagesList = document.getElementById('pages-list');
+            const storiesBar = document.getElementById('stories-bar');
+            const sbSearch = document.querySelector('.sb-search');
+
+            if (mode === 'pages') {
+                if (convList) convList.style.display = 'none';
+                if (pagesList) pagesList.style.display = 'block';
+                if (storiesBar) storiesBar.style.display = 'none';
+                if (sbSearch) sbSearch.style.display = 'none';
+                renderPagesList();
+                closePage();
+            } else {
+                if (convList) convList.style.display = '';
+                if (pagesList) pagesList.style.display = 'none';
+                if (storiesBar) storiesBar.style.display = '';
+                if (sbSearch) sbSearch.style.display = '';
+                
+                // CRITICAL FIX: Forcefully hide the page screen and restore the chat area
+                const pageScreen = document.getElementById('page-screen');
+                const chatArea = document.getElementById('chat-area');
+                if (pageScreen) {
+                    pageScreen.style.setProperty('display', 'none', 'important');
+                }
+                if (chatArea) {
+                    chatArea.style.setProperty('display', 'flex', 'important');
+                }
+                
+                if (activeChatId) {
+                    document.getElementById('no-chat-screen').style.setProperty('display', 'none', 'important');
+                    document.getElementById('active-chat-screen').style.setProperty('display', 'flex', 'important');
+                } else {
+                    document.getElementById('no-chat-screen').style.setProperty('display', 'flex', 'important');
+                    document.getElementById('active-chat-screen').style.setProperty('display', 'none', 'important');
+                }
+            }
+            if (window._updateFabVisibility) window._updateFabVisibility();
+        };
+
+        window.closePage = function() {
+            if (unsubPagePosts) { unsubPagePosts(); unsubPagePosts = null; }
+            activePageUser = null;
+            
+            // CRITICAL FIX: Ironclad reset for leaving the page
+            const pageScreen = document.getElementById('page-screen');
+            const chatArea = document.getElementById('chat-area');
+            if (pageScreen) {
+                pageScreen.style.setProperty('display', 'none', 'important');
+                pageScreen.style.background = '';
+            }
+            if (chatArea) {
+                chatArea.style.setProperty('display', 'flex', 'important');
+            }
+            
+            if (activeChatId) {
+                document.getElementById('no-chat-screen').style.setProperty('display', 'none', 'important');
+                document.getElementById('active-chat-screen').style.setProperty('display', 'flex', 'important');
+            } else {
+                document.getElementById('no-chat-screen').style.setProperty('display', 'flex', 'important');
+                document.getElementById('active-chat-screen').style.setProperty('display', 'none', 'important');
+            }
+            
+            document.body.classList.remove('mobile-chat-open');
+            document.getElementById('page-body').style.background = '';
+            
+            const picker = document.getElementById('page-bg-picker');
+            if (picker) picker.style.display = 'none';
+
+            window.isViewingHome = true;
+            if (window._updateFabVisibility) window._updateFabVisibility();
+        };
+
+        window.renderPagesList = function() {
+            const list = document.getElementById('pages-list');
+            if (!list || !currentUser) return;
+            
+            const friends = window.getFriendsList ? window.getFriendsList() : [];
+            const allUsers = [currentUser, ...friends.filter(u => u !== currentUser)];
+            
+            list.innerHTML = allUsers.map(u => {
+                const p = usersCache[u] || {};
+                const fname = p.fname || u;
+                
+                // Pull their custom colors exactly like the header
+                const accent1 = p.pageAccent || 'var(--accent)';
+                const accent2 = p.pageAccent2 || 'var(--text-muted)';
+                
+                // Stripped-down layout: Just the avatar, the Name+page, and the @username
+                return `
+                <div class="conv-item" onclick="openPage('${u}')" style="display:flex; align-items:center; padding:12px 20px; cursor:pointer;">
+                    <div style="width:50px; height:50px; border-radius:50%; overflow:hidden; flex-shrink:0; margin-right:15px; border:1px solid var(--border-light);">
+                        ${getAvatarHTML(u, p, false)}
+                    </div>
+                    <div style="display:flex; flex-direction:column; justify-content:center;">
+                        <div style="font-size:18px; font-weight:800; color:var(--text-dark); display:flex; align-items:center; letter-spacing:-0.5px; line-height:1;">
+                            ${fname}<span style="color:${accent1};">page</span>
+                        </div>
+                        
+                    </div>
+                </div>`;
+            }).join('');
+        };
+
+        window.openPage = async function(username) {
+            activePageUser = username;
+            const profile = usersCache[username] || {};
+            const fname = profile.fname || username;
+            const accentColor = profile.pageAccent || 'var(--accent)';
+            const accentColor2 = profile.pageAccent2 || 'var(--text-muted)'; // NEW: Secondary Accent
+
+            const hasStory = window.hasActiveStory && window.hasActiveStory(username);
+            const storyClickAttr = hasStory ? `onclick="openStoryViewer('${username}')" style="cursor:pointer; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"` : '';
+
+            const bioHtml = profile.bio ? `<div style="font-size:15px; color:var(--text-dark); max-width:500px; text-align:center; line-height:1.4; margin-top:12px;">${profile.bio}</div>` : '';
+            const pronounsText = profile.pronouns ? ` • ${profile.pronouns}` : '';
+            
+            // Smart Spotify Link Reader
+            let songHtml = '';
+            if (profile.song) {
+                const isLink = profile.song.startsWith('http');
+                songHtml = `
+                <a id="profile-song-link" ${isLink ? `href="${profile.song}" target="_blank"` : ''} style="font-size:13px; color:${accentColor}; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; text-decoration:none; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> 
+                    <span id="page-song-text">${isLink ? 'Loading track...' : profile.song}</span>
+                </a>`;
+                
+                // Automatically fetch the Song Name & Artist using Spotify's public API
+                if (isLink && profile.song.includes('spotify.com')) {
+                    fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent(profile.song))
+                        .then(res => res.json())
+                        .then(data => {
+                            const songEl = document.getElementById('page-song-text');
+                            if (songEl) songEl.innerText = data.title; 
+                        })
+                        .catch(() => {
+                            const songEl = document.getElementById('page-song-text');
+                            if (songEl) songEl.innerText = 'Play on Spotify';
+                        });
+                }
+            }
+
+            document.getElementById('page-title').innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; margin-top:10px; margin-bottom:10px;">
+                    <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:16px;">
+                        <div ${storyClickAttr} title="${hasStory ? 'View Story' : ''}">
+                            <div style="width:90px; height:90px; border-radius:50%; overflow:hidden;">
+                                ${getAvatarHTML(username, profile, true)}
+                            </div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+                            <div style="font-size:32px; font-weight:800; color:var(--text-dark); display:flex; align-items:center; letter-spacing:-0.5px; line-height:1;">
+                                ${fname}<span id="page-accent-text" style="color:${accentColor};">page</span>
+                            </div>
+                            <div id="page-accent2-text" style="font-size:14px; color:${accentColor2}; font-weight:600; margin-top:6px;">
+                                @${username}${pronounsText}
+                            </div>
+                        </div>
+                    </div>
+                    ${bioHtml}
+                    ${songHtml}
+                </div>
+            `;
+
+            const editBtn = document.getElementById('page-edit-btn');
+            if (editBtn) editBtn.style.display = username === currentUser ? 'flex' : 'none';
+
+            const bgBtn = document.getElementById('page-bg-btn');
+            if (bgBtn) bgBtn.style.display = username === currentUser ? 'flex' : 'none';
+
+            // Dual Custom Color Pickers
+            let picker = document.getElementById('page-bg-picker');
+            if (picker && username === currentUser) {
+                let accentContainer = document.getElementById('accent-picker-container');
+                if (!accentContainer) {
+                    accentContainer = document.createElement('div');
+                    accentContainer.id = 'accent-picker-container';
+                    accentContainer.style.cssText = "display:flex; flex-direction:column; gap:12px; margin-top:15px; padding-top:15px; border-top:1px solid var(--border-light);";
+                    accentContainer.innerHTML = `
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-size:14px; color:var(--text-dark); font-weight:bold;">Accent 1 (Page & Song):</label>
+                            <div style="position:relative; width:36px; height:36px; border-radius:50%; overflow:hidden; border:2px solid var(--border-light); cursor:pointer;">
+                                <input type="color" id="page-accent-picker" title="Accent 1" style="position:absolute; top:-10px; left:-10px; width:60px; height:60px; border:none; cursor:pointer; padding:0; background:none;">
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-size:14px; color:var(--text-dark); font-weight:bold;">Accent 2 (Username):</label>
+                            <div style="position:relative; width:36px; height:36px; border-radius:50%; overflow:hidden; border:2px solid var(--border-light); cursor:pointer;">
+                                <input type="color" id="page-accent2-picker" title="Accent 2" style="position:absolute; top:-10px; left:-10px; width:60px; height:60px; border:none; cursor:pointer; padding:0; background:none;">
+                            </div>
+                        </div>
+                    `;
+                    picker.appendChild(accentContainer);
+                    
+                    document.getElementById('page-accent-picker').addEventListener('change', async (e) => {
+                        const newColor = e.target.value;
+                        await updateDoc(doc(db, 'users', currentUser), { pageAccent: newColor });
+                        if(usersCache[currentUser]) usersCache[currentUser].pageAccent = newColor;
+                        const txt = document.getElementById('page-accent-text');
+                        if(txt) txt.style.color = newColor;
+                        const songLnk = document.getElementById('profile-song-link');
+                        if (songLnk) songLnk.style.color = newColor;
+                    });
+
+                    document.getElementById('page-accent2-picker').addEventListener('change', async (e) => {
+                        const newColor = e.target.value;
+                        await updateDoc(doc(db, 'users', currentUser), { pageAccent2: newColor });
+                        if(usersCache[currentUser]) usersCache[currentUser].pageAccent2 = newColor;
+                        const txt2 = document.getElementById('page-accent2-text');
+                        if(txt2) txt2.style.color = newColor;
+                    });
+                }
+                document.getElementById('page-accent-picker').value = accentColor;
+                document.getElementById('page-accent2-picker').value = accentColor2;
+                accentContainer.style.display = 'flex';
+            } else if (picker) {
+                const accentContainer = document.getElementById('accent-picker-container');
+                if (accentContainer) accentContainer.style.display = 'none';
+            }
+
+            applyPageBgFromProfile(profile);
+
+            document.getElementById('chat-area').style.setProperty('display', 'none', 'important');
+            document.getElementById('page-screen').style.setProperty('display', 'flex', 'important');
+            document.body.classList.add('mobile-chat-open');
+
+            window.isViewingHome = false;
+            if (window._updateFabVisibility) window._updateFabVisibility();
+
+            if (unsubPagePosts) unsubPagePosts();
+            const bodyEl = document.getElementById('page-body');
+            bodyEl.innerHTML = `<div class="page-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Loading...</div>`;
+
+            const postsRef = collection(db, 'pages', username, 'posts');
+            const q = query(postsRef, orderBy('createdAt', 'desc'));
+            
+            // Added error catch to prevent silent failures
+            unsubPagePosts = onSnapshot(q, (snap) => {
+                const posts = [];
+                snap.forEach(d => posts.push({ id: d.id, ...d.data() }));
+                renderPagePosts(posts, username, profile);
+            }, (err) => {
+                console.error("Error loading posts:", err);
+                bodyEl.innerHTML = `<div class="page-empty">Failed to load posts.</div>`;
+            });
+        };
+
+        function renderPagePosts(posts, username, profile) {
+            const bodyEl = document.getElementById('page-body');
+            if (!bodyEl || activePageUser !== username) return;
+            
+            if (posts.length === 0) {
+                const fname = profile.fname || username;
+                bodyEl.innerHTML = `<div class="page-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>${fname} is a little shy right now.</div>`;
+                return;
+            }
+            
+            bodyEl.innerHTML = '';
+            posts.forEach(post => {
+                const card = document.createElement('div');
+                card.className = 'page-post';
+                card.id = `page-post-${post.id}`;
+                
+                // CRITICAL FIX: Safe timestamp check prevents 'null' crashes
+                let ts = 'Just now';
+                if (post.createdAt) {
+                    try {
+                        const ms = typeof post.createdAt.toMillis === 'function' ? post.createdAt.toMillis() : post.createdAt.seconds * 1000;
+                        const d = new Date(ms);
+                        const h = d.getHours() % 12 || 12, m = d.getMinutes().toString().padStart(2,'0'), ap = d.getHours() >= 12 ? 'PM' : 'AM';
+                        ts = `${d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})} at ${h}:${m} ${ap}`;
+                    } catch(e) {}
+                }
+
+                let contentHtml = '';
+                
+                let textHtml = '';
+                let rawText = post.text || post.caption || post.note; 
+                if (rawText) {
+                    let escaped = rawText.replace(/</g, '<').replace(/>/g, '>');
+                    escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
+                    textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${escaped.split('\n').join('<br>')}</div>`;
+                }
+
+                let songHtml = '';
+                if (post.song) {
+                    let embedUrl = post.song;
+                    // Safely extract the ID without relying on mangled URLs
+                    const match = embedUrl.match(/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+                    if (match && !embedUrl.includes('embed')) {
+                        embedUrl = 'https://open.spotify.com/embed/' + match[1] + '/' + match[2] + '?utm_source=generator';
+                    }
+                    
+                    if (embedUrl.includes('embed')) {
+                        songHtml = `<div class="page-post-song" style="margin-bottom:10px;"><iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px; display:block;"></iframe></div>`;
+                    }
+                }
+
+                let imgHtml = '';
+                if (post.imageData) {
+                    imgHtml = `<img class="page-post-img" src="${post.imageData}" onclick="openLightbox(this.src)" loading="lazy" style="border-radius:12px;">`;
+                }
+
+                contentHtml = textHtml + songHtml + imgHtml;
+
+                const isOwn = username === currentUser;
+                const likes = post.likes || {};
+                const likeCount = Object.keys(likes).length;
+                const isLiked = likes[currentUser] === true;
+                const commentCount = post.commentCount || 0;
+
+                const heartSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${isLiked ? '#EE352E' : 'none'}" stroke="${isLiked ? '#EE352E' : 'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+                const commentSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+
+                card.innerHTML = `
+                    <div class="page-post-header">
+                        <div class="page-post-av">${getAvatarHTML(username, profile, false)}</div>
+                        <div class="page-post-meta">
+                            <div class="page-post-name">${getFullName(username)}</div>
+                            <div class="page-post-time">${ts}</div>
+                        </div>
+                        ${isOwn ? `<button onclick="deletePagePost('${post.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;margin-left:auto;transition:color 0.15s;" title="Delete post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : ''}
+                    </div>
+                    ${contentHtml}
+                    <div class="page-post-actions">
+                        <button class="page-action-btn ${isLiked ? 'liked' : ''}" onclick="togglePageLike('${username}', '${post.id}', this)">
+                            ${heartSVG} <span>${likeCount > 0 ? likeCount : ''}</span>
+                        </button>
+                        <button class="page-action-btn" onclick="togglePageComments('${post.id}')">
+                            ${commentSVG} <span>${commentCount > 0 ? commentCount + ' comment' + (commentCount !== 1 ? 's' : '') : 'Comment'}</span>
+                        </button>
+                    </div>
+                    <div class="page-comments-area" id="comments-${post.id}">
+                        <div class="page-comment-input-row">
+                            <div class="page-comment-av">${getAvatarHTML(currentUser, usersCache[currentUser]||{}, false)}</div>
+                            <input class="page-comment-input" placeholder="Write a comment..." id="comment-input-${post.id}" onkeypress="if(event.key==='Enter'){submitPageComment('${username}','${post.id}');event.preventDefault();}">
+                            <button class="page-comment-send" onclick="submitPageComment('${username}','${post.id}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            </button>
+                        </div>
+                        <div id="comment-list-${post.id}" style="margin-top:10px;"></div>
+                    </div>
+                `;
+                bodyEl.appendChild(card);
+
+                loadPageComments(username, post.id);
+            });
+        }
+
+        // ── PAGE COMPOSER ─────────────────────────────────────────
+        let _pcCapturedImage = null;
+        let _pcCapturedSong = null;
+
+        window.togglePageComposer = function() {
+            const c = document.getElementById('page-composer-overlay');
+            if (c) {
+                if (c.classList.contains('active')) {
+                    window.closePageComposer();
+                } else {
+                    document.getElementById('pc-unified-avatar').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser], false);
+                    c.style.display = 'flex';
+                    void c.offsetWidth;
+                    c.classList.add('active');
+                }
+            }
+        };
+
+        window.closePageComposer = function() {
+            const c = document.getElementById('page-composer-overlay');
+            if (c) {
+                c.classList.remove('active');
+                setTimeout(() => { c.style.display = 'none'; }, 200);
+            }
+        };
+
+        window.handlePcImage = function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    const MAX = 1000; let w=img.width, h=img.height;
+                    const r = Math.min(MAX/w, MAX/h); if(r<1){w=Math.round(w*r);h=Math.round(h*r);}
+                    c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+                    _pcCapturedImage = c.toDataURL('image/jpeg', 0.85);
+                    const prev = document.getElementById('pc-img-preview');
+                    const box = document.getElementById('pc-img-preview-box');
+                    if (prev && box) { prev.src = _pcCapturedImage; box.style.display = 'block'; }
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.clearPcImage = function() {
+            _pcCapturedImage = null;
+            const prev = document.getElementById('pc-img-preview');
+            const box = document.getElementById('pc-img-preview-box');
+            if (prev) prev.src = '';
+            if (box) box.style.display = 'none';
+            const inp = document.getElementById('pc-img-input');
+            if (inp) inp.value = '';
+        };
+
+        window.promptPcSong = function() {
+            const url = prompt("Paste a Spotify Track, Album, or Playlist Link:");
+            if (!url) return;
+            
+            let embedUrl = url;
+            const match = url.match(/(track|album|playlist)\/([a-zA-Z0-9]+)/);
+            if (match && !url.includes('embed')) {
+                embedUrl = 'https://open.spotify.com/embed/' + match[1] + '/' + match[2] + '?utm_source=generator&theme=0';
+            }
+            
+            _pcCapturedSong = embedUrl;
+            const iframe = document.getElementById('pc-song-iframe');
+            const box = document.getElementById('pc-song-preview-box');
+            if (iframe && box) {
+                iframe.src = embedUrl;
+                box.style.display = 'block';
+            }
+        };
+
+        window.clearPcSong = function() {
+            _pcCapturedSong = null;
+            const iframe = document.getElementById('pc-song-iframe');
+            const box = document.getElementById('pc-song-preview-box');
+            if (iframe) iframe.src = '';
+            if (box) box.style.display = 'none';
+        };
+
+        window.submitPagePost = async function() {
+            if (!currentUser) return;
+            const postBtn = document.getElementById('pc-submit-btn');
+            if (postBtn) { postBtn.textContent = 'Posting...'; postBtn.disabled = true; }
+
+            try {
+                const textEl = document.getElementById('pc-unified-text');
+                const text = textEl ? textEl.value.trim() : '';
+                
+                if (!text && !_pcCapturedImage && !_pcCapturedSong) {
+                    alert('Write something, add a photo, or attach a song!');
+                    if (postBtn) { postBtn.textContent = 'Post'; postBtn.disabled = false; }
+                    return;
+                }
+
+                let postData = { type: 'unified', createdAt: serverTimestamp() };
+                if (text) postData.text = text;
+                if (_pcCapturedImage) postData.imageData = _pcCapturedImage;
+                if (_pcCapturedSong) postData.song = _pcCapturedSong;
+
+                await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
+
+                if (textEl) textEl.value = '';
+                clearPcImage();
+                clearPcSong();
+                
+                window.closePageComposer();
+                
+            } catch(e) {
+                console.error('submitPagePost error: ', e);
+                alert('Failed to post.');
+            }
+            if (postBtn) { postBtn.textContent = 'Post'; postBtn.disabled = false; }
+        };
+
+        window.deletePagePost = async function(postId) {
+            if (!currentUser || !activePageUser || activePageUser !== currentUser) return;
+            await deleteDoc(doc(db, 'pages', currentUser, 'posts', postId)).catch(()=>{});
+        };
+
+        // ── PAGE LIKES ────────────────────────────────────────
+        window.togglePageLike = async function(pageOwner, postId, btn) {
+            if (!currentUser) return;
+            const postRef = doc(db, 'pages', pageOwner, 'posts', postId);
+            const snap = await getDoc(postRef).catch(()=>null);
+            if (!snap || !snap.exists()) return;
+            const likes = snap.data().likes || {};
+            const isLiked = likes[currentUser] === true;
+            const update = isLiked ? { [`likes.${currentUser}`]: deleteField() } : { [`likes.${currentUser}`]: true };
+            await updateDoc(postRef, update).catch(()=>{});
+            // Optimistic UI
+            const newLiked = !isLiked;
+            const newLikes = { ...likes };
+            if (newLiked) newLikes[currentUser] = true; else delete newLikes[currentUser];
+            const count = Object.keys(newLikes).length;
+            btn.classList.toggle('liked', newLiked);
+            const heartFill = newLiked ? '#EE352E' : 'none';
+            const heartStroke = newLiked ? '#EE352E' : 'currentColor';
+            btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartStroke}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span>${count > 0 ? count : ''}</span>`;
+        };
+
+        // ── PAGE COMMENTS ─────────────────────────────────────
+        window.togglePageComments = function(postId) {
+            const area = document.getElementById(`comments-${postId}`);
+            if (area) {
+                area.classList.toggle('open');
+                if (area.classList.contains('open')) {
+                    const inp = document.getElementById(`comment-input-${postId}`);
+                    if (inp) inp.focus();
+                }
+            }
+        };
+
+        window.replyToPageComment = function(postId, replyUsername) {
+            const input = document.getElementById(`comment-input-${postId}`);
+            if (input) {
+                const currentVal = input.value;
+                if (currentVal.startsWith('@')) {
+                    input.value = `@${replyUsername} ` + currentVal.replace(/^@[^\s]+\s/, '');
+                } else {
+                    input.value = `@${replyUsername} ${currentVal}`;
+                }
+                input.focus();
+            }
+        };
+
+        // NEW: Handles liking individual comments
+        window.togglePageCommentLike = async function(pageOwner, postId, commentId) {
+            if (!currentUser) return;
+            const commentRef = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
+            try {
+                const docSnap = await getDoc(commentRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    let likes = data.likes || {};
+                    if (likes[currentUser]) {
+                        delete likes[currentUser];
+                    } else {
+                        likes[currentUser] = true;
+                    }
+                    await updateDoc(commentRef, { likes });
+                }
+            } catch(e) {
+                console.error("Error liking comment:", e);
+            }
+        };
+
+        window.loadPageComments = function(pageOwner, postId) {
+            const commentsRef = collection(db, 'pages', pageOwner, 'posts', postId, 'comments');
+            const q = query(commentsRef, orderBy('createdAt', 'asc'));
+            
+            onSnapshot(q, (snap) => {
+                const listEl = document.getElementById(`comment-list-${postId}`);
+                if (!listEl) return;
+                
+                if (snap.empty) {
+                    listEl.innerHTML = '';
+                    return;
+                }
+                
+                let html = '';
+                snap.forEach(d => {
+                    const c = d.data();
+                    const commentId = d.id; // Needed for the like button
+                    const p = usersCache[c.author] || {};
+                    const fname = p.fname || c.author;
+                    let text = c.text || '';
+                    
+                    text = text.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
+
+                    // Calculate Comment Likes
+                    const likes = c.likes || {};
+                    const isLiked = likes[currentUser] === true;
+                    const likeCount = Object.keys(likes).length;
+                    const heartColor = isLiked ? '#EE352E' : 'var(--text-muted)';
+                    const heartFill = isLiked ? '#EE352E' : 'none';
+
+                    html += `
+                        <div class="page-comment-item">
+                            <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
+                                ${getAvatarHTML(c.author, p, false)}
+                            </div>
+                            <div style="flex:1; display:flex; flex-direction:column; padding-top:2px;">
+                                <div style="font-size:14px; color:var(--text-dark);">
+                                    <div style="font-weight:800; cursor:pointer; margin-bottom:2px;" onclick="viewProfile('${c.author}')">${fname}</div>
+                                    <div style="line-height:1.4;">${text}</div>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:12px; margin-top:4px;">
+                                    <button class="page-comment-reply-btn" onclick="replyToPageComment('${postId}', '${c.author}')">Reply</button>
+                                    <button class="page-comment-reply-btn" style="display:flex; align-items:center; gap:4px; color:${heartColor};" onclick="togglePageCommentLike('${pageOwner}', '${postId}', '${commentId}')">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="${heartFill}" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                        ${likeCount > 0 ? likeCount : 'Like'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                listEl.innerHTML = html;
+            });
+        };
+
+        window.toggleCommentLike = async function(pageOwner, postId, commentId, btn) {
+            if (!currentUser) return;
+            const ref = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
+            const snap = await getDoc(ref).catch(()=>null);
+            if (!snap || !snap.exists()) return;
+            const likes = snap.data().likes || {};
+            const isLiked = likes[currentUser] === true;
+            await updateDoc(ref, isLiked ? { [`likes.${currentUser}`]: deleteField() } : { [`likes.${currentUser}`]: true }).catch(()=>{});
+            const newLiked = !isLiked;
+            const newCount = Object.keys(likes).length + (newLiked ? 1 : -1);
+            btn.classList.toggle('liked', newLiked);
+            const fill = newLiked ? '#EE352E' : 'none';
+            const stroke = newLiked ? '#EE352E' : 'currentColor';
+            btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> ${newCount > 0 ? newCount : 'Like'}`;
+        };
+
+        window.toggleCommentReplies = function(postId, commentId) {
+            const el = document.getElementById(`replies-${postId}-${commentId}`);
+            if (el) {
+                el.classList.toggle('open');
+                if (el.classList.contains('open')) {
+                    const inp = document.getElementById(`reply-input-${postId}-${commentId}`);
+                    if (inp) inp.focus();
+                }
+            }
+        };
+
+        window.submitCommentReply = async function(pageOwner, postId, commentId) {
+            if (!currentUser) return;
+            const inp = document.getElementById(`reply-input-${postId}-${commentId}`);
+            if (!inp) return;
+            const text = inp.value.trim();
+            if (!text) return;
+            inp.value = '';
+            const ref = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
+            const snap = await getDoc(ref).catch(()=>null);
+            if (!snap) return;
+            const existing = snap.data().replies || [];
+            await updateDoc(ref, {
+                replies: [...existing, { author: currentUser, text, createdAt: Date.now() }]
+            }).catch(()=>{});
+        };
+
+        window.submitPageComment = async function(pageOwner, postId) {
+            if (!currentUser) return;
+            const inp = document.getElementById(`comment-input-${postId}`);
+            if (!inp) return;
+            const text = inp.value.trim();
+            if (!text) return;
+            inp.value = '';
+            await addDoc(collection(db, 'pages', pageOwner, 'posts', postId, 'comments'), {
+                author: currentUser, text, createdAt: serverTimestamp()
+            }).catch(()=>{});
+        };
+
+        // ── PAGE BACKGROUND ───────────────────────────────────
+        const PAGE_BG_PRESETS = [
+            { color: '#ffffff', label: 'White' },
+            { color: '#f8f4ef', label: 'Warm' },
+            { color: '#f0f4ff', label: 'Cool Blue' },
+            { color: '#f4f0ff', label: 'Lavender' },
+            { color: '#f0fff4', label: 'Mint' },
+            { color: '#fff4f0', label: 'Peach' },
+            { color: '#0a0a0a', label: 'Black' },
+            { color: '#0B192C', label: 'Navy' },
+            { color: '#1a1a2e', label: 'Midnight' },
+            { color: '#1e0000', label: 'Dark Red' },
+        ];
+
+        // Build swatch buttons
+        (function initPageBgPicker() {
+            const sw = document.getElementById('pbg-swatches');
+            if (!sw) return;
+            PAGE_BG_PRESETS.forEach(p => {
+                const btn = document.createElement('div');
+                btn.className = 'pbg-swatch';
+                btn.style.background = p.color;
+                btn.title = p.label;
+                btn.onclick = () => applyPageBg('color', p.color);
+                sw.appendChild(btn);
+            });
+        })();
+
+        window.togglePageBgPicker = function(e) {
+            e.stopPropagation();
+            const picker = document.getElementById('page-bg-picker');
+            picker.style.display = picker.style.display === 'block' ? 'none' : 'block';
+        };
+
+        document.addEventListener('click', (e) => {
+            const picker = document.getElementById('page-bg-picker');
+            if (picker && picker.style.display === 'block' && !picker.contains(e.target) && !e.target.closest('#page-bg-btn')) {
+                picker.style.display = 'none';
+            }
+        });
+
+        window.applyPageBg = async function(type, value) {
+            const screen = document.getElementById('page-screen');
+            let bgData = null;
+
+            if (type === 'color' && value) {
+                screen.style.background = value;
+                bgData = { type: 'color', value };
+                // Update active swatch
+                document.querySelectorAll('.pbg-swatch').forEach(s => s.classList.toggle('active', s.style.background === value || s.style.backgroundColor === value));
+            } else if (type === 'image' && value) {
+                screen.style.background = `url('${value}') center center / cover no-repeat`;
+                bgData = { type: 'image', value };
+            } else if (type === 'reset') {
+                screen.style.background = '';
+                bgData = null;
+                document.querySelectorAll('.pbg-swatch').forEach(s => s.classList.remove('active'));
+            }
+
+            // Save to user profile
+            if (currentUser) {
+                await updateDoc(doc(db, 'users', currentUser), { pageBg: bgData || deleteField() }).catch(()=>{});
+                if (usersCache[currentUser]) usersCache[currentUser].pageBg = bgData;
+            }
+
+            const picker = document.getElementById('page-bg-picker');
+            if (type === 'reset' && picker) picker.style.display = 'none';
+        };
+
+        window.handlePageBgImage = function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    const MAX = 1200; let w=img.width, h=img.height;
+                    const r = Math.min(MAX/w, MAX/h, 1); w=Math.round(w*r); h=Math.round(h*r);
+                    c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+                    applyPageBg('image', c.toDataURL('image/jpeg', 0.85));
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function applyPageBgFromProfile(profile) {
+            const screen = document.getElementById('page-screen');
+            const bg = profile.pageBg;
+            screen.style.background = '';
+            if (!bg) return;
+            if (bg.type === 'color' && bg.value) screen.style.background = bg.value;
+            else if (bg.type === 'image' && bg.value) screen.style.background = `url('${bg.value}') center center / cover no-repeat`;
+        }
+
+        // ── ADMIN MODE ────────────────────────────────────────
+        let isAdminMode = false;
+        // Admin gets its own db reference (works before any user is signed in)
+        let adminDb = null;
+        function getAdminDb() {
+            if (adminDb) return adminDb;
+            // Re-use the already-initialized app
+            adminDb = getFirestore(app);
+            return adminDb;
+        }
+
+        window.openAdminPanel = function() {
+            isAdminMode = true;
+            document.getElementById('app-layout').classList.remove('active');
+            const panel = document.getElementById('admin-panel');
+            panel.classList.add('active');
+            loadAdminUsers();
+        };
+
+        window.exitAdminMode = function() {
+            isAdminMode = false;
+            document.getElementById('admin-panel').classList.remove('active');
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('step-1-auth').style.display = 'block';
+            document.getElementById('auth-u').value = '';
+            document.getElementById('auth-p').value = '';
+        };
+
+        async function loadAdminUsers() {
+            const listEl = document.getElementById('admin-users-list');
+            if (!listEl) return;
+            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
+            try {
+                const adb = getAdminDb();
+                const snap = await getDocs(collection(adb, 'users'));
+                const users = [];
+                snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+                if (users.length === 0) { listEl.innerHTML = '<p style="color:#555;font-size:13px;">No users found.</p>'; return; }
+                users.sort((a,b) => (a.fname||a.id).localeCompare(b.fname||b.id));
+                listEl.innerHTML = users.map(u => {
+                    const initials = ((u.fname||'')[0]||'?').toUpperCase();
+                    const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
+                    return `<div class="admin-user-row">
+                        <div class="admin-user-av">${avHtml}</div>
+                        <div class="admin-user-info">
+                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()}</div>
+                            <div class="admin-user-handle">@${u.id} &middot; joined ${u.joined||'?'}</div>
+                        </div>
+                        <button class="admin-del-btn" onclick="adminDeleteUser('${u.id}')">Delete</button>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                console.error('Admin load users error:', e);
+                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+            }
+        }
+
+        window.adminDeleteUser = async function(username) {
+            if (!confirm(`Permanently delete user @${username}? This cannot be undone.`)) return;
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'users', username)).catch(()=>{});
+                const postsSnap = await getDocs(collection(adb, 'pages', username, 'posts')).catch(()=>null);
+                if (postsSnap) postsSnap.forEach(d => deleteDoc(d.ref).catch(()=>{}));
+                await loadAdminUsers();
+                alert(`User @${username} has been deleted.`);
+            } catch(e) {
+                alert('Error deleting user: ' + e.message);
+            }
+        };
+
+        window.postAdminAnnouncement = async function() {
+            const text = document.getElementById('admin-announcement-text').value.trim();
+            if (!text) { alert('Write an announcement first.'); return; }
+            const btn = document.querySelector('#admin-panel .btn-primary');
+            if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+            try {
+                const adb = getAdminDb();
+                await addDoc(collection(adb, 'pages', 'talkpage_official', 'posts'), {
+                    type: 'text',
+                    text: `OFFICIAL TALKPAGE ANNOUNCEMENT\n\n${text}`,
+                    createdAt: serverTimestamp(),
+                    isOfficial: true
+                });
+                document.getElementById('admin-announcement-text').value = '';
+                alert('Announcement posted!');
+            } catch(e) {
+                alert('Error posting: ' + e.message);
+            }
+            if (btn) { btn.textContent = 'Post to All Users'; btn.disabled = false; }
         };
 
                 window.renderTypingBubbles = function() {

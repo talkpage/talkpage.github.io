@@ -852,7 +852,7 @@
 
 
         /* ── HOME RECENT POSTS FEED ──────────────────────────── */
-        .home-post-card { background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; text-align: left; }
+        .home-post-card { background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; text-align: left; max-height: 240px; overflow: hidden; }
         .home-post-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); border-color: var(--accent); }
         .home-post-author { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
         .home-post-av { width: 28px; height: 28px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #FFF; font-size: 11px; }
@@ -1017,7 +1017,7 @@
                     <span>Start a new conversation here</span>
                 </div>
                 
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 40px; padding-top: 250px; min-height: 250px;">
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 40px; padding-top: 250px; min-height: 0; overflow-y: auto;">
                     
                     <div style="display:flex; align-items:center; justify-content:center; gap: 20px; margin-bottom: 30px; width:100%; max-width:500px;">
                         <div style="position:relative; flex-shrink:0;">
@@ -1271,15 +1271,12 @@
                         <button onclick="pcFmt('bold')" title="Bold" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:4px 8px;font-weight:bold;cursor:pointer;color:var(--text-dark);font-size:14px;font-family:var(--font-main);">B</button>
                         <button onclick="pcFmt('italic')" title="Italic" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:4px 8px;font-style:italic;cursor:pointer;color:var(--text-dark);font-size:14px;font-family:var(--font-main);">I</button>
                         <button onclick="pcFmt('underline')" title="Underline" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:4px 8px;text-decoration:underline;cursor:pointer;color:var(--text-dark);font-size:14px;font-family:var(--font-main);">U</button>
-                        <label title="Text Color" style="display:flex;align-items:center;gap:4px;border:1px solid var(--border-light);border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--text-dark);font-size:12px;font-weight:700;">
-                            <span style="font-size:13px;">A</span>
-                            <input type="color" id="pc-text-color" value="#000000" onchange="pcFmtColor(this.value)" style="width:16px;height:16px;border:none;padding:0;background:none;cursor:pointer;">
-                        </label>
+                        
                     </div>
                     <div style="display:flex; gap:12px; position:relative;">
                         <div id="pc-unified-avatar" style="width:40px; height:40px; border-radius:50%; flex-shrink:0; background:var(--border-light); overflow:hidden;"></div>
                         <div id="pc-unified-text" contenteditable="true" data-placeholder="What's on your mind? Use @ to mention" style="flex:1; border:none; background:transparent; font-family:var(--font-main); font-size:16px; color:var(--text-dark); resize:none; outline:none; min-height:80px; padding-top:8px; word-break:break-word; white-space:pre-wrap;" oninput="pcHandleInput(event)" onkeydown="pcHandleKeydown(event)"></div>
-                        <div id="pc-mention-popup" style="display:none;position:absolute;top:100%;left:40px;background:var(--bg-main);border:2px solid var(--border-dark);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.15);z-index:100;min-width:180px;max-height:160px;overflow-y:auto;padding:4px;"></div>
+                        <div id="pc-mention-popup" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-main);border:2px solid var(--border-dark);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:300;max-height:200px;overflow-y:auto;padding:4px;margin-top:4px;"></div>
                     </div>
                     
                     <div id="pc-img-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
@@ -2845,8 +2842,6 @@
                     usersCache[doc.id] = doc.data();
                     usersDirectory.push(doc.id);
                 });
-                // Reload home feed now that we have all users
-                if (window.loadRecentPagePosts) window.loadRecentPagePosts();
             } catch(e) { console.error("Directory fetch safely skipped."); }
         }
 
@@ -4410,7 +4405,11 @@
             compContainer = document.createElement('div');
             compContainer.id = 'story-composite-view';
             // CRITICAL: pointer-events: none lets clicks pass through the background to the nav buttons
-            compContainer.style.cssText = "position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; background: linear-gradient(135deg, var(--accent), #333);";
+            // Apply background: solid color takes priority, then image, then gradient
+            const bgStyle = story.bgColor
+                ? story.bgColor
+                : 'linear-gradient(135deg, var(--accent), #333)';
+            compContainer.style.cssText = `position:absolute; inset:0; z-index:2; pointer-events:none; overflow:hidden; background:${bgStyle};`;
             document.querySelector('.story-phone-card').appendChild(compContainer);
 
             if (story.bgImage) {
@@ -4434,6 +4433,11 @@
                         const img = document.createElement('img');
                         img.src = elData.content;
                         img.style.cssText = `width:150px; height:auto; border-radius:8px;`;
+                        wrapper.appendChild(img);
+                    } else if (elData.type === 'draw') {
+                        const img = document.createElement('img');
+                        img.src = elData.content;
+                        img.style.cssText = 'max-width:100%; max-height:100%; border-radius:8px; display:block;';
                         wrapper.appendChild(img);
                     } else if (elData.type === 'music') {
                         wrapper.style.zIndex = '9'; 
@@ -4913,69 +4917,48 @@
             selectElement(null); 
             const btn = document.getElementById('sc-submit-btn');
             if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
-            try {
-                const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); 
-                const bgImg = document.getElementById('sc-bg-img');
-                
-                // Sanitizer map: absolutely NO undefined variables allowed
-                const elements = scElements.map(obj => {
-                    let finalContent = '';
-                    if (obj.type === 'text') finalContent = obj.contentEl.innerText || '';
-                    else if (obj.type === 'image') finalContent = obj.contentEl.src || '';
-                    else if (obj.type === 'music') finalContent = obj.rawContent || '';
-                    
-                    return {
-                        type: obj.type || 'text',
-                        content: finalContent,
-                        left: obj.el.style.left || '50%',
-                        top: obj.el.style.top || '50%',
-                        scale: obj.el.dataset.scale || 1
-                    };
-                });
-
-                const storyData = { 
-                    author: currentUser, 
-                    createdAt: serverTimestamp(), 
-                    expiresAt,
-                    type: 'composite',
-                    bgImage: (bgImg && bgImg.src && bgImg.src.startsWith('data:')) ? bgImg.src : null,
-                    elements: elements
-                };
-
-                await addDoc(collection(db, "stories"), storyData);
-                closeStoryCreator();
-            } catch(e) {
-                console.error("Story save error: ", e);
-                alert('Could not share story. Try again.');
-            } finally {
-                if (btn) { btn.textContent = 'Post Story'; btn.disabled = false; }
-            }
-        };
-
-        window.submitStory = async function() {
-            selectElement(null); 
-            const btn = document.getElementById('sc-submit-btn');
-            if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
             
             try {
                 const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); 
                 const bgImg = document.getElementById('sc-bg-img');
                 
+                // Also capture freehand doodles added directly to sc-elements-container
+                const extraDrawEls = [];
+                const container = document.getElementById('sc-elements-container');
+                if (container) {
+                    container.querySelectorAll('img[data-type="draw"]').forEach(imgEl => {
+                        extraDrawEls.push({
+                            type: 'draw',
+                            content: imgEl.src,
+                            left: imgEl.style.left || '50%',
+                            top: imgEl.style.top || '50%',
+                            scale: Number(imgEl.dataset.scale || 1)
+                        });
+                    });
+                }
+
                 // Aggressive Sanitization: Force every value to be a standard string or number
-                const elements = scElements.map(obj => {
-                    let finalContent = '';
-                    if (obj.type === 'text') finalContent = obj.contentEl.innerText || '';
-                    else if (obj.type === 'image') finalContent = obj.contentEl.src || '';
-                    else if (obj.type === 'music') finalContent = obj.rawContent || '';
-                    
-                    return {
-                        type: String(obj.type || 'text'),
-                        content: String(finalContent),
-                        left: String(obj.el.style.left || '50%'),
-                        top: String(obj.el.style.top || '50%'),
-                        scale: Number(obj.el.dataset.scale || 1)
-                    };
-                });
+                const elements = [
+                    ...scElements.map(obj => {
+                        let finalContent = '';
+                        if (obj.type === 'text') finalContent = obj.contentEl.innerText || '';
+                        else if (obj.type === 'image') finalContent = obj.contentEl.src || '';
+                        else if (obj.type === 'music') finalContent = obj.rawContent || '';
+
+                        return {
+                            type: String(obj.type || 'text'),
+                            content: String(finalContent),
+                            left: String(obj.el.style.left || '50%'),
+                            top: String(obj.el.style.top || '50%'),
+                            scale: Number(obj.el.dataset.scale || 1)
+                        };
+                    }),
+                    ...extraDrawEls
+                ];
+
+                // Capture solid background color if set
+                const scCanvas = document.getElementById('sc-canvas');
+                const bgColorVal = scCanvas ? scCanvas.style.backgroundColor : '';
 
                 let storyData = { 
                     author: currentUser, 
@@ -4984,6 +4967,8 @@
                     type: 'composite',
                     elements: elements
                 };
+
+                if (bgColorVal) storyData.bgColor = bgColorVal;
 
                 // Only attach the background image if it actually exists (prevents 'null' crashes)
                 if (bgImg && bgImg.src && bgImg.src.startsWith('data:')) {
@@ -5103,26 +5088,36 @@
 
         let _pcMentionQuery = '';
         window.pcHandleInput = function(e) {
-            const el = e.target;
+            const el = document.getElementById('pc-unified-text');
+            if (!el) return;
+            const popup = document.getElementById('pc-mention-popup');
+            if (!popup) return;
+
+            // Get caret position within the contenteditable
             const sel = window.getSelection();
-            if (!sel || !sel.focusNode) return;
-            // Find @ mention
+            if (!sel || !sel.focusNode) { popup.style.display = 'none'; return; }
             const text = sel.focusNode.textContent || '';
             const pos = sel.focusOffset;
             const before = text.slice(0, pos);
             const atIdx = before.lastIndexOf('@');
-            const popup = document.getElementById('pc-mention-popup');
-            if (!popup) return;
-            if (atIdx >= 0 && !/\s/.test(before.slice(atIdx+1))) {
-                _pcMentionQuery = before.slice(atIdx+1).toLowerCase();
-                const friends = window.getFriendsList ? window.getFriendsList() : [];
-                const matches = friends.filter(f => f.toLowerCase().startsWith(_pcMentionQuery) || (usersCache[f]?.fname||'').toLowerCase().startsWith(_pcMentionQuery)).slice(0,6);
+
+            if (atIdx >= 0 && !/\s/.test(before.slice(atIdx + 1))) {
+                _pcMentionQuery = before.slice(atIdx + 1).toLowerCase();
+                // Search all known users, not just friends
+                const allKnown = (typeof usersDirectory !== 'undefined' && usersDirectory.length > 0)
+                    ? usersDirectory
+                    : (window.getFriendsList ? window.getFriendsList() : []);
+                const matches = allKnown.filter(f =>
+                    f.toLowerCase().includes(_pcMentionQuery) ||
+                    (usersCache[f]?.fname || '').toLowerCase().includes(_pcMentionQuery)
+                ).slice(0, 6);
+
                 if (matches.length) {
-                    popup.style.display = 'block';
                     popup.innerHTML = matches.map(f => {
-                        const p = usersCache[f]||{};
-                        return `<div onclick="pcInsertMention('${f}')" style="padding:8px 12px;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;" onmouseover="this.style.background='var(--bg-sidebar)'" onmouseout="this.style.background=''">${getAvatarHTML(f,p)} ${getFullName(f)} <span style="color:var(--text-muted);font-weight:400;">@${f}</span></div>`;
+                        const p = usersCache[f] || {};
+                        return `<div onmousedown="event.preventDefault();pcInsertMention('${f}')" style="padding:8px 12px;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text-dark);" onmouseover="this.style.background='var(--bg-sidebar)'" onmouseout="this.style.background=''">${getAvatarHTML(f, p)} ${p.fname || f} <span style="color:var(--text-muted);font-weight:400;font-size:12px;">@${f}</span></div>`;
                     }).join('');
+                    popup.style.display = 'block';
                     return;
                 }
             }
@@ -5347,6 +5342,7 @@
                 const bt = b.createdAt?.toMillis?b.createdAt.toMillis():(b.createdAt?.seconds*1000||0);
                 return bt-at;
             }).slice(0,15);
+            
             feed.innerHTML = '';
             sorted.forEach(post => {
                 const u = post._author;
@@ -5356,37 +5352,74 @@
                 const ms = post.createdAt?.toMillis?post.createdAt.toMillis():(post.createdAt?.seconds*1000||0);
                 const diff = Date.now()-ms;
                 const ts = !ms?'':diff<60000?'Just now':diff<3600000?Math.floor(diff/60000)+'m ago':diff<86400000?Math.floor(diff/3600000)+'h ago':new Date(ms).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+                
                 const likes = post.likes||{};
                 const likeCount = Object.keys(likes).length;
                 const isLiked = !!likes[currentUser];
+                
                 const card = document.createElement('div');
                 card.className = 'home-post-card';
-                card.style.cssText = 'min-width:240px;max-width:280px;scroll-snap-align:start;flex-shrink:0;cursor:pointer;';
+                // CRITICAL FIX: Overflow hidden + padding at the bottom lets the buttons sit nicely over the fade
+                card.style.cssText = 'min-width:240px;max-width:280px;scroll-snap-align:start;flex-shrink:0;cursor:pointer;position:relative;overflow:hidden;padding-bottom:46px;';
+                card.onclick = () => {
+                    setSidebarMode('pages');
+                    setTimeout(() => openPage(u), 50);
+                };
+                
                 let bodyHtml='';
-                if(post.text) bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">${post.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+                if(post.text) bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;">${post.text.replace(/</g,'<').replace(/>/g,'>')}</div>`;
                 if(post.imageData) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;margin-top:8px;display:block;" loading="lazy">`;
+
                 card.innerHTML=`
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">
-                        <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:11px;">${getAvatarHTML(u,prof,false)}</div>
-                        <div>
-                            <span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:12px;color:${accent};font-weight:600;margin-left:1px;">page</span>
-                            <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
-                        </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">
+                    <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:11px;">${getAvatarHTML(u,prof,false)}</div>
+                    <div>
+                        <span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:12px;color:${accent};font-weight:600;margin-left:1px;">page</span>
+                        <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
                     </div>
-                    ${bodyHtml}
-                    <div style="display:flex;gap:14px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border-light);">
-                        <button onclick="event.stopPropagation();homeLike('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:${isLiked?'#e74c3c':'var(--text-muted)'};font-family:var(--font-main);padding:0;transition:color 0.15s;" id="hlbtn-${post.id}">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="${isLiked?'#e74c3c':'none'}" stroke="${isLiked?'#e74c3c':'currentColor'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            <span id="hlcnt-${post.id}">${likeCount||''}</span>
-                        </button>
-                        <button onclick="event.stopPropagation();setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--text-muted);font-family:var(--font-main);padding:0;margin-left:auto;transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            Reply
-                        </button>
-                    </div>`;
+                </div>
+                ${bodyHtml}
+                <div style="position:absolute; bottom:0; left:0; right:0; height:65px; background:linear-gradient(to top, rgba(0,0,0,0.85), transparent); z-index:2; pointer-events:none;"></div>
+                <div style="position:absolute; bottom:0; left:0; right:0; display:flex; gap:14px; padding:12px 16px; z-index:3;">
+                    <button onclick="event.stopPropagation();homeLike('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:${isLiked?'#EE352E':'#FFF'};font-family:var(--font-main);padding:0;transition:color 0.15s;text-shadow:0 1px 3px rgba(0,0,0,0.8);" id="hlbtn-${post.id}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="${isLiked?'#EE352E':'none'}" stroke="${isLiked?'#EE352E':'#FFF'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        <span id="hlcnt-${post.id}" style="color:#FFF;">${likeCount||''}</span>
+                    </button>
+                    <button onclick="event.stopPropagation();setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#FFF;font-family:var(--font-main);padding:0;margin-left:auto;transition:color 0.15s;text-shadow:0 1px 3px rgba(0,0,0,0.8);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#FFF'">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Reply
+                    </button>
+                </div>`;
                 feed.appendChild(card);
             });
         }
+
+        window.homeLike = async function(pageOwner, postId) {
+            try {
+                const ref = doc(db,'pages',pageOwner,'posts',postId);
+                const snap = await getDoc(ref);
+                if(!snap.exists()) return;
+                const likes = snap.data().likes||{};
+                const nowLiked = !likes[currentUser];
+                if(nowLiked) likes[currentUser]=true;
+                else delete likes[currentUser];
+                await updateDoc(ref,{likes});
+                const btn = document.getElementById('hlbtn-'+postId);
+                const cnt = document.getElementById('hlcnt-'+postId);
+                if(btn){
+                    btn.style.color = nowLiked ? '#EE352E' : '#FFF';
+                    const svg = btn.querySelector('svg');
+                    if(svg){
+                        svg.setAttribute('fill', nowLiked ? '#EE352E' : 'none');
+                        svg.setAttribute('stroke', nowLiked ? '#EE352E' : '#FFF');
+                    }
+                }
+                if(cnt){
+                    const n = Object.keys(likes).length;
+                    cnt.textContent = n || '';
+                }
+            } catch(e) { console.error('homeLike', e); }
+        };
 
         window.homeLike = async function(pageOwner, postId) {
             try {
@@ -6818,8 +6851,12 @@
                 let contentHtml = '';
                 
                 let textHtml = '';
-                let rawText = post.text || post.caption || post.note; 
-                if (rawText) {
+                let rawText = post.text || post.caption || post.note;
+                if (post.richText) {
+                    // Render saved rich HTML (bold/italic/color), strip scripts for safety
+                    const safeHtml = post.richText.replace(/<script[\s\S]*?<\/script>/gi, '');
+                    textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${safeHtml}</div>`;
+                } else if (rawText) {
                     let escaped = rawText.replace(/</g, '<').replace(/>/g, '>');
                     escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
                     textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${escaped.split('\n').join('<br>')}</div>`;
@@ -6995,8 +7032,10 @@
 
             try {
                 const textEl = document.getElementById('pc-unified-text');
-                const text = textEl ? (textEl.value !== undefined ? textEl.value.trim() : textEl.innerText.trim()) : '';
-                
+                const plainText = textEl ? textEl.innerText.trim() : '';
+                const htmlContent = textEl ? textEl.innerHTML.trim() : '';
+                const text = plainText;
+
                 if (!text && !_pcCapturedImage && !_pcCapturedSong) {
                     alert('Write something, add a photo, or attach a song!');
                     if (postBtn) { postBtn.textContent = 'Post'; postBtn.disabled = false; }
@@ -7005,12 +7044,15 @@
 
                 let postData = { type: 'unified', createdAt: serverTimestamp() };
                 if (text) postData.text = text;
+                // Preserve rich formatting (bold/italic/color) if present
+                const hasFormatting = /<(b|strong|i|em|u|span)[\s>]/i.test(htmlContent);
+                if (hasFormatting) postData.richText = htmlContent;
                 if (_pcCapturedImage) postData.imageData = _pcCapturedImage;
                 if (_pcCapturedSong) postData.song = _pcCapturedSong;
 
                 await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
 
-                if (textEl) textEl.value = '';
+                if (textEl) { textEl.innerHTML = ''; }
                 clearPcImage();
                 clearPcSong();
                 
@@ -7411,12 +7453,8 @@
             _homePostsUnsubs.forEach(u => u());
             _homePostsUnsubs = [];
 
-            // Start with friends (available immediately from chatsCache),
-            // then expand to the full directory once it's loaded.
             const friends = window.getFriendsList ? window.getFriendsList() : [];
-            const dirUsers = (typeof usersDirectory !== 'undefined' && usersDirectory.length > 0)
-                ? usersDirectory : [];
-            const users = [...new Set([currentUser, ...friends, ...dirUsers])];
+            const users = [...new Set([currentUser, ...friends])];
 
             let allPosts = [];
             let resolved = 0;

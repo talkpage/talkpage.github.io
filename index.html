@@ -148,7 +148,32 @@
         #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; flex-direction: row;}
         #app-layout.active { display: flex; }
 
-        #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0; height: 100%; transform: translateZ(0);}
+        #sidebar { width: 340px; border-right: 2px solid var(--border-dark); display: flex; flex-direction: column; background: var(--bg-sidebar); backdrop-filter: var(--blur); z-index: 10; flex-shrink: 0; height: 100%; transform: translateZ(0); transition: width 0.22s cubic-bezier(0.4,0,0.2,1);}
+        #sidebar.collapsed { width: 64px; }
+        /* Hide text & extras when collapsed */
+        #sidebar.collapsed .sb-title-area,
+        #sidebar.collapsed .sb-search,
+        #sidebar.collapsed .conv-info,
+        #sidebar.collapsed .story-bubble-name,
+        #sidebar.collapsed #stories-bar,
+        #sidebar.collapsed .chat-options-wrapper,
+        #sidebar.collapsed #empty-sidebar-hint,
+        #sidebar.collapsed .new-chat-btn,
+        #sidebar.collapsed .sidebar-mode-row { display: none !important; }
+        /* Header layout when collapsed */
+        #sidebar.collapsed .sb-header { padding: calc(14px + env(safe-area-inset-top)) 0 14px; align-items: center; }
+        #sidebar.collapsed .sb-header-top { flex-direction: column; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        /* Profile icon row: hide the title wrapper, center the icon */
+        #sidebar.collapsed .sb-header-top > div:first-child { justify-content: center; gap: 0; width: 100%; }
+        #sidebar.collapsed .sb-actions { flex-direction: column; gap: 6px; align-items: center; width: 100%; }
+        #sidebar.collapsed .my-profile-icon-wrap { margin: 0 auto; }
+        /* Conv items: center avatar */
+        #sidebar.collapsed .conv-item { padding: 10px 0; justify-content: center; }
+        #sidebar.collapsed .avatar-container { margin-right: 0; }
+        /* Collapse toggle button */
+        #sidebar-collapse-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 6px; transition: color 0.15s, transform 0.22s; flex-shrink: 0; }
+        #sidebar-collapse-btn:hover { color: var(--accent); }
+        #sidebar.collapsed #sidebar-collapse-btn { transform: rotate(180deg); }
         .sb-header { 
             height: auto; 
             min-height: calc(84px + env(safe-area-inset-top)); 
@@ -676,7 +701,22 @@
         #story-viewer { position: fixed; inset: 0; z-index: 9000; background: #000; display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
         #story-viewer.active { opacity: 1; }
         #story-viewer-bg { position: absolute; inset: 0; background: #000 center/cover no-repeat; filter: blur(30px) brightness(0.3); transform: scale(1.1); }
-        .story-phone-card { position: relative; width: 100%; max-width: 400px; height: 100%; max-height: 85vh; background: #111; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 5; }
+        /* Always phone-shaped: 9:16 ratio, max fits the viewport */
+        .story-phone-card {
+            position: relative;
+            /* Fixed phone aspect ratio */
+            width: min(390px, calc(100vh * 9 / 16));
+            height: min(calc(390px * 16 / 9), 100vh);
+            aspect-ratio: 9 / 16;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 5;
+            flex-shrink: 0;
+        }
         #story-viewer-header { position: absolute; top: 0; left: 0; right: 0; z-index: 10; padding: 20px 16px 10px; display: flex; align-items: center; gap: 10px; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent); }
         #story-viewer-progress { position: absolute; top: 8px; left: 10px; right: 10px; height: 3px; z-index: 11; display: flex; gap: 4px; }
         .story-prog-seg { flex: 1; height: 3px; background: rgba(255,255,255,0.35); border-radius: 2px; overflow: hidden; }
@@ -892,6 +932,15 @@
 
         #pc-unified-text:empty:before { content: attr(data-placeholder); color: var(--text-muted); pointer-events:none; display:block; }
 
+        /* ── CHAT BG PICKER MODAL ───────────────────────────── */
+        #chat-bg-modal { position: fixed; inset: 0; z-index: 6000; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        #chat-bg-modal.active { display: flex; animation: fadeUp 0.18s ease; }
+        .chat-bg-card { background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 18px; padding: 24px; width: 90%; max-width: 360px; }
+        .chat-bg-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 16px; color: var(--text-dark); }
+        .chat-bg-presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .chat-bg-swatch { width: 34px; height: 34px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.15s, border-color 0.15s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .chat-bg-swatch:hover { transform: scale(1.15); border-color: var(--accent); }
+
     </style>
 </head>
 <body>
@@ -900,7 +949,12 @@
 
     <div id="auth-screen" style="display:none;">
         <div class="auth-container">
-            <h1 class="logo-large">Talkpage</h1>
+            <div style="margin-bottom: 32px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+                <div style="width: 72px; height: 72px; background: #FFFFFF; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.12); border: 2px solid var(--border-light);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="44" height="44" fill="#F6A800"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h1 class="logo-large" style="font-size:42px; border-bottom: none; padding-bottom: 0; margin-bottom: 0;">Talkpage</h1>
+            </div>
             
             <div id="step-1-auth">
                 <p id="auth-error" style="color: #EE352E; font-size: 14px; display: none; margin-bottom: 10px; font-weight: bold;"></p>
@@ -958,6 +1012,9 @@
                         </div>
                     </div>
                     <div class="sb-actions">
+                        <button id="sidebar-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
                         <button class="theme-btn" onclick="smartHomeBtn()" title="Home / Chat" style="position:relative;">
                             <svg id="home-btn-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
@@ -1090,6 +1147,10 @@
                                         <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 2v5L7 9v2h10V9l-2-2V2H9z"/><rect x="5" y="18" width="14" height="4" rx="1"/><path d="M9 11v7m6-7v7"/><path d="M7 18h10"/></svg>
                                         <span>Chess.com</span>
                                     </a>
+                                    <a href="https://skribbl.io" target="_blank" class="home-link-card">
+                                        <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                                        <span>Skribbl.io</span>
+                                    </a>
                                     <a href="https://genius.com/artists/Olivia-anne" target="_blank" class="home-link-card">
                                         <svg class="home-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
                                         <span>Olivia Anne Genius Lyrics</span>
@@ -1154,6 +1215,7 @@
             </div> 
             
             <div id="active-chat-screen">
+                <div id="chat-bg-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0);pointer-events:none;z-index:0;transition:background 0.2s;"></div>
                 <div id="pinned-msg-banner" onclick="jumpToPinnedMsg()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
                     <span id="pinned-msg-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pinned Message</span>
@@ -1168,6 +1230,9 @@
                         <h3 id="chat-title" class="clickable-name"></h3>
                         <p id="chat-subtitle" style="font-size: 13px; color: var(--text-muted); margin:0;"></p>
                     </div>
+                    <button onclick="openChatBgPicker()" title="Chat Background" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:8px;transition:color 0.15s;display:flex;align-items:center;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </button>
 
                 </div>
 
@@ -1787,7 +1852,9 @@
     <div id="story-viewer">
         <div id="story-viewer-bg"></div>
         <button id="story-viewer-close" onclick="closeStoryViewer()">✕</button>
-        <button id="story-viewer-pause" onclick="toggleStoryPlayPause()">⏸</button>
+        <button id="story-viewer-pause" onclick="toggleStoryPlayPause()">
+            <svg id="story-pause-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+        </button>
         
         <div class="story-phone-card">
         <div id="story-viewer-progress"></div>
@@ -1913,6 +1980,24 @@
         </div>
     </div>
 
+    <!-- ─── REPORT MESSAGE MODAL ─── -->
+    <div id="report-modal" style="position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);opacity:0;transition:opacity 0.2s;" onclick="if(event.target===this)closeReportModal()">
+        <div style="background:var(--bg-main);border:2px solid var(--border-dark);border-radius:18px;padding:24px;width:90%;max-width:380px;display:flex;flex-direction:column;gap:14px;" onclick="event.stopPropagation()">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <h3 style="font-size:16px;font-weight:800;color:var(--text-dark);margin:0;">Report Message</h3>
+                <button onclick="closeReportModal()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;display:flex;align-items:center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);margin:0;">Let us know why you're reporting this message. Our admins will review it.</p>
+            <textarea id="report-reason-input" placeholder="Describe the issue (optional)..." rows="3" style="width:100%;border:1.5px solid var(--border-light);border-radius:10px;padding:10px 12px;font-size:14px;font-family:var(--font-main);background:var(--bg-sidebar);color:var(--text-dark);resize:none;outline:none;transition:border-color 0.15s;box-sizing:border-box;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-light)'"></textarea>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary" style="flex:1;background:#EE352E;border:none;" onclick="submitReport()">Report</button>
+                <button class="btn-primary btn-outline" style="flex:1;border:none;color:var(--text-muted);" onclick="closeReportModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div id="admin-panel">
         <div class="admin-header">
             <div>
@@ -1923,14 +2008,81 @@
         </div>
         <div class="admin-body">
             <div class="admin-section">
-                <h2>Official Announcement</h2>
-                <textarea class="admin-story-textarea" id="admin-announcement-text" placeholder="Write an announcement to all users..."></textarea>
-                <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color:#000;" onclick="postAdminAnnouncement()">Post to All Users</button>
-                <p style="font-size:11px;color:#555;margin-top:8px;text-align:center;">Posts as an official Talkpage announcement visible to all users.</p>
+                <h2>Official Talkpage Story</h2>
+                <p style="font-size:12px;color:#666;margin-bottom:12px;">Post a story that appears in every user's stories bar as an official Talkpage announcement.</p>
+                <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color:#000;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="openAdminStoryCreator()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    Create Official Story
+                </button>
+            </div>
+            <div class="admin-section">
+                <h2>Current Story</h2>
+                <div id="admin-story-preview" style="font-size:13px;color:#666;">Loading...</div>
+            </div>
+            <div class="admin-section">
+                <h2>My Stories</h2>
+                <div id="admin-my-stories" style="font-size:13px;color:#666;">Loading...</div>
+            </div>
+            <div class="admin-section">
+                <h2>My Posts</h2>
+                <div id="admin-my-posts" style="font-size:13px;color:#666;">Loading...</div>
+            </div>
+            <div class="admin-section">
+                <h2>Reported Messages</h2>
+                <div id="admin-reports-list"><p style="color:#555;font-size:13px;">Loading reports...</p></div>
             </div>
             <div class="admin-section">
                 <h2>Registered Users</h2>
                 <div id="admin-users-list"><p style="color:#555;font-size:13px;">Loading users...</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── CHAT BACKGROUND PICKER MODAL ─── -->
+    <div id="chat-bg-modal" onclick="if(event.target===this)closeChatBgPicker()">
+        <div class="chat-bg-card" onclick="event.stopPropagation()">
+            <h3>Chat Background</h3>
+
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Rainbow Colours</span>
+            <div class="chat-bg-presets">
+                <div class="chat-bg-swatch" style="background:#FF4444;" onclick="applyChatBg('color','#FF4444')" title="Red"></div>
+                <div class="chat-bg-swatch" style="background:#FF7700;" onclick="applyChatBg('color','#FF7700')" title="Orange"></div>
+                <div class="chat-bg-swatch" style="background:#FFCC00;" onclick="applyChatBg('color','#FFCC00')" title="Yellow"></div>
+                <div class="chat-bg-swatch" style="background:#88CC00;" onclick="applyChatBg('color','#88CC00')" title="Yellow-Green"></div>
+                <div class="chat-bg-swatch" style="background:#00BB44;" onclick="applyChatBg('color','#00BB44')" title="Green"></div>
+                <div class="chat-bg-swatch" style="background:#00BBBB;" onclick="applyChatBg('color','#00BBBB')" title="Teal"></div>
+                <div class="chat-bg-swatch" style="background:#0088FF;" onclick="applyChatBg('color','#0088FF')" title="Blue"></div>
+                <div class="chat-bg-swatch" style="background:#4455FF;" onclick="applyChatBg('color','#4455FF')" title="Indigo"></div>
+                <div class="chat-bg-swatch" style="background:#8833FF;" onclick="applyChatBg('color','#8833FF')" title="Violet"></div>
+                <div class="chat-bg-swatch" style="background:#FF33AA;" onclick="applyChatBg('color','#FF33AA')" title="Pink"></div>
+            </div>
+
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Custom Colour</span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <input type="color" id="chat-bg-color-inp" value="#0088FF" class="color-picker-circle" style="width:36px;height:36px;" oninput="applyChatBg('color',this.value)">
+                <span style="font-size:13px;color:var(--text-muted);">Pick any colour</span>
+            </div>
+
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Background Image</span>
+            <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:14px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-light)'">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Upload Image
+                <input type="file" accept="image/*" style="display:none;" onchange="handleChatBgImage(event)">
+            </label>
+
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:6px;">
+                Dark Overlay Opacity
+                <span id="chat-overlay-pct" style="font-weight:700;color:var(--accent);float:right;">0%</span>
+            </span>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                <span style="font-size:11px;color:var(--text-muted);">None</span>
+                <input type="range" id="chat-overlay-slider" min="0" max="80" value="0" style="flex:1;accent-color:var(--accent);" oninput="applyChatOverlay(this.value)">
+                <span style="font-size:11px;color:var(--text-muted);">Dark</span>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+                <button class="btn-primary btn-outline" style="flex:1;border:none;color:var(--text-muted);font-size:13px;" onclick="applyChatBg('reset');closeChatBgPicker()">Reset</button>
+                <button class="btn-primary" style="flex:1;font-size:13px;border:none;" onclick="closeChatBgPicker()">Done</button>
             </div>
         </div>
     </div>
@@ -2023,16 +2175,8 @@
             return (yiq >= 128) ? '#000000' : '#FFFFFF';
         }
 
-        // Auto-cleanup stale typing indicators — runs every 1s, always re-renders bubbles
+        // Auto-cleanup stale typing indicators — runs every 1s, re-renders bubbles without mutating cache
         setInterval(() => {
-            const now = Date.now();
-            chatsCache.forEach(c => {
-                if (c.typing) {
-                    for (let u in c.typing) {
-                        if (now - c.typing[u] > 3000) { delete c.typing[u]; }
-                    }
-                }
-            });
             if (typeof renderTypingBubbles === 'function') renderTypingBubbles();
         }, 1000);
 
@@ -2666,10 +2810,42 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user.email.split('@')[0];
+
+                // ── ADMIN SESSION INTERCEPT ──────────────────────────
+                if (currentUser === 'talkpage') {
+                    // Ensure the talkpage user doc exists in Firestore so writes are permitted
+                    const tpDocRef = doc(db, 'users', 'talkpage');
+                    const tpSnap = await getDoc(tpDocRef).catch(()=>null);
+                    if (!tpSnap || !tpSnap.exists()) {
+                        await setDoc(tpDocRef, {
+                            fname: 'Talkpage', lname: 'Official', bio: 'The official Talkpage account.',
+                            pic: null, joined: 'Admin', username: 'talkpage', accentColor: '#F6A800'
+                        }).catch(()=>{});
+                    }
+                    document.getElementById('loading-overlay').style.display = 'none';
+                    document.getElementById('auth-screen').style.display = 'none';
+                    window._isAdminSession = true;
+                    openAdminPanel();
+                    return;
+                }
                 const profileSnap = await getDoc(doc(db, "users", currentUser));
                 
                 if (profileSnap.exists()) {
                     usersCache[currentUser] = profileSnap.data();
+
+                    // ── BANNED USER CHECK ───────────────────────────────
+                    if (usersCache[currentUser].banned === true) {
+                        const banReason = usersCache[currentUser].banReason || '';
+                        document.getElementById('loading-overlay').style.display = 'none';
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('app-layout').classList.remove('active');
+                        // Show full-screen ban page — user stays logged in but sees nothing else
+                        const banScreen = document.getElementById('ban-screen');
+                        const banReasonEl = document.getElementById('ban-reason-text');
+                        if (banReasonEl) banReasonEl.textContent = banReason;
+                        if (banScreen) banScreen.style.display = 'flex';
+                        return;
+                    }
                     // Backfill accent color for existing users
                     if (!usersCache[currentUser].accentColor) {
                         const existingAccent = localStorage.getItem('talkpage_custom_accent') || '#F6A800';
@@ -2738,9 +2914,39 @@
             if (!u || !p) { err.innerText = "Please fill out both fields."; err.style.display = 'block'; return; }
 
             // ── ADMIN LOGIN ───────────────────────────────────
-            if (u === 'talkpage' && p === 'BylerEndgame07') {
-                document.getElementById('auth-screen').style.display = 'none';
-                openAdminPanel();
+            if (u === 'talkpage') {
+                const email = `talkpage@talkpage.com`;
+                err.style.display = 'none';
+                document.getElementById('login-btn').disabled = true;
+                document.getElementById('signup-btn').disabled = true;
+                try {
+                    // Try signing in first
+                    await signInWithEmailAndPassword(auth, email, p);
+                    // onAuthStateChanged intercepts talkpage and opens admin panel
+                } catch(authErr) {
+                    if (authErr.code === 'auth/user-not-found' || authErr.code === 'auth/invalid-credential' || authErr.code === 'auth/invalid-email') {
+                        // Account doesn't exist yet — create it
+                        try {
+                            await createUserWithEmailAndPassword(auth, email, p);
+                            // onAuthStateChanged will intercept and open admin panel
+                        } catch(createErr) {
+                            err.innerText = 'Admin setup error: ' + createErr.message;
+                            err.style.display = 'block';
+                            document.getElementById('login-btn').disabled = false;
+                            document.getElementById('signup-btn').disabled = false;
+                        }
+                    } else if (authErr.code === 'auth/wrong-password') {
+                        err.innerText = 'Incorrect admin password.';
+                        err.style.display = 'block';
+                        document.getElementById('login-btn').disabled = false;
+                        document.getElementById('signup-btn').disabled = false;
+                    } else {
+                        err.innerText = 'Admin login error: ' + authErr.message;
+                        err.style.display = 'block';
+                        document.getElementById('login-btn').disabled = false;
+                        document.getElementById('signup-btn').disabled = false;
+                    }
+                }
                 return;
             }
 
@@ -2957,6 +3163,9 @@
                     refreshActiveChatHeader();
                     window.updateReadReceiptsUI();
                     if (typeof renderTypingBubbles === 'function') renderTypingBubbles();
+                    // Real-time background sync: apply if the active chat's background changed
+                    const activeChat = chatsCache.find(c => c.id === activeChatId);
+                    if (activeChat) _applySavedChatBg(activeChatId);
                 }
             });
         }
@@ -3247,7 +3456,7 @@
             typingTimeout = setTimeout(() => {
                 isTyping = false;
                 updateDoc(doc(db, "chats", activeChatId), { [`typing.${currentUser}`]: deleteField() }).catch(e=>e);
-            }, 2500);
+            }, 3000);
         };
 
         window.handleHeaderClick = function() {
@@ -3285,6 +3494,7 @@
                 
                 activeChatId = chatId;
                 isFirstLoadForChat = true;
+                _applySavedChatBg(chatId);
                 
                 requestAnimationFrame(renderSidebar); 
                 document.getElementById('no-chat-screen').style.display = 'none';
@@ -3547,6 +3757,7 @@
                                         </div>
                                         <div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div>
                                         <div class="menu-item" onclick="pinMessage('${msg.id}')">${chat?.pinnedMessage === msg.id ? 'Unpin' : 'Pin Message'}</div>
+                                        ${!isMe ? `<div class="menu-item text-red" onclick="reportMessage('${msg.id}', '${(msg.text||'').replace(/'/g,"\\'")}', '${msg.sender||''}')">Report</div>` : ''}
                                         ${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}
                                     </div>
                                 </div>
@@ -4378,8 +4589,8 @@
             
             // Reset Pause Button State
             storyIsPaused = false;
-            const pauseBtn = document.getElementById('story-viewer-pause');
-            if(pauseBtn) pauseBtn.innerHTML = '⏸';
+            const pauseIcon = document.getElementById('story-pause-icon');
+            if(pauseIcon) pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
 
             const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
             seen[story.id] = true;
@@ -4394,7 +4605,12 @@
             }
 
             const profile = usersCache[story.author] || {};
-            document.getElementById('sv-avatar').innerHTML = getAvatarHTML(story.author, profile);
+            if (story.author === 'talkpage') {
+                const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F6A800';
+                document.getElementById('sv-avatar').innerHTML = `<div style="width:38px;height:38px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="${accentColor}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>`;
+            } else {
+                document.getElementById('sv-avatar').innerHTML = getAvatarHTML(story.author, profile);
+            }
             document.getElementById('sv-name').textContent = profile.fname ? `${profile.fname} ${profile.lname || ''}`.trim() : story.author;
             const ms = story.createdAt?.toMillis ? story.createdAt.toMillis() : (story.createdAt?.seconds * 1000);
             document.getElementById('sv-time').textContent = ms ? timeAgo(ms) : '';
@@ -4500,12 +4716,17 @@
                 }
             } else {
                 ownerBar.style.display = 'none';
-                viewerBar.style.display = 'flex';
-                const likeBtn = document.getElementById('story-like-btn');
-                const isLiked = story.likes && story.likes[currentUser];
-                if (isLiked) likeBtn.classList.add('liked');
-                else likeBtn.classList.remove('liked');
-                document.getElementById('story-reply-input').value = '';
+                // Hide like/reply for official Talkpage stories
+                if (story.author === 'talkpage') {
+                    viewerBar.style.display = 'none';
+                } else {
+                    viewerBar.style.display = 'flex';
+                    const likeBtn = document.getElementById('story-like-btn');
+                    const isLiked = story.likes && story.likes[currentUser];
+                    if (isLiked) likeBtn.classList.add('liked');
+                    else likeBtn.classList.remove('liked');
+                    document.getElementById('story-reply-input').value = '';
+                }
             }
 
             const prog = document.getElementById('story-viewer-progress');
@@ -4524,15 +4745,16 @@
 
         window.toggleStoryPlayPause = function() {
             const btn = document.getElementById('story-viewer-pause');
+            const icon = document.getElementById('story-pause-icon');
             if (storyIsPaused) {
                 // It was paused, so we restart the slide
                 storyIsPaused = false;
-                btn.innerHTML = '⏸';
+                if (icon) icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
                 showStoryAt(storyViewerIdx);
             } else {
                 // Pause it
                 storyIsPaused = true;
-                btn.innerHTML = '▶';
+                if (icon) icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
                 pauseStoryTimer();
             }
         };
@@ -4675,7 +4897,7 @@
         window.closeStoryCreator = function() {
             const sc = document.getElementById('story-creator');
             sc.style.opacity = '0';
-            setTimeout(() => { sc.style.display = 'none'; }, 200);
+            setTimeout(() => { sc.style.display = 'none'; sc.style.zIndex = ''; }, 200);
         };
 
         function resizeImageFile(file, callback) {
@@ -5895,6 +6117,22 @@
         window.getAvatarHTML = function(username, profileObj, showRing = true) {
             try {
                 const p = profileObj || usersCache[username] || {};
+
+                // Talkpage official account: show chat-bubble icon in user's accent color
+                if (username === 'talkpage') {
+                    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F6A800';
+                    const talkpageInner = `<div style="width:100%;height:100%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="60%" height="60%" fill="${accentColor}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>`;
+                    if (showRing && window.hasActiveStory && window.hasActiveStory(username)) {
+                        const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
+                        const stories = storiesCache[username] || [];
+                        const allSeen = stories.length > 0 && stories.every(s => seen[s.id]);
+                        const ringBg = allSeen ? 'var(--border-light)' : 'conic-gradient(var(--accent), #ff6b9d, var(--accent))';
+                        const ringShadow = allSeen ? 'none' : '0 0 8px rgba(246,168,0,0.5)';
+                        return `<div style="width:100%;height:100%;border-radius:50%;padding:3px;background:${ringBg};box-shadow:${ringShadow};display:flex;align-items:center;justify-content:center;box-sizing:border-box;">${talkpageInner}</div>`;
+                    }
+                    return talkpageInner;
+                }
+
                 let inner = `<span style="color:#FFF;font-weight:bold;font-size:inherit;display:flex;align-items:center;justify-content:center;height:100%;">${username ? String(username).charAt(0).toUpperCase() : "?"}</span>`;
                 if (p && p.pic && typeof p.pic === 'string' && p.pic.length > 10) {
                     inner = `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
@@ -6462,7 +6700,7 @@
                         if (msg.replyTo) replyHtml = `<div class="reply-block"><strong>${getFullName(msg.replyTo.sender)}</strong>: ${msg.replyTo.text}</div>`;
 
                         const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
-                        const toolsHtml = `<div class="msg-tools-wrapper"><button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button><div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;"><div class="emoji-row"><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button></div><div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div><div class="menu-item" onclick="pinMessage('${msg.id}')">${chat?.pinnedMessage === msg.id ? 'Unpin' : 'Pin Message'}</div>${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}</div></div>`;
+                        const toolsHtml = `<div class="msg-tools-wrapper"><button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button><div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;"><div class="emoji-row"><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button><button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button></div><div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div><div class="menu-item" onclick="pinMessage('${msg.id}')">${chat?.pinnedMessage === msg.id ? 'Unpin' : 'Pin Message'}</div>${!isMe ? `<div class="menu-item text-red" onclick="reportMessage('${msg.id}', '${(msg.text||'').replace(/'/g,"\\'")}', '${msg.sender||''}')">Report</div>` : ''} ${isMe ? `<div class="menu-item text-red" onclick="deleteMessage('${msg.id}')">Delete</div>` : ''}</div></div>`;
 
                         let avatarHtml = '';
                         if (chat && chat.isGroup && !isMe) avatarHtml = `<div class="msg-avatar" onclick="viewProfile('${msg.sender}')" title="${getFullName(msg.sender)}">${getAvatarHTML(msg.sender, senderProfile, false)}</div>`;
@@ -6648,7 +6886,7 @@
             if (!list || !currentUser) return;
             
             const friends = window.getFriendsList ? window.getFriendsList() : [];
-            const allUsers = [currentUser, ...friends.filter(u => u !== currentUser)];
+            const allUsers = [currentUser, ...friends.filter(u => u !== currentUser && u !== 'talkpage')];
             
             list.innerHTML = allUsers.map(u => {
                 const p = usersCache[u] || {};
@@ -7323,10 +7561,10 @@
                 const img = new Image();
                 img.onload = () => {
                     const c = document.createElement('canvas');
-                    const MAX = 1200; let w=img.width, h=img.height;
+                    const MAX = 1920; let w=img.width, h=img.height;
                     const r = Math.min(MAX/w, MAX/h, 1); w=Math.round(w*r); h=Math.round(h*r);
                     c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-                    applyPageBg('image', c.toDataURL('image/jpeg', 0.85));
+                    applyPageBg('image', c.toDataURL('image/jpeg', 0.92));
                 };
                 img.src = ev.target.result;
             };
@@ -7341,6 +7579,58 @@
             if (bg.type === 'color' && bg.value) screen.style.background = bg.value;
             else if (bg.type === 'image' && bg.value) screen.style.background = `url('${bg.value}') center center / cover no-repeat`;
         }
+
+        // ── REPORT MESSAGE ────────────────────────────────────────
+        let _reportMsgId = null, _reportMsgText = null, _reportSender = null;
+
+        window.reportMessage = function(msgId, msgText, sender) {
+            document.querySelectorAll('.msg-menu').forEach(m => m.style.display = 'none');
+            _reportMsgId = msgId;
+            _reportMsgText = msgText;
+            _reportSender = sender;
+            const modal = document.getElementById('report-modal');
+            const inp = document.getElementById('report-reason-input');
+            if (inp) inp.value = '';
+            modal.style.display = 'flex';
+            void modal.offsetWidth;
+            modal.style.opacity = '1';
+            setTimeout(() => inp && inp.focus(), 120);
+        };
+
+        window.closeReportModal = function() {
+            const modal = document.getElementById('report-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => { modal.style.display = 'none'; }, 200);
+        };
+
+        window.submitReport = async function() {
+            const reason = (document.getElementById('report-reason-input')?.value || '').trim();
+            try {
+                await addDoc(collection(db, 'reports'), {
+                    msgId: _reportMsgId || '',
+                    msgText: _reportMsgText || '',
+                    sender: _reportSender || '',
+                    reportedBy: currentUser,
+                    reportedByPic: (usersCache[currentUser] && usersCache[currentUser].pic) || null,
+                    reportedByFname: (usersCache[currentUser] && usersCache[currentUser].fname) || currentUser,
+                    senderPic: (usersCache[_reportSender] && usersCache[_reportSender].pic) || null,
+                    senderFname: (usersCache[_reportSender] && usersCache[_reportSender].fname) || _reportSender || '',
+                    chatId: activeChatId || '',
+                    reason: reason,
+                    createdAt: serverTimestamp(),
+                    read: false
+                });
+                closeReportModal();
+                // Show a brief toast instead of alert
+                const toast = document.createElement('div');
+                toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);animation:fadeUp 0.2s ease;';
+                toast.textContent = '✓ Message reported. Thank you.';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            } catch(e) {
+                alert('Error reporting: ' + e.message);
+            }
+        };
 
         // ── ADMIN MODE ────────────────────────────────────────
         let isAdminMode = false;
@@ -7359,15 +7649,193 @@
             const panel = document.getElementById('admin-panel');
             panel.classList.add('active');
             loadAdminUsers();
+            loadAdminReports();
+            loadAdminStory();
+            loadAdminMyStories();
+            loadAdminMyPosts();
+        };
+
+        async function loadAdminMyStories() {
+            const el = document.getElementById('admin-my-stories');
+            if (!el) return;
+            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
+            try {
+                const adb = getAdminDb();
+                // Load stories by the logged-in admin (talkpage user)
+                const adminUser = 'talkpage';
+                const now = new Date();
+                const snap = await getDocs(query(collection(adb, 'stories'), where('author', '==', adminUser)));
+                if (snap.empty) { el.innerHTML = '<span style="color:#555;font-size:13px;">No stories.</span>'; return; }
+                const stories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                stories.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                el.innerHTML = stories.map(s => {
+                    const ts = s.createdAt ? new Date(s.createdAt.seconds * 1000).toLocaleString() : '';
+                    const exp = s.expiresAt ? new Date(s.expiresAt.seconds * 1000) : null;
+                    const isExpired = exp && exp < now;
+                    return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+                        <div style="font-size:12px;color:#888;margin-bottom:4px;">Posted: ${ts} ${isExpired ? '<span style="color:#EE352E;font-size:10px;font-weight:bold;">EXPIRED</span>' : '<span style="color:#4CAF50;font-size:10px;font-weight:bold;">ACTIVE</span>'}</div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <button onclick="adminViewMyStory('${s.id}')" style="flex:1;background:#222;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">View</button>
+                            <button onclick="adminDeleteMyStory('${s.id}')" style="flex:1;background:#EE352E;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
+            }
+        }
+
+        window.adminViewMyStory = function(storyId) {
+            const sc = storiesCache['talkpage'];
+            if (sc && sc.length > 0) {
+                const sv = document.getElementById('story-viewer');
+                if (sv) { sv.style.zIndex = '9500'; sv.style.display = 'flex'; void sv.offsetWidth; sv.style.opacity = '1'; }
+                openStoryViewer('talkpage');
+            } else {
+                alert('Story not visible — it may have expired or not loaded yet.');
+            }
+        };
+
+        window.adminDeleteMyStory = async function(storyId) {
+            if (!confirm('Delete this story?')) return;
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'stories', storyId));
+                alert('Story deleted.');
+                loadAdminMyStories();
+                loadAdminStory();
+            } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        async function loadAdminMyPosts() {
+            const el = document.getElementById('admin-my-posts');
+            if (!el) return;
+            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
+            try {
+                const adb = getAdminDb();
+                const adminUser = 'talkpage';
+                const snap = await getDocs(query(collection(adb, 'pages', adminUser, 'posts'), orderBy('createdAt', 'desc')));
+                if (snap.empty) { el.innerHTML = '<span style="color:#555;font-size:13px;">No posts yet.</span>'; return; }
+                el.innerHTML = snap.docs.map(d => {
+                    const p = d.data();
+                    const ts = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleString() : '';
+                    const preview = (p.text || p.caption || p.note || '(no text)').substring(0, 80);
+                    return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+                        <div style="font-size:12px;color:#888;margin-bottom:6px;">${ts}</div>
+                        <div style="font-size:13px;color:#ccc;white-space:pre-wrap;word-break:break-word;margin-bottom:8px;">${preview.replace(/</g,'&lt;')}${(p.text||'').length > 80 ? '…' : ''}</div>
+                        ${p.imageData ? '<div style="font-size:11px;color:#888;margin-bottom:6px;">📷 Has image</div>' : ''}
+                        <button onclick="adminDeleteMyPost('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete Post</button>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
+            }
+        }
+
+        window.adminDeleteMyPost = async function(postId) {
+            if (!confirm('Delete this post?')) return;
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'pages', 'talkpage', 'posts', postId));
+                loadAdminMyPosts();
+            } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        window.openAdminStoryCreator = function() {
+            // Ensure currentUser is set to 'talkpage' for the story submission
+            if (!currentUser) currentUser = 'talkpage';
+            // Bring story creator above the admin panel (z-index 9500 > admin panel 9000)
+            const sc = document.getElementById('story-creator');
+            if (sc) sc.style.zIndex = '9500';
+            openStoryCreator();
         };
 
         window.exitAdminMode = function() {
             isAdminMode = false;
+            window._isAdminSession = false;
             document.getElementById('admin-panel').classList.remove('active');
-            document.getElementById('auth-screen').style.display = 'flex';
-            document.getElementById('step-1-auth').style.display = 'block';
-            document.getElementById('auth-u').value = '';
-            document.getElementById('auth-p').value = '';
+            // Sign out talkpage from Firebase Auth
+            signOut(auth).then(() => {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('step-1-auth').style.display = 'block';
+                document.getElementById('auth-u').value = '';
+                document.getElementById('auth-p').value = '';
+            }).catch(() => {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('step-1-auth').style.display = 'block';
+            });
+        };
+
+        async function loadAdminReports() {
+            const listEl = document.getElementById('admin-reports-list');
+            if (!listEl) return;
+            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
+            try {
+                const adb = getAdminDb();
+                const snap = await getDocs(query(collection(adb, 'reports'), orderBy('createdAt', 'desc')));
+                if (snap.empty) { listEl.innerHTML = '<p style="color:#555;font-size:13px;">No reports yet.</p>'; return; }
+                listEl.innerHTML = [...snap.docs].map(d => {
+                    const r = d.data();
+                    const ts = r.createdAt ? new Date(r.createdAt.seconds * 1000).toLocaleString() : 'Unknown time';
+                    const isRead = r.read === true;
+
+                    // Sender avatar
+                    const senderInitial = ((r.senderFname || r.sender || '?')[0]).toUpperCase();
+                    const senderAvHtml = r.senderPic
+                        ? `<img src="${r.senderPic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+                        : `<span style="font-size:13px;font-weight:bold;color:#fff;">${senderInitial}</span>`;
+
+                    // Reporter avatar
+                    const repInitial = ((r.reportedByFname || r.reportedBy || '?')[0]).toUpperCase();
+                    const repAvHtml = r.reportedByPic
+                        ? `<img src="${r.reportedByPic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+                        : `<span style="font-size:11px;font-weight:bold;color:#fff;">${repInitial}</span>`;
+
+                    return `<div id="report-row-${d.id}" style="background:${isRead ? '#111' : '#1a0000'};border:1px solid ${isRead ? '#1a1a1a' : '#550000'};border-radius:12px;padding:14px;margin-bottom:10px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                            <div style="font-size:11px;color:#666;">${ts}</div>
+                            ${!isRead ? '<div style="font-size:10px;font-weight:bold;color:#EE352E;text-transform:uppercase;letter-spacing:1px;">New</div>' : ''}
+                        </div>
+                        <!-- Message card styled like a real bubble -->
+                        <div style="display:flex;align-items:flex-start;gap:10px;background:#0d0d0d;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #EE352E;">
+                            <div style="width:36px;height:36px;border-radius:50%;background:#333;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${senderAvHtml}</div>
+                            <div style="flex:1;">
+                                <div style="font-size:12px;font-weight:700;color:#aaa;margin-bottom:4px;">@${r.sender || '?'}</div>
+                                <div style="font-size:14px;color:#e0e0e0;line-height:1.45;word-break:break-word;">${(r.msgText || '(no text)').replace(/</g,'&lt;')}</div>
+                            </div>
+                        </div>
+                        <!-- Reported by -->
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:${r.reason ? '6px' : '8px'};">
+                            <div style="width:24px;height:24px;border-radius:50%;background:#444;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${repAvHtml}</div>
+                            <div style="font-size:12px;color:#888;">Reported by <strong style="color:#bbb;">@${r.reportedBy || '?'}</strong></div>
+                        </div>
+                        ${r.reason ? `<div style="font-size:12px;color:#888;background:#0a0a0a;border-radius:6px;padding:6px 10px;margin-bottom:8px;"><span style="color:#666;">Reason:</span> ${r.reason.replace(/</g,'&lt;')}</div>` : ''}
+                        <div style="display:flex;gap:8px;margin-top:6px;">
+                            ${!isRead ? `<button onclick="adminMarkReportRead('${d.id}')" style="background:#333;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Mark as Read</button>` : ''}
+                            <button onclick="adminDismissReport('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Dismiss</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+            }
+        }
+
+        window.adminMarkReportRead = async function(reportId) {
+            try {
+                const adb = getAdminDb();
+                await updateDoc(doc(adb, 'reports', reportId), { read: true });
+                await loadAdminReports();
+            } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        window.adminDismissReport = async function(reportId) {
+            if (!confirm('Dismiss and delete this report?')) return;
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'reports', reportId));
+                await loadAdminReports();
+            } catch(e) { alert('Error: ' + e.message); }
         };
 
         async function loadAdminUsers() {
@@ -7384,13 +7852,14 @@
                 listEl.innerHTML = users.map(u => {
                     const initials = ((u.fname||'')[0]||'?').toUpperCase();
                     const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
+                    const isBanned = u.banned === true;
                     return `<div class="admin-user-row">
                         <div class="admin-user-av">${avHtml}</div>
                         <div class="admin-user-info">
-                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()}</div>
+                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isBanned ? '<span style="color:#EE352E;font-size:11px;font-weight:bold;"> BANNED</span>' : ''}</div>
                             <div class="admin-user-handle">@${u.id} &middot; joined ${u.joined||'?'}</div>
                         </div>
-                        <button class="admin-del-btn" onclick="adminDeleteUser('${u.id}')">Delete</button>
+                        <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
                     </div>`;
                 }).join('');
             } catch(e) {
@@ -7398,6 +7867,26 @@
                 listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
             }
         }
+
+        window.adminBanUser = async function(username, isBanned) {
+            const action = isBanned ? 'unban' : 'ban';
+            if (!confirm(`${action.charAt(0).toUpperCase() + action.slice(1)} @${username}?`)) return;
+            let banReason = '';
+            if (!isBanned) {
+                banReason = prompt(`Enter a reason for banning @${username} (shown to the user):`) || '';
+            }
+            try {
+                const adb = getAdminDb();
+                const updateData = { banned: !isBanned };
+                if (!isBanned) updateData.banReason = banReason;
+                else updateData.banReason = '';
+                await updateDoc(doc(adb, 'users', username), updateData);
+                await loadAdminUsers();
+                alert(`User @${username} has been ${action}ned.`);
+            } catch(e) {
+                alert('Error: ' + e.message);
+            }
+        };
 
         window.adminDeleteUser = async function(username) {
             if (!confirm(`Permanently delete user @${username}? This cannot be undone.`)) return;
@@ -7413,25 +7902,59 @@
             }
         };
 
-        window.postAdminAnnouncement = async function() {
-            const text = document.getElementById('admin-announcement-text').value.trim();
-            if (!text) { alert('Write an announcement first.'); return; }
-            const btn = document.querySelector('#admin-panel .btn-primary');
-            if (btn) { btn.textContent = 'Posting...'; btn.disabled = true; }
+        async function loadAdminStory() {
+            const el = document.getElementById('admin-story-preview');
+            if (!el) return;
+            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
             try {
                 const adb = getAdminDb();
-                await addDoc(collection(adb, 'pages', 'talkpage_official', 'posts'), {
-                    type: 'text',
-                    text: `OFFICIAL TALKPAGE ANNOUNCEMENT\n\n${text}`,
-                    createdAt: serverTimestamp(),
-                    isOfficial: true
-                });
-                document.getElementById('admin-announcement-text').value = '';
-                alert('Announcement posted!');
+                const snap = await getDocs(query(collection(adb, 'stories'), where('author', '==', 'talkpage'), orderBy('createdAt', 'desc'), limit(1)));
+                if (snap.empty) {
+                    el.innerHTML = '<span style="color:#555;font-size:13px;">No active story.</span>';
+                } else {
+                    const d = snap.docs[0];
+                    const s = d.data();
+                    const ts = s.createdAt ? new Date(s.createdAt.seconds * 1000).toLocaleString() : '';
+                    const expires = s.expiresAt ? new Date(s.expiresAt.seconds * 1000).toLocaleString() : '';
+                    el.innerHTML = `
+                        <div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;">
+                            <div style="font-size:12px;color:#888;margin-bottom:6px;">Posted: ${ts}</div>
+                            <div style="font-size:12px;color:#666;margin-bottom:10px;">Expires: ${expires}</div>
+                            <div style="display:flex;gap:8px;">
+                                <button onclick="adminViewTalkpageStory()" style="flex:1;background:#222;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;">View Story</button>
+                                <button onclick="adminDeleteTalkpageStory('${d.id}')" style="flex:1;background:#EE352E;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;">Delete Story</button>
+                            </div>
+                        </div>`;
+                }
             } catch(e) {
-                alert('Error posting: ' + e.message);
+                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
             }
-            if (btn) { btn.textContent = 'Post to All Users'; btn.disabled = false; }
+        }
+
+        window.adminViewTalkpageStory = function() {
+            // Temporarily show app-layout just enough to open the story viewer
+            if (!currentUser) currentUser = 'talkpage';
+            const sc = storiesCache['talkpage'];
+            if (sc && sc.length > 0) {
+                // Bring story viewer above admin panel
+                const sv = document.getElementById('story-viewer');
+                if (sv) { sv.style.zIndex = '9500'; sv.style.display = 'flex'; void sv.offsetWidth; sv.style.opacity = '1'; }
+                openStoryViewer('talkpage');
+            } else {
+                alert('No active Talkpage story found. It may still be loading — try again in a moment.');
+            }
+        };
+
+        window.adminDeleteTalkpageStory = async function(storyId) {
+            if (!confirm('Delete this official Talkpage story?')) return;
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'stories', storyId));
+                alert('Story deleted.');
+                loadAdminStory();
+            } catch(e) {
+                alert('Error: ' + e.message);
+            }
         };
 
 
@@ -7440,6 +7963,107 @@
         // ══════════════════════════════════════════════════════════
 
         let _homePostsUnsubs = [];
+
+        window.toggleSidebarCollapse = function() {
+            const sb = document.getElementById('sidebar');
+            sb.classList.toggle('collapsed');
+            localStorage.setItem('talkpage_sidebar_collapsed', sb.classList.contains('collapsed') ? '1' : '0');
+        };
+        // Restore sidebar collapse state on load
+        if (localStorage.getItem('talkpage_sidebar_collapsed') === '1') {
+            document.getElementById('sidebar')?.classList.add('collapsed');
+        }
+
+        // ── CHAT BACKGROUND PICKER ────────────────────────────────────
+        window.openChatBgPicker = function() {
+            if (!activeChatId) return;
+            const modal = document.getElementById('chat-bg-modal');
+            if (!modal) return;
+            const chatObj = chatsCache.find(c => c.id === activeChatId);
+            const saved = (chatObj && chatObj.background) || null;
+            const colorInp = document.getElementById('chat-bg-color-inp');
+            if (colorInp) colorInp.value = (saved && saved.type === 'color') ? saved.value : '#0088FF';
+            const overlayOpacity = saved ? (saved.overlay || 0) : 0;
+            const slider = document.getElementById('chat-overlay-slider');
+            const pct = document.getElementById('chat-overlay-pct');
+            if (slider) slider.value = Math.round(overlayOpacity * 100);
+            if (pct) pct.textContent = Math.round(overlayOpacity * 100) + '%';
+            modal.style.display = 'flex'; void modal.offsetWidth; modal.classList.add('active');
+        };
+
+        window.applyChatOverlay = async function(val) {
+            const opacity = parseInt(val) / 100;
+            const overlay = document.getElementById('chat-bg-overlay');
+            if (overlay) overlay.style.background = `rgba(0,0,0,${opacity})`;
+            const pct = document.getElementById('chat-overlay-pct');
+            if (pct) pct.textContent = val + '%';
+            if (!activeChatId) return;
+            // Sync overlay to Firestore alongside background
+            const chatObj = chatsCache.find(c => c.id === activeChatId);
+            const existingBg = (chatObj && chatObj.background) || {};
+            await updateDoc(doc(db, 'chats', activeChatId), {
+                background: { ...existingBg, overlay: opacity }
+            }).catch(()=>{});
+        };
+
+        window.closeChatBgPicker = function() {
+            const modal = document.getElementById('chat-bg-modal');
+            if (modal) { modal.classList.remove('active'); setTimeout(() => modal.style.display = 'none', 200); }
+        };
+
+        window.applyChatBg = async function(type, value) {
+            const screen = document.getElementById('active-chat-screen');
+            if (!screen || !activeChatId) return;
+            const chatObj = chatsCache.find(c => c.id === activeChatId);
+            const existingOverlay = (chatObj && chatObj.background && chatObj.background.overlay) || 0;
+            if (type === 'reset') {
+                screen.style.background = '';
+                const overlay = document.getElementById('chat-bg-overlay');
+                if (overlay) overlay.style.background = 'rgba(0,0,0,0)';
+                await updateDoc(doc(db, 'chats', activeChatId), { background: deleteField() }).catch(()=>{});
+                document.querySelectorAll('.chat-bg-swatch').forEach(s => s.classList.remove('active'));
+            } else if (type === 'color') {
+                screen.style.background = value; screen.style.backgroundSize = '';
+                await updateDoc(doc(db, 'chats', activeChatId), { background: { type: 'color', value, overlay: existingOverlay } }).catch(()=>{});
+            } else if (type === 'image') {
+                screen.style.background = `url('${value}') center/cover no-repeat`;
+                await updateDoc(doc(db, 'chats', activeChatId), { background: { type: 'image', value, overlay: existingOverlay } }).catch(()=>{});
+            }
+        };
+
+        window.handleChatBgImage = function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    // Compress to max 600px wide to keep base64 under ~300KB for Firestore
+                    const MAX = 1920; let w = img.width, h = img.height;
+                    const r = Math.min(MAX/w, MAX/h, 1); w = Math.round(w*r); h = Math.round(h*r);
+                    c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    applyChatBg('image', c.toDataURL('image/jpeg', 0.92));
+                    closeChatBgPicker();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function _applySavedChatBg(chatId) {
+            const screen = document.getElementById('active-chat-screen');
+            const overlayEl = document.getElementById('chat-bg-overlay');
+            if (!screen) return;
+            screen.style.background = '';
+            if (overlayEl) overlayEl.style.background = 'rgba(0,0,0,0)';
+            const chatObj = chatsCache.find(c => c.id === chatId);
+            if (chatObj && chatObj.background) {
+                const bg = chatObj.background;
+                if (bg.type === 'color' && bg.value) screen.style.background = bg.value;
+                else if (bg.type === 'image' && bg.value) screen.style.background = `url('${bg.value}') center/cover no-repeat`;
+                if (overlayEl && bg.overlay) overlayEl.style.background = `rgba(0,0,0,${bg.overlay})`;
+            }
+        }
 
         window.loadRecentPagePosts = async function() {
             // Support both possible container IDs
@@ -7527,7 +8151,7 @@
             }).catch(()=>{});
         };
 
-                window.renderTypingBubbles = function() {
+        window.renderTypingBubbles = function() {
             const container = document.getElementById('typing-bubbles-container');
             if (!container || !activeChatId) return;
             const chat = chatsCache.find(c => c.id === activeChatId);
@@ -7537,7 +8161,7 @@
             const typists = Object.keys(chat.typing).filter(u => {
                 if (u === currentUser) return false;
                 const val = chat.typing[u];
-                return typeof val === 'number' && (now - val < 4000);
+                return typeof val === 'number' && (now - val < 5000);
             });
 
             if (typists.length === 0) { container.innerHTML = ''; return; }
@@ -7561,5 +8185,12 @@
         };
 
     </script>
+
+    <!-- ─── BAN SCREEN ─── -->
+    <div id="ban-screen" style="display:none; position:fixed; inset:0; z-index:9999; background:var(--bg-main); flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#EE352E" stroke-width="1.5" style="margin-bottom:24px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+        <h1 style="font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:12px;letter-spacing:-0.5px;">You've been banned from Talkpage.</h1>
+        <p id="ban-reason-text" style="font-size:16px;color:var(--text-muted);max-width:360px;line-height:1.6;"></p>
+    </div>
 </body>
 </html>

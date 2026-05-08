@@ -1215,7 +1215,7 @@
             </div> 
             
             <div id="active-chat-screen">
-                <div id="chat-bg-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0);pointer-events:none;z-index:0;transition:background 0.2s;"></div>
+
                 <div id="pinned-msg-banner" onclick="jumpToPinnedMsg()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
                     <span id="pinned-msg-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Pinned Message</span>
@@ -7991,18 +7991,40 @@
             modal.style.display = 'flex'; void modal.offsetWidth; modal.classList.add('active');
         };
 
+        // Helper: apply background+overlay as a single layered CSS background so the
+        // dark tint is baked into the background paint and never affects child elements.
+        function _setChatBgStyle(screen, bg) {
+            if (!bg || bg.type === 'reset') {
+                screen.style.background = '';
+                screen.style.backgroundSize = '';
+                return;
+            }
+            if (bg.type === 'color') {
+                screen.style.background = bg.value;
+                screen.style.backgroundSize = '';
+            } else if (bg.type === 'image') {
+                const o = bg.overlay || 0;
+                if (o > 0) {
+                    // Layer: dark gradient on top, image underneath — all in one background property
+                    screen.style.background = `linear-gradient(rgba(0,0,0,${o}),rgba(0,0,0,${o})), url('${bg.value}') center/cover no-repeat`;
+                } else {
+                    screen.style.background = `url('${bg.value}') center/cover no-repeat`;
+                }
+            }
+        }
+
         window.applyChatOverlay = async function(val) {
             const opacity = parseInt(val) / 100;
-            const overlay = document.getElementById('chat-bg-overlay');
-            if (overlay) overlay.style.background = `rgba(0,0,0,${opacity})`;
             const pct = document.getElementById('chat-overlay-pct');
             if (pct) pct.textContent = val + '%';
             if (!activeChatId) return;
-            // Sync overlay to Firestore alongside background
+            const screen = document.getElementById('active-chat-screen');
             const chatObj = chatsCache.find(c => c.id === activeChatId);
             const existingBg = (chatObj && chatObj.background) || {};
+            const newBg = { ...existingBg, overlay: opacity };
+            if (screen) _setChatBgStyle(screen, newBg);
             await updateDoc(doc(db, 'chats', activeChatId), {
-                background: { ...existingBg, overlay: opacity }
+                background: newBg
             }).catch(()=>{});
         };
 
@@ -8017,17 +8039,17 @@
             const chatObj = chatsCache.find(c => c.id === activeChatId);
             const existingOverlay = (chatObj && chatObj.background && chatObj.background.overlay) || 0;
             if (type === 'reset') {
-                screen.style.background = '';
-                const overlay = document.getElementById('chat-bg-overlay');
-                if (overlay) overlay.style.background = 'rgba(0,0,0,0)';
+                _setChatBgStyle(screen, null);
                 await updateDoc(doc(db, 'chats', activeChatId), { background: deleteField() }).catch(()=>{});
                 document.querySelectorAll('.chat-bg-swatch').forEach(s => s.classList.remove('active'));
             } else if (type === 'color') {
-                screen.style.background = value; screen.style.backgroundSize = '';
-                await updateDoc(doc(db, 'chats', activeChatId), { background: { type: 'color', value, overlay: existingOverlay } }).catch(()=>{});
+                const bg = { type: 'color', value, overlay: existingOverlay };
+                _setChatBgStyle(screen, bg);
+                await updateDoc(doc(db, 'chats', activeChatId), { background: bg }).catch(()=>{});
             } else if (type === 'image') {
-                screen.style.background = `url('${value}') center/cover no-repeat`;
-                await updateDoc(doc(db, 'chats', activeChatId), { background: { type: 'image', value, overlay: existingOverlay } }).catch(()=>{});
+                const bg = { type: 'image', value, overlay: existingOverlay };
+                _setChatBgStyle(screen, bg);
+                await updateDoc(doc(db, 'chats', activeChatId), { background: bg }).catch(()=>{});
             }
         };
 
@@ -8052,17 +8074,9 @@
 
         function _applySavedChatBg(chatId) {
             const screen = document.getElementById('active-chat-screen');
-            const overlayEl = document.getElementById('chat-bg-overlay');
             if (!screen) return;
-            screen.style.background = '';
-            if (overlayEl) overlayEl.style.background = 'rgba(0,0,0,0)';
             const chatObj = chatsCache.find(c => c.id === chatId);
-            if (chatObj && chatObj.background) {
-                const bg = chatObj.background;
-                if (bg.type === 'color' && bg.value) screen.style.background = bg.value;
-                else if (bg.type === 'image' && bg.value) screen.style.background = `url('${bg.value}') center/cover no-repeat`;
-                if (overlayEl && bg.overlay) overlayEl.style.background = `rgba(0,0,0,${bg.overlay})`;
-            }
+            _setChatBgStyle(screen, chatObj && chatObj.background ? chatObj.background : null);
         }
 
         window.loadRecentPagePosts = async function() {

@@ -932,6 +932,31 @@
 
         #pc-unified-text:empty:before { content: attr(data-placeholder); color: var(--text-muted); pointer-events:none; display:block; }
 
+        /* ── STRIKES ──────────────────────────────────────────── */
+        #strike-modal { position:fixed; inset:0; z-index:10000; background:var(--bg-main); display:none; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center; }
+        #strike-modal.active { display:flex; animation:fadeUp 0.22s ease; }
+        .strike-pips { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:16px; }
+        .strike-pip { width:32px; height:32px; border-radius:50%; border:2.5px solid #F6A800; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; transition:all 0.2s; }
+        .strike-pip.filled { background:#F6A800; color:#000; }
+        .strike-pip.empty { background:transparent; color:#F6A800; }
+        /* settings strikes section */
+        .strike-settings-section { background:rgba(246,168,0,0.07); border:1px solid rgba(246,168,0,0.25); border-radius:12px; padding:14px; margin-bottom:14px; }
+        .strike-settings-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+        .strike-settings-count { font-size:22px; font-weight:800; color:#F6A800; }
+        .strike-settings-label { font-size:14px; font-weight:700; color:var(--text-dark); }
+        .strike-settings-sub { font-size:12px; color:var(--text-muted); }
+        .strike-item { background:var(--bg-sidebar); border:1px solid var(--border-light); border-radius:8px; padding:10px 12px; margin-bottom:8px; }
+        .strike-item-reason { font-size:13px; color:var(--text-dark); font-weight:600; margin-bottom:3px; }
+        .strike-item-meta { font-size:11px; color:var(--text-muted); }
+        /* reported message preview inside strike popup */
+        .strike-msg-preview { background:rgba(246,168,0,0.08); border:1px solid rgba(246,168,0,0.25); border-left:3px solid #F6A800; border-radius:10px; padding:12px 14px; margin:14px 0; text-align:left; max-width:400px; width:100%; }
+        .strike-msg-preview .smp-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#F6A800; margin-bottom:6px; }
+        .strike-msg-preview .smp-text { font-size:14px; color:var(--text-dark); line-height:1.5; word-break:break-word; }
+        /* admin strike button */
+        .admin-strike-btn { background:#FF8C00; border:none; color:#000; font-weight:700; font-size:12px; padding:6px 10px; border-radius:7px; cursor:pointer; transition:opacity 0.15s; white-space:nowrap; }
+        .admin-strike-btn:hover { opacity:0.85; }
+        .admin-user-actions { display:flex; gap:6px; flex-shrink:0; }
+
         /* ── CHAT BG PICKER MODAL ───────────────────────────── */
         #chat-bg-modal { position: fixed; inset: 0; z-index: 6000; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
         #chat-bg-modal.active { display: flex; animation: fadeUp 0.18s ease; }
@@ -1524,6 +1549,30 @@
 
             <!-- ── ACCOUNT TAB ── -->
             <div id="settings-panel-account" class="settings-panel">
+
+                <!-- Strike Status -->
+                <div id="settings-strike-section" style="display:none; margin-bottom:14px;">
+                    <div class="strike-settings-section">
+                        <div class="strike-settings-header">
+                            <span class="strike-settings-count" id="settings-strike-count">0</span>
+                            <div>
+                                <div class="strike-settings-label">Active Strikes</div>
+                                <div class="strike-settings-sub">Strikes expire 30 days after being issued. 3 strikes = ban.</div>
+                            </div>
+                            <div class="strike-pips" id="settings-strike-pips" style="margin-bottom:0;margin-left:auto;"></div>
+                        </div>
+                        <div id="settings-strike-list"></div>
+                    </div>
+                </div>
+                <div id="settings-no-strikes" style="display:none; margin-bottom:14px;">
+                    <div style="background:rgba(0,180,80,0.07);border:1px solid rgba(0,180,80,0.2);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00B450" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <div>
+                            <div style="font-size:13px;font-weight:700;color:var(--text-dark);">Account in good standing</div>
+                            <div style="font-size:12px;color:var(--text-muted);">You have no active strikes.</div>
+                        </div>
+                    </div>
+                </div>
                 <div style="cursor:pointer; display:flex; justify-content:space-between; align-items:center; padding: 14px 15px; background:var(--bg-sidebar); border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 10px;" onclick="togglePasswordSection()">
                     <div>
                         <span class="settings-row-label">Change Password</span>
@@ -2839,13 +2888,35 @@
                         document.getElementById('loading-overlay').style.display = 'none';
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('app-layout').classList.remove('active');
-                        // Show full-screen ban page — user stays logged in but sees nothing else
                         const banScreen = document.getElementById('ban-screen');
                         const banReasonEl = document.getElementById('ban-reason-text');
                         if (banReasonEl) banReasonEl.textContent = banReason;
                         if (banScreen) banScreen.style.display = 'flex';
                         return;
                     }
+
+                    // ── EXPIRE OLD STRIKES + STRIKE ALERT CHECK ─────────
+                    (async () => {
+                        const now = Date.now();
+                        const rawStrikes = usersCache[currentUser].strikes || [];
+                        const activeStrikes = rawStrikes.filter(s => s.expiresAt > now);
+                        // Write back cleaned list if any expired
+                        if (activeStrikes.length !== rawStrikes.length) {
+                            updateDoc(doc(db, 'users', currentUser), { strikes: activeStrikes }).catch(()=>{});
+                            usersCache[currentUser].strikes = activeStrikes;
+                        }
+                        // Show strike modal if admin flagged a pending alert
+                        const hasPending = usersCache[currentUser].pendingStrikeAlert === true;
+                        if (hasPending && activeStrikes.length > 0) {
+                            updateDoc(doc(db, 'users', currentUser), { pendingStrikeAlert: false }).catch(()=>{});
+                            const latestReason = usersCache[currentUser].latestStrikeReason || '';
+                            const latestMsgText = usersCache[currentUser].latestStrikeMsgText || '';
+                            const senderPic = usersCache[currentUser].latestStrikeSenderPic || null;
+                            const senderName = usersCache[currentUser].latestStrikeSenderName || '';
+                            const sentTo = usersCache[currentUser].latestStrikeSentTo || '';
+                            showStrikeModal(activeStrikes, latestReason, latestMsgText, senderPic, senderName, sentTo);
+                        }
+                    })();
                     // Backfill accent color for existing users
                     if (!usersCache[currentUser].accentColor) {
                         const existingAccent = localStorage.getItem('talkpage_custom_accent') || '#F6A800';
@@ -2878,6 +2949,49 @@
                     fetchDirectory(); 
                     listenToChats();
                     listenToStories();
+
+                    // ── REAL-TIME BAN/STRIKE LISTENER ─────────────────────
+                    // Instantly pushes bans and strikes without requiring a refresh
+                    (function startUserWatcher() {
+                        const userRef = doc(db, 'users', currentUser);
+                        onSnapshot(userRef, (snap) => {
+                            if (!snap.exists()) return;
+                            const data = snap.data();
+                            // Update local cache
+                            usersCache[currentUser] = { ...(usersCache[currentUser] || {}), ...data };
+
+                            // ── REAL-TIME BAN CHECK ──
+                            if (data.banned === true) {
+                                const banScreen = document.getElementById('ban-screen');
+                                const banReasonEl = document.getElementById('ban-reason-text');
+                                if (banReasonEl) banReasonEl.textContent = data.banReason || '';
+                                if (banScreen) banScreen.style.display = 'flex';
+                                return;
+                            } else {
+                                // If user was unbanned, hide ban screen
+                                const banScreen = document.getElementById('ban-screen');
+                                if (banScreen && banScreen.style.display === 'flex') banScreen.style.display = 'none';
+                            }
+
+                            // ── REAL-TIME STRIKE CHECK ──
+                            if (data.pendingStrikeAlert === true) {
+                                const now = Date.now();
+                                const activeStrikes = (data.strikes || []).filter(s => s.expiresAt > now);
+                                if (activeStrikes.length > 0) {
+                                    // Clear the flag immediately so it doesn't re-trigger on next snapshot
+                                    updateDoc(userRef, { pendingStrikeAlert: false }).catch(() => {});
+                                    const latestReason = data.latestStrikeReason || '';
+                                    const latestMsgText = data.latestStrikeMsgText || '';
+                                    const senderPic = data.latestStrikeSenderPic || null;
+                                    const senderName = data.latestStrikeSenderName || '';
+                                    const sentTo = data.latestStrikeSentTo || '';
+                                    showStrikeModal(activeStrikes, latestReason, latestMsgText, senderPic, senderName, sentTo);
+                                }
+                            }
+                        }, (err) => {
+                            console.warn('User watcher error:', err);
+                        });
+                    })();
                     setTimeout(() => window.loadRecentPagePosts && window.loadRecentPagePosts(), 1500); 
                     document.getElementById('my-profile-icon').innerHTML = getAvatarHTML(currentUser, usersCache[currentUser]);
                     window.updateHomeGreeting();
@@ -2973,6 +3087,109 @@
         };
 
         window.logout = function() { signOut(auth).then(() => { location.reload(); }); };
+
+        // ── STRIKES ──────────────────────────────────────────────────────
+        function renderStrikePips(container, count) {
+            if (!container) return;
+            container.innerHTML = [1,2,3].map(i =>
+                `<div class="strike-pip ${i <= count ? 'filled' : 'empty'}">${i}</div>`
+            ).join('');
+        }
+
+        window.showStrikeModal = function(activeStrikes, latestReason, reportedMsgText, senderPic, senderName, sentTo) {
+            const modal = document.getElementById('strike-modal');
+            if (!modal) return;
+
+            // Pips
+            renderStrikePips(document.getElementById('strike-modal-pips'), activeStrikes.length);
+
+            // Reported message preview (if strike came from a report)
+            const msgPreview = document.getElementById('strike-modal-msg-preview');
+            const msgTextEl = document.getElementById('strike-modal-msg-text');
+            if (reportedMsgText && msgPreview && msgTextEl) {
+                // Build sender header with pic + sentTo
+                let headerHtml = '';
+                if (senderPic || senderName || sentTo) {
+                    const avatarHtml = senderPic
+                        ? `<img src="${senderPic}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(246,168,0,0.4);">`
+                        : `<div style="width:32px;height:32px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;color:#F6A800;flex-shrink:0;">${(senderName||'?')[0].toUpperCase()}</div>`;
+                    const toLine = sentTo ? `<div style="font-size:10px;color:#888;margin-top:1px;">to ${sentTo}</div>` : '';
+                    headerHtml = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                        ${avatarHtml}
+                        <div>
+                            <div style="font-size:12px;font-weight:700;color:var(--text-dark);">${senderName || 'Unknown'}</div>
+                            ${toLine}
+                        </div>
+                    </div>`;
+                }
+                msgTextEl.innerHTML = headerHtml + `<div style="font-size:14px;color:var(--text-dark);line-height:1.5;word-break:break-word;">${reportedMsgText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+                msgPreview.style.display = 'block';
+            } else if (msgPreview) {
+                msgPreview.style.display = 'none';
+            }
+
+            // Reason
+            const reasonWrap = document.getElementById('strike-modal-reason-wrap');
+            const reasonText = document.getElementById('strike-modal-reason-text');
+            if (latestReason && reasonWrap && reasonText) {
+                reasonText.textContent = latestReason;
+                reasonWrap.style.display = 'block';
+            } else if (reasonWrap) {
+                reasonWrap.style.display = 'none';
+            }
+
+            // Expiry
+            const sortedByExpiry = [...activeStrikes].sort((a,b) => b.expiresAt - a.expiresAt);
+            const latest = sortedByExpiry[0];
+            const expiryEl = document.getElementById('strike-modal-expiry');
+            if (expiryEl && latest) {
+                const daysLeft = Math.ceil((latest.expiresAt - Date.now()) / (1000 * 60 * 60 * 24));
+                expiryEl.textContent = `This strike expires in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}.`;
+            }
+
+            modal.classList.add('active');
+        };
+
+        window.dismissStrikeModal = function() {
+            const modal = document.getElementById('strike-modal');
+            if (modal) { modal.classList.remove('active'); setTimeout(() => modal.style.display = 'none', 200); }
+        };
+
+        window.loadSettingsStrikes = function() {
+            const now = Date.now();
+            const rawStrikes = (usersCache[currentUser] && usersCache[currentUser].strikes) || [];
+            const activeStrikes = rawStrikes.filter(s => s.expiresAt > now);
+
+            const section = document.getElementById('settings-strike-section');
+            const noStrikesEl = document.getElementById('settings-no-strikes');
+            const countEl = document.getElementById('settings-strike-count');
+            const pipsEl = document.getElementById('settings-strike-pips');
+            const listEl = document.getElementById('settings-strike-list');
+
+            if (activeStrikes.length === 0) {
+                if (section) section.style.display = 'none';
+                if (noStrikesEl) noStrikesEl.style.display = 'block';
+                return;
+            }
+
+            if (section) section.style.display = 'block';
+            if (noStrikesEl) noStrikesEl.style.display = 'none';
+            if (countEl) countEl.textContent = activeStrikes.length;
+            renderStrikePips(pipsEl, activeStrikes.length);
+
+            if (listEl) {
+                listEl.innerHTML = activeStrikes
+                    .sort((a,b) => b.issuedAt - a.issuedAt)
+                    .map(s => {
+                        const issued = new Date(s.issuedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                        const daysLeft = Math.ceil((s.expiresAt - now) / (1000 * 60 * 60 * 24));
+                        return `<div class="strike-item">
+                            <div class="strike-item-reason">${s.reason || 'No reason provided.'}</div>
+                            <div class="strike-item-meta">Issued ${issued} &middot; Expires in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}</div>
+                        </div>`;
+                    }).join('');
+            }
+        };
 
         window.changeUserPassword = async function() {
             const newPw = document.getElementById('new-pw').value;
@@ -6166,6 +6383,7 @@
                 void el.offsetWidth; // Trigger reflow
                 el.classList.add('active');
                 if (id === 'doodle-modal') setTimeout(resizeDoodleCanvas, 300);
+                if (id === 'settings-modal') { setTimeout(() => window.loadSettingsStrikes && window.loadSettingsStrikes(), 50); }
             } else {
                 el.classList.remove('active');
                 setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 300);
@@ -6273,6 +6491,7 @@
             btn.classList.add('active');
             const panel = document.getElementById('settings-panel-' + tab);
             if (panel) panel.classList.add('active');
+            if (tab === 'account') loadSettingsStrikes();
             if (tab === 'notifications') window.updateNotifUI();
         };
 
@@ -7606,15 +7825,24 @@
         window.submitReport = async function() {
             const reason = (document.getElementById('report-reason-input')?.value || '').trim();
             try {
+                // Determine who the message was sent to (other participants in the chat)
+                const chat = chatsCache.find(c => c.id === activeChatId);
+                const recipients = chat ? (chat.participants || []).filter(p => p !== _reportSender) : [];
+                const recipientNames = recipients.map(r => {
+                    const u = usersCache[r];
+                    return u ? ((u.fname || '') + ' ' + (u.lname || '')).trim() || r : r;
+                });
+
                 await addDoc(collection(db, 'reports'), {
                     msgId: _reportMsgId || '',
                     msgText: _reportMsgText || '',
                     sender: _reportSender || '',
+                    senderPic: (usersCache[_reportSender] && usersCache[_reportSender].pic) || null,
+                    senderFname: (usersCache[_reportSender] && usersCache[_reportSender].fname) || _reportSender || '',
+                    sentTo: recipientNames.join(', ') || '',
                     reportedBy: currentUser,
                     reportedByPic: (usersCache[currentUser] && usersCache[currentUser].pic) || null,
                     reportedByFname: (usersCache[currentUser] && usersCache[currentUser].fname) || currentUser,
-                    senderPic: (usersCache[_reportSender] && usersCache[_reportSender].pic) || null,
-                    senderFname: (usersCache[_reportSender] && usersCache[_reportSender].fname) || _reportSender || '',
                     chatId: activeChatId || '',
                     reason: reason,
                     createdAt: serverTimestamp(),
@@ -7810,8 +8038,9 @@
                             <div style="font-size:12px;color:#888;">Reported by <strong style="color:#bbb;">@${r.reportedBy || '?'}</strong></div>
                         </div>
                         ${r.reason ? `<div style="font-size:12px;color:#888;background:#0a0a0a;border-radius:6px;padding:6px 10px;margin-bottom:8px;"><span style="color:#666;">Reason:</span> ${r.reason.replace(/</g,'&lt;')}</div>` : ''}
-                        <div style="display:flex;gap:8px;margin-top:6px;">
+                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
                             ${!isRead ? `<button onclick="adminMarkReportRead('${d.id}')" style="background:#333;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Mark as Read</button>` : ''}
+                            <button onclick="adminStrikeFromReport('${d.id}','${(r.sender||'').replace(/'/g,"\\'")}','${(r.msgText||'').replace(/'/g,"\\'").replace(/\n/g,' ').substring(0,200)}','${(r.senderPic||'').replace(/'/g,"\\'")}','${(r.senderFname||'').replace(/'/g,"\\'")}','${(r.sentTo||'').replace(/'/g,"\\'")}')" style="background:#F6A800;border:none;color:#000;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">⚠ Strike User</button>
                             <button onclick="adminDismissReport('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Dismiss</button>
                         </div>
                     </div>`;
@@ -7838,6 +8067,20 @@
             } catch(e) { alert('Error: ' + e.message); }
         };
 
+        window.adminStrikeFromReport = async function(reportId, sender, msgText, senderPic, senderFname, sentTo) {
+            if (!sender) { alert('No sender found on this report.'); return; }
+            const reason = prompt(`Strike @${sender} for this message?\n\nEnter a reason (shown to the user alongside the reported message):`);
+            if (reason === null) return;
+            if (!reason.trim()) { alert('Please provide a reason.'); return; }
+            await adminIssueStrike(sender, reason.trim(), msgText, senderPic || null, senderFname || sender, sentTo || '');
+            // Optionally mark the report as read after striking
+            try {
+                const adb = getAdminDb();
+                await updateDoc(doc(adb, 'reports', reportId), { read: true, strikeIssued: true });
+                await loadAdminReports();
+            } catch(e) { /* non-critical */ }
+        };
+
         async function loadAdminUsers() {
             const listEl = document.getElementById('admin-users-list');
             if (!listEl) return;
@@ -7853,13 +8096,32 @@
                     const initials = ((u.fname||'')[0]||'?').toUpperCase();
                     const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
                     const isBanned = u.banned === true;
-                    return `<div class="admin-user-row">
-                        <div class="admin-user-av">${avHtml}</div>
-                        <div class="admin-user-info">
-                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isBanned ? '<span style="color:#EE352E;font-size:11px;font-weight:bold;"> BANNED</span>' : ''}</div>
-                            <div class="admin-user-handle">@${u.id} &middot; joined ${u.joined||'?'}</div>
+                    // Count active strikes
+                    const now = Date.now();
+                    const activeStrikes = (u.strikes || []).filter(s => s.expiresAt > now);
+                    const strikeLabel = activeStrikes.length > 0 ? `<span style="color:#FF8C00;font-size:11px;font-weight:bold;"> ⚠ ${activeStrikes.length} STRIKE${activeStrikes.length>1?'S':''}</span>` : '';
+                    // Build per-strike remove rows
+                    const strikeRows = activeStrikes.map((s, idx) => {
+                        const issued = s.issuedAt ? new Date(s.issuedAt).toLocaleDateString() : '?';
+                        const safeReason = (s.reason||'No reason').replace(/'/g, "\\'");
+                        return `<div style="display:flex;align-items:center;gap:8px;margin-top:6px;background:#1a1a1a;border-radius:7px;padding:6px 10px;">
+                            <span style="flex:1;font-size:11px;color:#aaa;"><span style="color:#FF8C00;font-weight:bold;">Strike ${idx+1}</span> · ${issued} · ${s.reason||'No reason'}</span>
+                            <button class="admin-strike-btn" style="background:#333;color:#FF8C00;font-size:11px;padding:4px 8px;" onclick="adminRemoveStrike('${u.id}', ${s.issuedAt})">✕ Remove</button>
+                        </div>`;
+                    }).join('');
+                    return `<div class="admin-user-row" style="flex-direction:column;align-items:stretch;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div class="admin-user-av">${avHtml}</div>
+                            <div class="admin-user-info">
+                                <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isBanned ? '<span style="color:#EE352E;font-size:11px;font-weight:bold;"> BANNED</span>' : strikeLabel}</div>
+                                <div class="admin-user-handle">@${u.id} &middot; joined ${u.joined||'?'}</div>
+                            </div>
+                            <div class="admin-user-actions">
+                                ${!isBanned ? `<button class="admin-strike-btn" onclick="adminIssueStrike('${u.id}')">⚠ Strike</button>` : ''}
+                                <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
+                            </div>
                         </div>
-                        <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
+                        ${strikeRows}
                     </div>`;
                 }).join('');
             } catch(e) {
@@ -7885,6 +8147,77 @@
                 alert(`User @${username} has been ${action}ned.`);
             } catch(e) {
                 alert('Error: ' + e.message);
+            }
+        };
+
+        window.adminIssueStrike = async function(username, reason, reportedMsgText, senderPic, senderName, sentTo) {
+            // If called without reason (from user list), prompt for one
+            if (reason === undefined) {
+                reason = prompt(`Enter the reason for striking @${username}:\n(This will be shown to the user)`);
+                if (reason === null) return;
+                if (!reason.trim()) { alert('Please provide a reason for the strike.'); return; }
+            }
+
+            try {
+                const adb = getAdminDb();
+                const userRef = doc(adb, 'users', username);
+                const userSnap = await getDoc(userRef);
+                if (!userSnap.exists()) { alert('User not found.'); return; }
+                const userData = userSnap.data();
+
+                const now = Date.now();
+                const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+                const existing = (userData.strikes || []).filter(s => s.expiresAt > now);
+                const newStrike = { reason: reason.trim(), issuedAt: now, expiresAt: now + THIRTY_DAYS };
+                if (reportedMsgText) newStrike.reportedMsgText = reportedMsgText;
+                const updatedStrikes = [...existing, newStrike];
+
+                const sharedFields = {
+                    pendingStrikeAlert: true,
+                    latestStrikeReason: reason.trim(),
+                    latestStrikeMsgText: reportedMsgText || '',
+                    latestStrikeSenderPic: senderPic || null,
+                    latestStrikeSenderName: senderName || '',
+                    latestStrikeSentTo: sentTo || ''
+                };
+
+                if (updatedStrikes.length >= 3) {
+                    const autoBanReason = `Automatically banned after receiving 3 strikes. Latest: ${reason.trim()}`;
+                    await updateDoc(userRef, {
+                        strikes: updatedStrikes,
+                        banned: true,
+                        banReason: autoBanReason,
+                        ...sharedFields
+                    });
+                    await loadAdminUsers();
+                    alert(`@${username} now has ${updatedStrikes.length} strikes and has been automatically banned.`);
+                } else {
+                    await updateDoc(userRef, {
+                        strikes: updatedStrikes,
+                        ...sharedFields
+                    });
+                    await loadAdminUsers();
+                    alert(`Strike issued to @${username}. They now have ${updatedStrikes.length} active strike(s).`);
+                }
+            } catch(e) {
+                alert('Error issuing strike: ' + e.message);
+            }
+        };
+
+        window.adminRemoveStrike = async function(username, issuedAt) {
+            if (!confirm(`Remove this strike from @${username}?`)) return;
+            try {
+                const adb = getAdminDb();
+                const userRef = doc(adb, 'users', username);
+                const userSnap = await getDoc(userRef);
+                if (!userSnap.exists()) { alert('User not found.'); return; }
+                const existing = userSnap.data().strikes || [];
+                const updated = existing.filter(s => s.issuedAt !== issuedAt);
+                await updateDoc(userRef, { strikes: updated });
+                await loadAdminUsers();
+                alert(`Strike removed from @${username}. They now have ${updated.filter(s => s.expiresAt > Date.now()).length} active strike(s).`);
+            } catch(e) {
+                alert('Error removing strike: ' + e.message);
             }
         };
 
@@ -8201,6 +8534,35 @@
     </script>
 
     <!-- ─── BAN SCREEN ─── -->
+    <!-- ─── STRIKE NOTIFICATION SCREEN ─── -->
+    <div id="strike-modal">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" style="margin-bottom:24px;">
+            <path d="M12 2.5L1.5 21.5h21L12 2.5z" fill="#F6A800" opacity="0.18"/>
+            <path d="M12 2.5L1.5 21.5h21L12 2.5z" fill="none" stroke="#F6A800" stroke-width="1.6" stroke-linejoin="round"/>
+            <line x1="12" y1="9.5" x2="12" y2="14.5" stroke="#F6A800" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="12" cy="17.5" r="0.9" fill="#F6A800"/>
+        </svg>
+        <h1 style="font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:12px;letter-spacing:-0.5px;">Your account has received a strike.</h1>
+        <p style="font-size:16px;color:var(--text-muted);max-width:380px;line-height:1.6;margin-bottom:20px;">Accumulating 3 strikes within 30 days will result in a permanent ban.</p>
+
+        <div id="strike-modal-msg-preview" class="strike-msg-preview" style="display:none;">
+            <div class="smp-label">Reported Message</div>
+            <div class="smp-text" id="strike-modal-msg-text"></div>
+        </div>
+
+        <div id="strike-modal-reason-wrap" style="margin-bottom:8px;max-width:380px;width:100%;text-align:left;display:none;">
+            <p style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#F6A800;margin-bottom:4px;">Reason</p>
+            <p id="strike-modal-reason-text" style="font-size:15px;color:var(--text-muted);line-height:1.6;margin:0;"></p>
+        </div>
+
+        <div class="strike-pips" id="strike-modal-pips" style="margin-top:18px;"></div>
+        <p id="strike-modal-expiry" style="font-size:13px;color:var(--text-muted);margin-bottom:28px;"></p>
+
+        <button onclick="dismissStrikeModal()" style="background:#F6A800;border:none;color:#000;font-size:16px;font-weight:800;padding:14px 48px;border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+            Continue to Talkpage
+        </button>
+    </div>
+
     <div id="ban-screen" style="display:none; position:fixed; inset:0; z-index:9999; background:var(--bg-main); flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#EE352E" stroke-width="1.5" style="margin-bottom:24px;opacity:0.8;"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
         <h1 style="font-size:28px;font-weight:800;color:var(--text-dark);margin-bottom:12px;letter-spacing:-0.5px;">You've been banned from Talkpage.</h1>

@@ -171,18 +171,18 @@
         #sidebar.collapsed .conv-item { padding: 10px 0; justify-content: center; }
         #sidebar.collapsed .avatar-container { margin-right: 0; }
         /* Collapse toggle button */
-        #sidebar-collapse-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 6px; transition: color 0.15s, transform 0.22s; flex-shrink: 0; }
+        #sidebar-collapse-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border-radius: 7px; transition: color 0.15s, background 0.15s, transform 0.22s; flex-shrink: 0; }
         #sidebar-collapse-btn:hover { color: var(--accent); }
         #sidebar.collapsed #sidebar-collapse-btn { transform: rotate(180deg); }
         .sb-header { 
             height: auto; 
             min-height: calc(84px + env(safe-area-inset-top)); 
-            padding: calc(25px + env(safe-area-inset-top)) 25px 25px 25px; 
+            padding: calc(25px + env(safe-area-inset-top)) 16px 16px 16px; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
             border-bottom: 2px solid var(--border-dark); 
-            flex-shrink: 0; 
+            flex-shrink: 0;
         }
 
         .sb-header-top { 
@@ -193,20 +193,20 @@
             margin-bottom: 0; 
         }
         .sb-title-area { display: flex; flex-direction: column; justify-content: center; }
-        .sb-title-area h1 { font-size: 22px; line-height: 1.1; margin-bottom: 2px; }
+        .sb-title-area h1 { font-size: 20px; line-height: 1.1; margin-bottom: 2px; }
         .sb-title-area span { font-size: 11px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
-        .sb-actions { display: flex; align-items: center; gap: 12px; }
-        .theme-btn { background: none; border: none; color: var(--border-dark); transition: transform 0.15s ease-out, color 0.15s ease-out; display: flex; align-items: center; justify-content: center; }
-        @media (hover: hover) and (pointer: fine) { .theme-btn:hover { color: var(--accent); transform: scale(1.15); } }
+        .sb-actions { display: flex; align-items: center; gap: 1px; flex-shrink: 0; }
+        .theme-btn { background: none; border: none; color: var(--text-muted); transition: color 0.15s ease-out, background 0.15s ease-out; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 7px; flex-shrink: 0; cursor: pointer; }
+        @media (hover: hover) and (pointer: fine) { .theme-btn:hover { color: var(--accent); background: var(--bg-main); } }
 
         .my-profile-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--border-dark); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; overflow: hidden; text-transform: uppercase; transition: transform 0.15s ease-out; border: 2px solid var(--border-dark); box-shadow: var(--glow);}
         .my-profile-icon span { color: #FFFFFF !important; }
         @media (hover: hover) and (pointer: fine) { .my-profile-icon:hover { transform: scale(1.08); border-color: var(--accent); } }
         .my-profile-icon img { width: 100%; height: 100%; object-fit: cover; }
         
-        .new-chat-btn { background: none; border: none; font-size: 30px; font-weight: bold; color: var(--text-dark); line-height: 1; margin-top: -4px; transition: color 0.15s ease-out, transform 0.15s ease-out;}
-        @media (hover: hover) and (pointer: fine) { .new-chat-btn:hover { color: var(--accent); transform: scale(1.1); } }
+        .new-chat-btn { background: none; border: none; color: var(--text-muted); display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 7px; transition: color 0.15s ease-out, background 0.15s ease-out; cursor: pointer; flex-shrink: 0; }
+        @media (hover: hover) and (pointer: fine) { .new-chat-btn:hover { color: var(--accent); background: var(--bg-main); } }
 
         .conv-list { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; padding-bottom: 20px; transform: translateZ(0);}
         .conv-item { padding: 15px 25px; display: flex; align-items: center; border-bottom: 1px solid var(--border-light); transition: background 0.1s ease-out; will-change: background;}
@@ -248,7 +248,18 @@
     overflow-y: auto; 
     overflow-x: hidden; 
     -webkit-overflow-scrolling: touch;
+    --home-overlay-opacity: 0;
 }
+        #no-chat-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,var(--home-overlay-opacity));
+            pointer-events: none;
+            z-index: 0;
+        }
+        #no-chat-screen > * { position: relative; z-index: 1; }
+        #home-bg-btn { z-index: 10 !important; }
         #active-chat-screen { flex: 1; display: none; flex-direction: column; background: var(--bg-chat); backdrop-filter: var(--blur); height: 100%; overflow: hidden; position: relative;} 
 
         /* Gartic Integration */
@@ -339,8 +350,25 @@
         @media (hover: hover) and (pointer: fine) { .reaction-badge:hover { border-color: var(--accent); transform: translateY(-1px); } }
         .reaction-badge.active-react { border-color: var(--accent); background: var(--bg-main); font-weight: bold;}
 
+        /* Swipe-to-reply indicator */
+        .msg-wrapper { transition: transform 0.15s ease-out; }
+        .msg-wrapper.swipe-replying { transition: none !important; }
+        .swipe-reply-indicator {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent); color: #000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.15s;
+            z-index: 50; flex-shrink: 0;
+        }
+        .msg-wrapper.sent .swipe-reply-indicator { right: -40px; }
+        .msg-wrapper.received .swipe-reply-indicator { left: -40px; }
+        .swipe-reply-indicator.visible { opacity: 1; }
+
         .msg-tools-wrapper { opacity: 0; transition: opacity 0.15s ease-out; position: relative; display: flex; align-items: center; justify-content: center; }
         @media (hover: hover) and (pointer: fine) { .bubble-row:hover .msg-tools-wrapper { opacity: 1; } }
+        /* Always show on touch devices */
+        @media (hover: none) { .msg-tools-wrapper { opacity: 1; } }
         .msg-tools-wrapper:active { opacity: 1; }
         .msg-dots { background: none; border: none; color: var(--text-muted); padding: 5px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
         @media (hover: hover) and (pointer: fine) { .msg-dots:hover { background: var(--bg-sidebar); color: var(--accent); } }
@@ -352,9 +380,27 @@
         @media (hover: hover) and (pointer: fine) { .menu-item:hover { background: var(--bg-sidebar); color: var(--accent); } }
         @media (hover: hover) and (pointer: fine) { .menu-item.text-red:hover { color: #EE352E; } }
 
-        .emoji-row { display: flex; align-items: center; gap: 4px; padding: 5px; border-bottom: 1px solid var(--border-light); margin-bottom: 5px; }
+        .emoji-row { display: flex; align-items: center; gap: 4px; padding: 5px; border-bottom: 1px solid var(--border-light); margin-bottom: 5px; flex-wrap: wrap; }
         .emoji-btn { font-size: 16px; transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: none; background: none; padding: 2px; }
         @media (hover: hover) and (pointer: fine) { .emoji-btn:hover { transform: scale(1.3); } }
+
+        /* Emoji Picker Popup */
+        .emoji-picker-popup {
+            position: fixed; z-index: 9999; background: var(--bg-main);
+            border: 2px solid var(--border-dark); border-radius: 16px;
+            padding: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.25), var(--glow);
+            width: 300px; max-width: 90vw;
+            animation: fadeUp 0.15s ease;
+        }
+        .ep-search { width: 100%; border: 1px solid var(--border-light); border-radius: 20px; padding: 7px 14px; font-size: 13px; font-family: var(--font-main); background: var(--bg-sidebar); color: var(--text-dark); outline: none; margin-bottom: 10px; box-sizing: border-box; transition: border-color 0.15s; }
+        .ep-search:focus { border-color: var(--accent); }
+        .ep-categories { display: flex; gap: 4px; margin-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
+        .ep-categories::-webkit-scrollbar { display: none; }
+        .ep-cat-btn { background: none; border: none; font-size: 16px; padding: 4px 6px; border-radius: 8px; cursor: pointer; transition: background 0.1s; flex-shrink: 0; }
+        .ep-cat-btn:hover, .ep-cat-btn.active { background: var(--bg-sidebar); }
+        .ep-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; max-height: 200px; overflow-y: auto; }
+        .ep-emoji { font-size: 20px; padding: 4px; border: none; background: none; cursor: pointer; border-radius: 6px; transition: background 0.1s, transform 0.1s; display: flex; align-items: center; justify-content: center; line-height: 1; }
+        .ep-emoji:hover { background: var(--bg-sidebar); transform: scale(1.2); }
 
         .typing-dots { display: flex; gap: 4px; padding: 12px 18px; border-radius: var(--radius-bubble); background: var(--msg-recv-bg); align-items: center; height: 40px; box-sizing: border-box; width: fit-content; border: 1px solid var(--border-light); border-bottom-left-radius: 4px; }
         .typing-dots span { width: 8px; height: 8px; background: var(--msg-recv-txt); opacity: 0.6; border-radius: 50%; animation: typingAnim 1.4s infinite ease-in-out both; }
@@ -474,6 +520,9 @@
             #app-layout { position: relative; }
             #sidebar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease; z-index: 10; border: none;}
             #chat-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); z-index: 20; background: var(--bg-main); display: flex !important;}
+            /* Page screen on mobile: same slot as chat-area */
+            #page-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1); z-index: 20; background: var(--bg-main); }
+            body.mobile-chat-open #page-screen { transform: translateX(0) !important; }
             
             body.mobile-chat-open #sidebar { transform: translateX(-30%); opacity: 0; pointer-events: none; }
             body.mobile-chat-open #chat-area { transform: translateX(0); }
@@ -500,7 +549,39 @@
         .settings-text-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 12px; text-decoration: underline; font-family: var(--font-main); transition: color 0.15s; }
         .settings-text-btn:hover { color: var(--accent); }
 
-        /* ===== PROFILE BANNER REDESIGN ===== */
+        /* ===== NOTIFICATIONS BELL ===== */
+        .notif-bell-wrap { position: relative; display: flex; align-items: center; }
+        .notif-bell-badge { display: none; position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; background: #EE352E; border-radius: 50%; border: 2px solid var(--bg-sidebar); font-size: 9px; font-weight: bold; color: #FFF; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
+        .notif-bell-badge.visible { display: flex; }
+
+        /* Notifications Panel */
+        #notif-panel { position: fixed; top: 0; left: 340px; width: 320px; max-width: 90vw; height: 100vh; background: var(--bg-main); border-right: 2px solid var(--border-dark); z-index: 800; display: none; flex-direction: column; box-shadow: 4px 0 20px rgba(0,0,0,0.12); transform: translateX(-20px); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease; }
+        #notif-panel.open { display: flex; transform: translateX(0); opacity: 1; }
+        @media (max-width: 768px) { #notif-panel { left: 0; width: 100%; z-index: 1000; } }
+        .notif-panel-header { padding: calc(20px + env(safe-area-inset-top)) 20px 16px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .notif-panel-header h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .notif-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .notif-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: background 0.1s; position: relative; }
+        .notif-item:hover { background: var(--bg-sidebar); }
+        .notif-item.unread { background: color-mix(in srgb, var(--accent) 6%, var(--bg-main)); }
+        .notif-item.unread::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+        .notif-av { width: 38px; height: 38px; border-radius: 50%; background: var(--border-dark); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #FFF; }
+        .notif-av img { width: 100%; height: 100%; object-fit: cover; }
+        .notif-body { flex: 1; min-width: 0; }
+        .notif-text { font-size: 13px; line-height: 1.4; color: var(--text-dark); }
+        .notif-text strong { font-weight: 800; }
+        .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .notif-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+
+        /* ===== VERIFIED BADGE ===== */
+        .verified-badge {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px;
+            flex-shrink: 0; vertical-align: middle; margin-left: 3px;
+            position: relative;
+        }
+        .verified-badge svg { display: block; }
+        .verified-badge-lg { width: 20px; height: 20px; }
         .profile-banner { height: 82px; background: linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); position: relative; flex-shrink: 0; border-radius: 14px 14px 0 0; }
         .profile-banner-avatar { position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%); width: 88px; height: 88px; border-radius: 50%; border: 4px solid var(--bg-main); background: var(--border-dark); overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; color: #FFF !important; box-shadow: 0 4px 20px rgba(0,0,0,0.25); cursor: pointer; transition: transform 0.15s; }
         .profile-banner-avatar:hover { transform: translateX(-50%) scale(1.05); }
@@ -1023,13 +1104,13 @@
         <div id="sidebar">
             <div class="sb-header">
                 <div class="sb-header-top">
-                    <div style="display:flex; align-items:center; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:8px; min-width:0; flex:1; overflow:hidden;">
                         <div class="my-profile-icon-wrap" id="my-profile-icon-wrap">
                             <div class="my-profile-icon" id="my-profile-icon" onclick="viewMyProfile()" title="My Profile"></div>
                             <div class="avail-dot ad-online" id="my-status-dot" onclick="openStatusPicker(event)" title="Change status" style="cursor:pointer; right:-1px; bottom:-1px;"></div>
                         </div>
-                        <div class="sb-title-area">
-                            <h1>Talkpage</h1>
+                        <div class="sb-title-area" style="min-width:0;">
+                            <h1 style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Talkpage</h1>
                             <button id="sidebar-mode-btn" onclick="toggleSidebarModeMenu(event)" style="display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;padding:0;font-family:var(--font-main);">
                                 <span id="sidebar-mode-label" style="font-size:11px;color:var(--text-muted);font-weight:bold;text-transform:uppercase;letter-spacing:1px;">Chats</span>
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="3" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1038,27 +1119,29 @@
                     </div>
                     <div class="sb-actions">
                         <button id="sidebar-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
                         <button class="theme-btn" onclick="smartHomeBtn()" title="Home / Chat" style="position:relative;">
-                            <svg id="home-btn-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg id="home-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
                             </svg>
                             <span id="sidebar-unread-dot" class="sidebar-notif-dot"></span>
                         </button>
-                        <button class="theme-btn" onclick="openContacts()" title="Contacts">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </button>
+                        <div class="notif-bell-wrap">
+                            <button class="theme-btn" onclick="toggleNotifPanel()" title="Notifications" id="notif-bell-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            </button>
+                            <div class="notif-bell-badge" id="notif-bell-badge"></div>
+                        </div>
                         <button class="theme-btn" onclick="toggleModal('settings-modal', true)" title="Settings">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="3"></circle>
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
                             </svg>
                         </button>
-                        <button class="new-chat-btn" onclick="toggleModal('new-chat-modal', true)">+</button>
+                        <button class="new-chat-btn" onclick="toggleModal('new-chat-modal', true)" title="New chat">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1088,6 +1171,10 @@
             
             <div id="no-chat-screen" style="flex: 1; display: flex; flex-direction: column; background-color: var(--bg-sidebar); backdrop-filter: var(--blur); position: relative; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;">
                 
+                <button id="home-bg-btn" onclick="openHomeBgPicker()" title="Change Background" style="position:sticky;top:12px;margin-left:auto;margin-right:12px;flex-shrink:0;align-self:flex-end;background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;z-index:10;transition:color 0.15s;display:flex;align-items:center;border-radius:8px;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </button>
+
                 <button class="mobile-back-btn" style="position: absolute; top: 15px; left: 15px; z-index: 10;" onclick="backToList()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
                 </button>
@@ -2081,13 +2168,44 @@
                 <div id="admin-reports-list"><p style="color:#555;font-size:13px;">Loading reports...</p></div>
             </div>
             <div class="admin-section">
+                <h2>Verified Users</h2>
+                <p style="font-size:12px;color:#666;margin-bottom:12px;">Grant or revoke the verified checkmark badge for users.</p>
+                <div id="admin-verified-list"><p style="color:#555;font-size:13px;">Loading...</p></div>
+            </div>
+            <div class="admin-section">
                 <h2>Registered Users</h2>
                 <div id="admin-users-list"><p style="color:#555;font-size:13px;">Loading users...</p></div>
             </div>
         </div>
     </div>
 
-    <!-- ─── CHAT BACKGROUND PICKER MODAL ─── -->
+    <!-- ─── NOTIFICATIONS PANEL ─── -->
+    <div id="notif-panel">
+        <div class="notif-panel-header">
+            <h2>Notifications</h2>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button onclick="markAllNotifsRead()" style="background:none;border:none;cursor:pointer;font-size:12px;font-weight:700;color:var(--text-muted);font-family:var(--font-main);transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Mark all read</button>
+                <button onclick="toggleNotifPanel()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;padding:4px;transition:color 0.15s;" onmouseover="this.style.color='var(--text-dark)'" onmouseout="this.style.color='var(--text-muted)'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="notif-list" id="notif-list">
+            <div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.4;display:block;margin-left:auto;margin-right:auto;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                No notifications yet
+            </div>
+        </div>
+    </div>
+    <!-- Notif panel backdrop -->
+    <div id="notif-backdrop" onclick="toggleNotifPanel()" style="display:none;position:fixed;inset:0;z-index:799;background:transparent;"></div>
+
+    <!-- ─── EMOJI PICKER GLOBAL ─── -->
+    <div id="global-emoji-picker" class="emoji-picker-popup" style="display:none;" onclick="event.stopPropagation()">
+        <input class="ep-search" id="ep-search-input" placeholder="Search emoji..." oninput="epSearch(this.value)">
+        <div class="ep-categories" id="ep-cats"></div>
+        <div class="ep-grid" id="ep-grid"></div>
+    </div>
     <div id="chat-bg-modal" onclick="if(event.target===this)closeChatBgPicker()">
         <div class="chat-bg-card" onclick="event.stopPropagation()">
             <h3>Chat Background</h3>
@@ -2922,6 +3040,15 @@
                         const existingAccent = localStorage.getItem('talkpage_custom_accent') || '#F6A800';
                         updateDoc(doc(db, "users", currentUser), { accentColor: existingAccent }).catch(() => {});
                         usersCache[currentUser].accentColor = existingAccent;
+                    } else {
+                        // Sync accent from Firestore → this device (cross-device sync)
+                        const cloudAccent = usersCache[currentUser].accentColor;
+                        localStorage.setItem('talkpage_custom_accent', cloudAccent);
+                        document.documentElement.style.setProperty('--accent', cloudAccent);
+                        const picker = document.getElementById('accent-color-picker');
+                        if (picker) picker.value = cloudAccent;
+                        window.updateFavicon && window.updateFavicon(cloudAccent);
+                        window.updateHomeGradient && window.updateHomeGradient(cloudAccent);
                     }
                     document.getElementById('loading-overlay').style.display = 'none';
                     document.getElementById('auth-screen').style.display = 'none';
@@ -3462,6 +3589,12 @@
 
                     const dotsSVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>`;
                     const pinIcon = isPinned ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="margin-right:4px;"><path d="M21 16l-3-3v-6a5 5 0 0 0-10 0v6l-3 3v2h7v5l1 1 1-1v-5h7v-2z"></path></svg>` : '';
+                    // Verified badge for DM chats
+                    let verifiedBadge = '';
+                    if (!chat.isGroup) {
+                        const tU = safeParticipants.find(p => p !== currentUser) || '';
+                        verifiedBadge = window.getVerifiedBadge ? window.getVerifiedBadge(tU, '') : '';
+                    }
                     
                     // Availability dot (DM chats only)
                     let availDotHtml = '';
@@ -3476,7 +3609,7 @@
                         <div class="avatar-container" style="position:relative;"><div class="avatar">${avatarContent}</div>${availDotHtml}</div>
                         <div class="conv-info">
                             <div class="conv-header-row">
-                                <div class="conv-name">${pinIcon}${chatTitle}</div>
+                                <div class="conv-name">${pinIcon}${chatTitle}${verifiedBadge}</div>
                                 ${unreadBadge}
                             </div>
                             <div class="conv-preview" style="font-weight:${fw}; color:${color};">${lastMsg}</div>
@@ -3910,7 +4043,7 @@
 
                             // MENTION & LINK ENGINE
                             const isImg = safeMsgText.startsWith('<img');
-                            const isEmoji = !isImg && isOnlyEmojis(safeMsgText.replace(/<[^>]*>?/gm, '')); 
+                            const isEmoji = !isImg && isOnlyEmojis(safeMsgText.replace(/<[^>]*>?/gm, '').trim()); 
                             
                             if (!isImg && !isEmoji && !isSpoiler) {
                                 const urlRegex = /(https?:\/\/[^\s<]+)/g;
@@ -3964,13 +4097,12 @@
                                 <div class="msg-tools-wrapper">
                                     <button class="msg-dots" onclick="toggleMsgMenu(event, '${msg.id}')">${dotsSVG}</button>
                                     <div id="msg-menu-${msg.id}" class="msg-menu" style="display:none;">
-                                        <div class="emoji-row" style="display: flex; align-items: center; gap: 4px; padding: 5px; border-bottom: 1px solid var(--border-light); margin-bottom: 5px;">
+                                        <div class="emoji-row">
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '❤️')">❤️</button>
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😂')">😂</button>
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '😮')">😮</button>
                                             <button class="emoji-btn" onclick="reactToMessage('${msg.id}', '👍')">👍</button>
-                                            <button class="emoji-btn" style="background: var(--bg-sidebar); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-left: 4px; color: var(--text-dark);" onclick="this.style.display='none'; document.getElementById('custom-react-${msg.id}').style.display='inline-block'; document.getElementById('custom-react-${msg.id}').focus();">➕</button>
-                                            <input type="text" id="custom-react-${msg.id}" style="width: 25px; display: none; border: 1px solid var(--border-dark); border-radius: 4px; background: var(--bg-main); color: var(--text-dark); text-align: center; font-size: 12px; outline: none; padding: 2px;" maxlength="2" placeholder="😀" onkeypress="if(event.key === 'Enter') { reactToMessage('${msg.id}', this.value); }">
+                                            <button class="emoji-btn" title="More reactions" onclick="openEmojiPicker(event, '${msg.id}')" style="background:var(--bg-sidebar);border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:bold;color:var(--text-dark);">+</button>
                                         </div>
                                         <div class="menu-item" onclick="replyToMessage('${msg.id}')">Reply</div>
                                         <div class="menu-item" onclick="pinMessage('${msg.id}')">${chat?.pinnedMessage === msg.id ? 'Unpin' : 'Pin Message'}</div>
@@ -4007,7 +4139,7 @@
                                 <div class="msg-block ${isMe ? 'sent' : 'received'}">
                                     <div class="bubble-row ${isMe ? 'sent' : 'received'}" style="${isMe ? 'flex-direction: row-reverse;' : ''}">
                                         <div class="bubble-content">
-                                            <div class="${bubbleClasses}" ${bubbleStyle} ondblclick="reactToMessage('${msg.id}', '❤️')">${replyHtml}${safeMsgText}</div>
+                                            <div class="${bubbleClasses}" ${bubbleStyle} ondblclick="reactToMessage('${msg.id}', '❤️'); window._dbTapAnim(this)">${replyHtml}${safeMsgText}</div>
                                             ${reactionsHtml}
                                         </div>
                                         ${toolsHtml}
@@ -5020,6 +5152,14 @@
                 if(!story.likes) story.likes = {};
                 story.likes[currentUser] = true;
                 updateDoc(doc(db, "stories", story.id), { [`likes.${currentUser}`]: true }).catch(e=>e);
+                // Send notification to story author (not if it's your own story)
+                if (story.author && story.author !== currentUser) {
+                    addDoc(collection(db, 'notifications'), {
+                        recipient: story.author, from: currentUser, type: 'like_story',
+                        storyId: story.id,
+                        read: false, createdAt: serverTimestamp()
+                    }).catch(e=>e);
+                }
             }
         };
 
@@ -5873,6 +6013,14 @@
                 const cnt = document.getElementById('hlcnt-'+postId);
                 if(btn){btn.style.color=nowLiked?'#e74c3c':'var(--text-muted)';const svg=btn.querySelector('svg');if(svg){svg.setAttribute('fill',nowLiked?'#e74c3c':'none');svg.setAttribute('stroke',nowLiked?'#e74c3c':'currentColor');}}
                 if(cnt){const n=Object.keys(likes).length;cnt.textContent=n||'';}
+                // Send notification when liking (not unliking)
+                if (nowLiked && pageOwner !== currentUser) {
+                    addDoc(collection(db, 'notifications'), {
+                        recipient: pageOwner, from: currentUser, type: 'like_post',
+                        postId: postId, pageOwner: pageOwner,
+                        read: false, createdAt: serverTimestamp()
+                    }).catch(()=>{});
+                }
             }catch(e){console.error('homeLike',e);}
         };
 
@@ -5938,7 +6086,8 @@
             pvPic.innerHTML = getAvatarHTML(username, profile);
 
             // Name / handle
-            document.getElementById('pv-name').innerText = getFullName(username);
+            const pvNameEl = document.getElementById('pv-name');
+            pvNameEl.innerHTML = getFullName(username) + (window.getVerifiedBadge ? window.getVerifiedBadge(username, 'lg') : '');
             document.getElementById('pv-handle').innerText = `@${username}`;
 
             // Pronouns
@@ -7004,9 +7153,15 @@
                     Pages
                 </div>
             `;
+            // Position the menu using fixed coords from the button's bounding rect
+            // so overflow:hidden on any ancestor can't clip it
             const btn = document.getElementById('sidebar-mode-btn');
-            btn.parentElement.style.position = 'relative';
-            btn.parentElement.appendChild(menu);
+            const rect = btn.getBoundingClientRect();
+            menu.style.position = 'fixed';
+            menu.style.top = (rect.bottom + 6) + 'px';
+            menu.style.left = rect.left + 'px';
+            menu.style.zIndex = '9999';
+            document.body.appendChild(menu);
 
             setTimeout(() => {
                 document.addEventListener('click', function closeMenu() {
@@ -7546,6 +7701,14 @@
             const heartFill = newLiked ? '#EE352E' : 'none';
             const heartStroke = newLiked ? '#EE352E' : 'currentColor';
             btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartStroke}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span>${count > 0 ? count : ''}</span>`;
+            // Send notification only when liking (not unliking)
+            if (newLiked && pageOwner !== currentUser) {
+                addDoc(collection(db, 'notifications'), {
+                    recipient: pageOwner, from: currentUser, type: 'like_post',
+                    postId: postId, pageOwner: pageOwner,
+                    read: false, createdAt: serverTimestamp()
+                }).catch(()=>{});
+            }
         };
 
         // ── PAGE COMMENTS ─────────────────────────────────────
@@ -7702,6 +7865,14 @@
             await addDoc(collection(db, 'pages', pageOwner, 'posts', postId, 'comments'), {
                 author: currentUser, text, createdAt: serverTimestamp()
             }).catch(()=>{});
+            // Send notification to post owner (not if commenting on own post)
+            if (pageOwner !== currentUser) {
+                addDoc(collection(db, 'notifications'), {
+                    recipient: pageOwner, from: currentUser, type: 'comment_post',
+                    postId: postId, pageOwner: pageOwner, commentText: text,
+                    read: false, createdAt: serverTimestamp()
+                }).catch(()=>{});
+            }
         };
 
         // ── PAGE BACKGROUND ───────────────────────────────────
@@ -8530,6 +8701,566 @@
                     </div>
                 </div>`;
         };
+
+        // ── DOUBLE TAP HEART ANIMATION ──────────────────────────────
+        window._dbTapAnim = function(el) {
+            const heart = document.createElement('div');
+            heart.textContent = '❤️';
+            heart.style.cssText = 'position:absolute;font-size:32px;pointer-events:none;z-index:999;transform:scale(0);animation:heartPop 0.6s ease forwards;';
+            const rect = el.getBoundingClientRect();
+            heart.style.left = (rect.left + rect.width/2 - 16) + 'px';
+            heart.style.top = (rect.top + rect.height/2 - 16) + 'px';
+            if (!document.getElementById('heart-pop-style')) {
+                const s = document.createElement('style');
+                s.id = 'heart-pop-style';
+                s.textContent = '@keyframes heartPop{0%{transform:scale(0);opacity:1}50%{transform:scale(1.4);opacity:1}100%{transform:scale(1.0);opacity:0}}';
+                document.head.appendChild(s);
+            }
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 700);
+        };
+
+        // ── EMOJI PICKER ENGINE ────────────────────────────────────
+        const EP_EMOJIS = {
+            '❤️': ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕'],
+            '👍': ['👋','🤚','🖐','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💪','🦾','🦿','🦵','🦶','👂','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁','👅','👄'],
+            '🎉': ['🥂','🎊','🎈','🎁','🎀','🎗','🎟','🎫','🎖','🏆','🥇','🥈','🥉','🏅','🎪','🎭','🎨','🎬','🎤','🎧','🎼','🎹','🎸','🎺','🎻','🥁','🪘','🎷','🎮','🕹','🎲','🧸','🪆','🎯','🎳','🎰'],
+            '🔥': ['⚡','✨','🌟','💫','⭐','🌈','☀️','🌙','💥','🎆','🎇','🌊','💨','❄️','🌸','🌺','🌻','🌹','🍀','🌿','🍃','🌳','🌴','🦋','🐝','🐞','🦄','🐉','🦊','🐺','🦁','🐯','🐻','🐼','🐨','🦘','🦙','🦒','🐘','🦛','🦏','🦓','🦍','🐪','🐫'],
+            '😂': ['🤣','😹','💀','☠️','😵','🫠','🤪','😜','🤑','😈','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃'],
+        };
+        const EP_CATS = [
+            { icon: '😊', key: '❤️', label: 'Faces' },
+            { icon: '👍', key: '👍', label: 'Hands' },
+            { icon: '🎉', key: '🎉', label: 'Fun' },
+            { icon: '🔥', key: '🔥', label: 'Nature' },
+            { icon: '😂', key: '😂', label: 'Silly' },
+        ];
+        let _epCurrentMsgId = null;
+        let _epCurrentCat = '❤️';
+
+        window.openEmojiPicker = function(event, msgId) {
+            event.stopPropagation();
+            document.querySelectorAll('.msg-menu').forEach(m => m.style.display = 'none');
+            _epCurrentMsgId = msgId;
+            const picker = document.getElementById('global-emoji-picker');
+            picker.style.display = 'block';
+            // Position near click
+            const x = Math.min(event.clientX, window.innerWidth - 310);
+            const y = Math.min(event.clientY, window.innerHeight - 300);
+            picker.style.left = x + 'px';
+            picker.style.top = y + 'px';
+            picker.style.position = 'fixed';
+            // Render categories
+            const cats = document.getElementById('ep-cats');
+            cats.innerHTML = EP_CATS.map(c => `<button class="ep-cat-btn ${c.key === _epCurrentCat ? 'active' : ''}" onclick="epSetCat('${c.key}', this)" title="${c.label}">${c.icon}</button>`).join('');
+            epRenderGrid(_epCurrentCat);
+            document.getElementById('ep-search-input').value = '';
+        };
+
+        window.epSetCat = function(key, btn) {
+            _epCurrentCat = key;
+            document.querySelectorAll('.ep-cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            epRenderGrid(key);
+        };
+
+        function epRenderGrid(catKey) {
+            const grid = document.getElementById('ep-grid');
+            const emojis = EP_EMOJIS[catKey] || [];
+            grid.innerHTML = emojis.map(e => `<button class="ep-emoji" onclick="epPick('${e}')">${e}</button>`).join('');
+        }
+
+        window.epSearch = function(query) {
+            if (!query.trim()) { epRenderGrid(_epCurrentCat); return; }
+            const all = Object.values(EP_EMOJIS).flat();
+            const unique = [...new Set(all)];
+            const grid = document.getElementById('ep-grid');
+            grid.innerHTML = unique.map(e => `<button class="ep-emoji" onclick="epPick('${e}')">${e}</button>`).join('');
+        };
+
+        window.epPick = function(emoji) {
+            if (_epCurrentMsgId) reactToMessage(_epCurrentMsgId, emoji);
+            document.getElementById('global-emoji-picker').style.display = 'none';
+        };
+
+        document.addEventListener('click', (e) => {
+            const picker = document.getElementById('global-emoji-picker');
+            if (picker && !picker.contains(e.target)) picker.style.display = 'none';
+        });
+
+        // ── SWIPE-TO-REPLY ON MESSAGES ──────────────────────────────
+        let _swipeMsgWrapper = null, _swipeStartX = 0, _swipeStartY = 0, _swipeActive = false;
+        const _SWIPE_THRESHOLD = 60;
+
+        document.getElementById('messages-view').addEventListener('touchstart', (e) => {
+            const wrapper = e.target.closest('.msg-wrapper');
+            if (!wrapper) return;
+            _swipeMsgWrapper = wrapper;
+            _swipeStartX = e.touches[0].clientX;
+            _swipeStartY = e.touches[0].clientY;
+            _swipeActive = false;
+        }, { passive: true });
+
+        document.getElementById('messages-view').addEventListener('touchmove', (e) => {
+            if (!_swipeMsgWrapper) return;
+            const dx = e.touches[0].clientX - _swipeStartX;
+            const dy = Math.abs(e.touches[0].clientY - _swipeStartY);
+            if (dy > 20 && !_swipeActive) { _swipeMsgWrapper = null; return; }
+            const isSent = _swipeMsgWrapper.classList.contains('sent');
+            // Sent: swipe left (negative), Received: swipe right (positive)
+            const allowedDir = isSent ? dx < 0 : dx > 0;
+            if (!allowedDir) return;
+            const progress = Math.min(Math.abs(dx) / _SWIPE_THRESHOLD, 1);
+            const tx = isSent ? Math.max(dx, -_SWIPE_THRESHOLD) : Math.min(dx, _SWIPE_THRESHOLD);
+            _swipeMsgWrapper.classList.add('swipe-replying');
+            _swipeMsgWrapper.style.transform = `translateX(${tx}px)`;
+            _swipeActive = true;
+            // Show indicator
+            let ind = _swipeMsgWrapper.querySelector('.swipe-reply-indicator');
+            if (!ind) {
+                ind = document.createElement('div');
+                ind.className = 'swipe-reply-indicator';
+                ind.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>';
+                _swipeMsgWrapper.style.position = 'relative';
+                _swipeMsgWrapper.appendChild(ind);
+            }
+            ind.style.opacity = String(progress);
+        }, { passive: true });
+
+        document.getElementById('messages-view').addEventListener('touchend', (e) => {
+            if (!_swipeMsgWrapper || !_swipeActive) { _swipeMsgWrapper = null; _swipeActive = false; return; }
+            const dx = e.changedTouches[0].clientX - _swipeStartX;
+            _swipeMsgWrapper.classList.remove('swipe-replying');
+            _swipeMsgWrapper.style.transform = '';
+            const ind = _swipeMsgWrapper.querySelector('.swipe-reply-indicator');
+            if (ind) ind.style.opacity = '0';
+            if (Math.abs(dx) >= _SWIPE_THRESHOLD) {
+                // Find the message id from wrapper id (msg-MSGID)
+                const msgId = _swipeMsgWrapper.id.replace('msg-', '');
+                if (msgId) replyToMessage(msgId);
+            }
+            _swipeMsgWrapper = null;
+            _swipeActive = false;
+        }, { passive: true });
+
+        // ── NOTIFICATIONS SYSTEM ─────────────────────────────────────
+        let _notifUnsub = null;
+        let _notifOpen = false;
+
+        window.toggleNotifPanel = function() {
+            const panel = document.getElementById('notif-panel');
+            const backdrop = document.getElementById('notif-backdrop');
+            _notifOpen = !_notifOpen;
+            if (_notifOpen) {
+                panel.classList.add('open');
+                backdrop.style.display = 'block';
+                markAllNotifsRead();
+            } else {
+                panel.classList.remove('open');
+                backdrop.style.display = 'none';
+            }
+        };
+
+        window.markAllNotifsRead = async function() {
+            if (!currentUser) return;
+            try {
+                const snap = await getDocs(query(collection(db, 'notifications'), where('recipient', '==', currentUser), where('read', '==', false)));
+                const batch = [];
+                snap.forEach(d => batch.push(updateDoc(doc(db, 'notifications', d.id), { read: true })));
+                await Promise.all(batch);
+                document.getElementById('notif-bell-badge').classList.remove('visible');
+            } catch(e) {}
+        };
+
+        // SVG icons for notification types
+        const _NOTIF_ICONS = {
+            like_post:     `<svg width="13" height="13" viewBox="0 0 24 24" fill="#EE352E" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+            like_comment:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="#EE352E" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+            like_story:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="#EE352E" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
+            comment_post:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+            reply_comment: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>`,
+            react_msg:     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
+        };
+
+        function renderNotifList(notifs) {
+            const list = document.getElementById('notif-list');
+            if (!list) return;
+            if (!notifs || notifs.length === 0) {
+                list.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:0.4;display:block;margin-left:auto;margin-right:auto;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>No notifications yet</div>`;
+                return;
+            }
+            list.innerHTML = notifs.map(n => {
+                const p = usersCache[n.from] || {};
+                const avHtml = p.pic ? `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#FFF;font-weight:bold;font-size:14px;">${((p.fname||n.from||'?')[0]).toUpperCase()}</span>`;
+                const ts = n.createdAt ? (() => { const d=new Date(n.createdAt.seconds*1000); return d.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + ' ' + (d.getHours()%12||12)+':'+(d.getMinutes().toString().padStart(2,'0'))+(d.getHours()>=12?'PM':'AM'); })() : '';
+                let iconHtml = _NOTIF_ICONS[n.type] || `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>`;
+                let text = '';
+                if (n.type === 'like_post') {
+                    text = `<strong>${getFullName(n.from)}</strong> liked your post.`;
+                } else if (n.type === 'comment_post') {
+                    const snippet = n.commentText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">"${n.commentText.substring(0,60)}${n.commentText.length>60?'...':''}"</div>` : '';
+                    text = `<strong>${getFullName(n.from)}</strong> commented on your post.${snippet}`;
+                } else if (n.type === 'like_comment') {
+                    text = `<strong>${getFullName(n.from)}</strong> liked your comment.`;
+                } else if (n.type === 'reply_comment') {
+                    text = `<strong>${getFullName(n.from)}</strong> replied to your comment.`;
+                } else if (n.type === 'react_msg') {
+                    text = `<strong>${getFullName(n.from)}</strong> reacted to your message.`;
+                } else if (n.type === 'like_story') {
+                    text = `<strong>${getFullName(n.from)}</strong> liked your story.`;
+                } else {
+                    text = n.text || 'New notification';
+                }
+                const postId = n.postId || '';
+                const pageOwner = n.pageOwner || '';
+                return `<div class="notif-item ${n.read ? '' : 'unread'}" onclick="handleNotifClick('${n.id}','${n.type||''}','${postId}','${pageOwner}')" style="cursor:pointer;">
+                    <div class="notif-av">${avHtml}</div>
+                    <div class="notif-body"><div class="notif-text">${text}</div><div class="notif-time">${ts}</div></div>
+                    <div class="notif-icon" style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--bg-sidebar);flex-shrink:0;">${iconHtml}</div>
+                </div>`;
+            }).join('');
+        }
+
+        window.handleNotifClick = function(notifId, type, postId, pageOwner) {
+            toggleNotifPanel();
+            if (pageOwner) {
+                setSidebarMode('pages');
+                openPage(pageOwner).then(() => {
+                    // After page loads, scroll to the specific post if we have its ID
+                    if (postId) {
+                        const tryScroll = (attempts) => {
+                            const el = document.getElementById('page-post-' + postId);
+                            if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                // Briefly highlight so user knows which post it is
+                                el.style.transition = 'box-shadow 0.3s';
+                                el.style.boxShadow = '0 0 0 2px var(--accent)';
+                                setTimeout(() => { el.style.boxShadow = ''; }, 2000);
+                            } else if (attempts > 0) {
+                                setTimeout(() => tryScroll(attempts - 1), 300);
+                            }
+                        };
+                        setTimeout(() => tryScroll(8), 400);
+                    }
+                }).catch(() => {});
+            }
+        };
+
+        function subscribeNotifications() {
+            if (!currentUser || _notifUnsub) return;
+            // No orderBy to avoid composite index requirement — sort client-side instead
+            const q = query(collection(db, 'notifications'), where('recipient', '==', currentUser), limit(50));
+            _notifUnsub = onSnapshot(q, (snap) => {
+                const notifs = snap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    .sort((a, b) => {
+                        const at = a.createdAt ? (a.createdAt.seconds || 0) : 0;
+                        const bt = b.createdAt ? (b.createdAt.seconds || 0) : 0;
+                        return bt - at;
+                    })
+                    .slice(0, 30);
+                const unread = notifs.filter(n => !n.read);
+                const badge = document.getElementById('notif-bell-badge');
+                if (badge) {
+                    if (unread.length > 0) {
+                        badge.textContent = unread.length > 9 ? '9+' : String(unread.length);
+                        badge.classList.add('visible');
+                    } else {
+                        badge.classList.remove('visible');
+                    }
+                }
+                renderNotifList(notifs);
+            }, (err) => { console.warn('subscribeNotifications error:', err); });
+        }
+
+        // Patch: Send a notification when someone reacts to a message
+        const _origReactToMessage = window.reactToMessage;
+        if (_origReactToMessage) {
+            window.reactToMessage = async function(msgId, emoji) {
+                await _origReactToMessage(msgId, emoji);
+                // Find msg sender
+                const msg = activeChatMessages[msgId];
+                if (msg && msg.sender && msg.sender !== currentUser) {
+                    try {
+                        await addDoc(collection(db, 'notifications'), {
+                            recipient: msg.sender, from: currentUser, type: 'react_msg',
+                            emoji: emoji, msgId: msgId, chatId: activeChatId || '',
+                            read: false, createdAt: serverTimestamp()
+                        });
+                    } catch(e) {}
+                }
+            };
+        }
+
+        // Notifications for likes/comments are handled directly in togglePageLike and submitPageComment
+
+        // ── VERIFIED BADGE HELPER ───────────────────────────────────
+        const VERIFIED_BADGE_SVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+        window.getVerifiedBadge = function(username, size) {
+            const p = usersCache[username] || {};
+            if (!p.verified) return '';
+            const cls = size === 'lg' ? 'verified-badge verified-badge-lg' : 'verified-badge';
+            const color = p.accentColor || '#F6A800';
+            const light = blendHex(color, '#ffffff', 0.4);
+            const dim = size === 'lg' ? 20 : 16;
+            const uid = username.replace(/[^a-z0-9]/gi, '');
+            // Generate a smooth scalloped badge shape — 10 bumps like the reference image.
+            // Each bump is defined by an inner point (valley) and outer point (peak).
+            const numBumps = 10;
+            const cx = 12, cy = 12;
+            const outerR = 11.2, innerR = 8.8;
+            let d = '';
+            for (let i = 0; i < numBumps * 2; i++) {
+                const angle = (Math.PI / numBumps) * i - Math.PI / 2;
+                const r = (i % 2 === 0) ? outerR : innerR;
+                const x = (cx + r * Math.cos(angle)).toFixed(4);
+                const y = (cy + r * Math.sin(angle)).toFixed(4);
+                d += (i === 0 ? 'M' : 'L') + x + ',' + y + ' ';
+            }
+            d += 'Z';
+            const check = 'M7.5,12.5 L10.5,15.5 L16.5,9';
+            return '<span class="' + cls + '" title="Verified"><svg width="' + dim + '" height="' + dim + '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
+                '<defs><linearGradient id="vbg_' + uid + '" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="' + light + '"/><stop offset="100%" stop-color="' + color + '"/></linearGradient></defs>' +
+                '<path d="' + d + '" fill="url(#vbg_' + uid + ')" stroke="none"/>' +
+                '<path d="' + check + '" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>' +
+                '</svg></span>';
+        };
+
+        // Helpers to lighten/darken a hex color
+        function lighten(hex) { return blendHex(hex, '#ffffff', 0.5); }
+        function darken(hex) { return blendHex(hex, '#000000', 0.25); }
+        function blendHex(hex, target, amount) {
+            const parse = h => { h = h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; };
+            const [r1,g1,b1] = parse(hex); const [r2,g2,b2] = parse(target);
+            const r = Math.round(r1+(r2-r1)*amount), g = Math.round(g1+(g2-g1)*amount), b = Math.round(b1+(b2-b1)*amount);
+            return `rgb(${r},${g},${b})`;
+        }
+
+        // Patch getFullName to append verified badge in relevant places
+        const _origGetFullName = window.getFullName;
+        window.getFullNameVerified = function(username) {
+            const name = _origGetFullName(username);
+            const badge = window.getVerifiedBadge(username, '');
+            return badge ? `${name}${badge}` : name;
+        };
+
+        // ── ADMIN: VERIFIED USERS SECTION ──────────────────────────
+        async function loadAdminVerified() {
+            const listEl = document.getElementById('admin-verified-list');
+            if (!listEl) return;
+            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
+            try {
+                const adb = getAdminDb();
+                const snap = await getDocs(collection(adb, 'users'));
+                const users = [];
+                snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+                users.sort((a,b) => (a.fname||a.id).localeCompare(b.fname||b.id));
+                listEl.innerHTML = users.map(u => {
+                    const initials = ((u.fname||'')[0]||'?').toUpperCase();
+                    const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
+                    const isVerified = u.verified === true;
+                    return `<div class="admin-user-row">
+                        <div class="admin-user-av">${avHtml}</div>
+                        <div class="admin-user-info" style="flex:1;">
+                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isVerified ? '<span style="color:var(--accent);font-size:11px;font-weight:bold;">✓ VERIFIED</span>' : ''}</div>
+                            <div class="admin-user-handle">@${u.id}</div>
+                        </div>
+                        <button onclick="adminToggleVerified('${u.id}', ${isVerified})" style="background:${isVerified ? '#333' : 'var(--accent)'};border:none;color:${isVerified ? '#aaa' : '#000'};border-radius:7px;padding:7px 14px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);transition:opacity 0.15s;">${isVerified ? 'Revoke' : 'Verify'}</button>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+            }
+        }
+
+        window.adminToggleVerified = async function(username, isVerified) {
+            try {
+                const adb = getAdminDb();
+                await updateDoc(doc(adb, 'users', username), { verified: !isVerified });
+                if (usersCache[username]) usersCache[username].verified = !isVerified;
+                await loadAdminVerified();
+            } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        // ── HOMEPAGE BACKGROUND PICKER ──────────────────────────────
+        window.openHomeBgPicker = function() {
+            const existing = document.getElementById('home-bg-picker-modal');
+            if (existing) { existing.style.display = existing.style.display === 'none' ? 'flex' : 'none'; return; }
+            const modal = document.createElement('div');
+            modal.id = 'home-bg-picker-modal';
+            modal.style.cssText = 'position:fixed;inset:0;z-index:7000;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);';
+            modal.innerHTML = `<div class="chat-bg-card" onclick="event.stopPropagation()">
+                <h3>Home Background</h3>
+
+                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Rainbow Colours</span>
+                <div class="chat-bg-presets">
+                    <div class="chat-bg-swatch" style="background:#FF4444;" onclick="applyHomeBg('color','#FF4444')" title="Red"></div>
+                    <div class="chat-bg-swatch" style="background:#FF7700;" onclick="applyHomeBg('color','#FF7700')" title="Orange"></div>
+                    <div class="chat-bg-swatch" style="background:#FFCC00;" onclick="applyHomeBg('color','#FFCC00')" title="Yellow"></div>
+                    <div class="chat-bg-swatch" style="background:#88CC00;" onclick="applyHomeBg('color','#88CC00')" title="Yellow-Green"></div>
+                    <div class="chat-bg-swatch" style="background:#00BB44;" onclick="applyHomeBg('color','#00BB44')" title="Green"></div>
+                    <div class="chat-bg-swatch" style="background:#00BBBB;" onclick="applyHomeBg('color','#00BBBB')" title="Teal"></div>
+                    <div class="chat-bg-swatch" style="background:#0088FF;" onclick="applyHomeBg('color','#0088FF')" title="Blue"></div>
+                    <div class="chat-bg-swatch" style="background:#4455FF;" onclick="applyHomeBg('color','#4455FF')" title="Indigo"></div>
+                    <div class="chat-bg-swatch" style="background:#8833FF;" onclick="applyHomeBg('color','#8833FF')" title="Violet"></div>
+                    <div class="chat-bg-swatch" style="background:#FF33AA;" onclick="applyHomeBg('color','#FF33AA')" title="Pink"></div>
+                </div>
+
+                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Custom Colour</span>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                    <input type="color" id="home-bg-custom-color" value="#FFFFFF" class="color-picker-circle" style="width:36px;height:36px;" oninput="applyHomeBg('color',this.value)">
+                    <span style="font-size:13px;color:var(--text-muted);">Pick any colour</span>
+                </div>
+
+                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Background Image</span>
+                <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:14px;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-light)'">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Upload Image
+                    <input type="file" accept="image/*" style="display:none;" onchange="handleHomeBgImage(event)">
+                </label>
+
+                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:6px;">
+                    Dark Overlay Opacity
+                    <span id="home-overlay-pct" style="font-weight:700;color:var(--accent);float:right;">0%</span>
+                </span>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                    <span style="font-size:11px;color:var(--text-muted);">None</span>
+                    <input type="range" id="home-overlay-slider" min="0" max="80" value="0" style="flex:1;accent-color:var(--accent);" oninput="applyHomeOverlay(this.value)">
+                    <span style="font-size:11px;color:var(--text-muted);">Dark</span>
+                </div>
+
+                <div style="display:flex;gap:8px;">
+                    <button class="btn-primary btn-outline" style="flex:1;border:none;color:var(--text-muted);font-size:13px;" onclick="applyHomeBg('reset');document.getElementById('home-bg-picker-modal').style.display='none'">Reset</button>
+                    <button class="btn-primary" style="flex:1;font-size:13px;border:none;" onclick="document.getElementById('home-bg-picker-modal').style.display='none'">Done</button>
+                </div>
+            </div>`;
+            modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+            document.body.appendChild(modal);
+        };
+
+        window.applyHomeOverlay = function(val) {
+            const screen = document.getElementById('no-chat-screen');
+            const pct = document.getElementById('home-overlay-pct');
+            if (pct) pct.textContent = val + '%';
+            if (!screen) return;
+            const opacity = (parseInt(val) / 100).toFixed(2);
+            screen.dataset.overlayOpacity = opacity;
+            screen.style.setProperty('--home-overlay-opacity', opacity);
+            // Persist overlay value alongside the background in Firestore
+            if (currentUser) {
+                const existing = (usersCache[currentUser] && usersCache[currentUser].homeBg) || null;
+                const updated = existing ? { ...existing, overlay: parseFloat(opacity) } : { type: 'overlay-only', overlay: parseFloat(opacity) };
+                updateDoc(doc(db, 'users', currentUser), { homeBg: updated }).catch(()=>{});
+                if (usersCache[currentUser]) usersCache[currentUser].homeBg = updated;
+            }
+        };
+
+        window.applyHomeBg = function(type, value) {
+            const screen = document.getElementById('no-chat-screen');
+            if (!screen) return;
+            let saved = null;
+            if (type === 'reset') {
+                screen.style.background = '';
+                screen.style.backgroundImage = '';
+            } else if (type === 'color') {
+                screen.style.background = value;
+                saved = { type: 'color', value };
+            } else if (type === 'image') {
+                screen.style.background = `url('${value}') center center / cover no-repeat`;
+                saved = { type: 'image', value };
+            }
+            if (saved && currentUser) {
+                updateDoc(doc(db, 'users', currentUser), { homeBg: saved }).catch(()=>{});
+                if (usersCache[currentUser]) usersCache[currentUser].homeBg = saved;
+            } else if (type === 'reset' && currentUser) {
+                updateDoc(doc(db, 'users', currentUser), { homeBg: deleteField() }).catch(()=>{});
+                if (usersCache[currentUser]) delete usersCache[currentUser].homeBg;
+                // Re-apply gradient
+                const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+                window.updateHomeGradient && window.updateHomeGradient(accent);
+            }
+        };
+
+        window.handleHomeBgImage = function(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.onload = () => {
+                    const c = document.createElement('canvas');
+                    const MAX = 1920; let w=img.width,h=img.height;
+                    const r = Math.min(MAX/w,MAX/h,1); w=Math.round(w*r); h=Math.round(h*r);
+                    c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
+                    applyHomeBg('image', c.toDataURL('image/jpeg', 0.88));
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        function applyHomeBgFromProfile(profile) {
+            const screen = document.getElementById('no-chat-screen');
+            if (!screen || !profile) return;
+            const bg = profile.homeBg;
+            if (!bg) return;
+            if (bg.type === 'color') screen.style.background = bg.value;
+            else if (bg.type === 'image') screen.style.background = `url('${bg.value}') center center / cover no-repeat`;
+            // Restore overlay opacity
+            if (bg.overlay != null && bg.overlay > 0) {
+                screen.style.setProperty('--home-overlay-opacity', String(bg.overlay));
+                screen.dataset.overlayOpacity = String(bg.overlay);
+                // Sync slider if picker is open
+                const slider = document.getElementById('home-overlay-slider');
+                const pct = document.getElementById('home-overlay-pct');
+                const pctVal = Math.round(bg.overlay * 100);
+                if (slider) slider.value = pctVal;
+                if (pct) pct.textContent = pctVal + '%';
+            }
+        }
+
+        // Hook into app startup to subscribe notifications and apply home bg
+        const _origRenderSidebar = window.renderSidebar;
+        const _notifStarted = { done: false };
+        if (_origRenderSidebar) {
+            window.renderSidebar = function() {
+                _origRenderSidebar();
+                if (!_notifStarted.done && currentUser) {
+                    _notifStarted.done = true;
+                    subscribeNotifications();
+                    loadAdminVerified && loadAdminVerified();
+                    // Apply saved home bg
+                    const myProfile = usersCache[currentUser];
+                    if (myProfile) applyHomeBgFromProfile(myProfile);
+                }
+            };
+        }
+
+        // Also hook into openAdminPanel to load verified section
+        const _origOpenAdmin = window.openAdminPanel;
+        if (_origOpenAdmin) {
+            window.openAdminPanel = function() {
+                _origOpenAdmin();
+                loadAdminVerified();
+            };
+        }
+
+        // Add home bg button to the home screen header area (after DOM loads)
+        document.addEventListener('DOMContentLoaded', () => {
+            // nothing needed — button injected via goToHome patch below
+        });
+
+        // Patch goToHome - bg button is now in HTML directly, no injection needed
+
+        // Subscribe notifications on load if already logged in
+        setTimeout(() => {
+            if (currentUser && !_notifStarted.done) {
+                _notifStarted.done = true;
+                subscribeNotifications();
+                const myProfile = usersCache[currentUser];
+                if (myProfile) applyHomeBgFromProfile(myProfile);
+            }
+        }, 3000);
 
     </script>
 

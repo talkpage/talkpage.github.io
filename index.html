@@ -6105,8 +6105,12 @@
                 card.style.cssText = 'width:100%;flex-shrink:0;cursor:default;position:relative;box-sizing:border-box;';
                 
                 let bodyHtml='';
-                if(post.text) {
-                    let escaped = post.text.replace(/</g,'<').replace(/>/g,'>');
+                const rawPostText = post.text || post.caption || post.note;
+                if(post.richText) {
+                    const safeHtml = post.richText.replace(/<script[\s\S]*?<\/script>/gi, '');
+                    bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">${safeHtml}</div>`;
+                } else if(rawPostText) {
+                    let escaped = rawPostText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
                     escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;">@$1</span>');
                     escaped = escaped.replace(/#([a-zA-Z0-9_]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openHashtagFeed(\'$1\')">#$1</span>');
                     bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">${escaped}</div>`;
@@ -6149,15 +6153,15 @@
 
                 card.innerHTML=`
                 ${homeRepostBanner}
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
-                    <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
+                    <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:15px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
                     <div>
-                        <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:13px;font-weight:700;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:13px;color:${accent};font-weight:700;">page</span></div>
+                        <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span></div>
                         <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
                     </div>
                 </div>
                 ${bodyHtml}
-                <div style="display:flex;align-items:center;gap:16px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border-light);">
+                <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border-light);">
                     <button onclick="event.stopPropagation();homeLike('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;transition:color 0.15s;" id="hlbtn-${post.id}">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="${isLiked?'#EE352E':'none'}" stroke="${isLiked?'#EE352E':'var(--text-muted)'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                         ${likeCountStr}

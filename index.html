@@ -1098,6 +1098,8 @@
         .admin-user-handle { font-size: 12px; color: #555; }
         .admin-del-btn { background: #EE352E; border: none; color: #fff; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; transition: opacity 0.15s; font-family: var(--font-main); }
         .admin-del-btn:hover { opacity: 0.8; }
+        .admin-danger-btn { background: #8B0000; border: 1px solid #ff5252; color: #fff; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; transition: opacity 0.15s; font-family: var(--font-main); }
+        .admin-danger-btn:hover { opacity: 0.8; }
         .admin-story-textarea { width: 100%; min-height: 80px; background: #111; border: 1px solid #333; border-radius: 10px; padding: 12px; font-size: 14px; font-family: var(--font-main); color: #fff; outline: none; resize: none; transition: border-color 0.15s; margin-bottom: 10px; }
         .admin-story-textarea:focus { border-color: var(--accent); }
         .admin-logout { background: none; border: 1px solid #333; color: #888; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; }
@@ -2288,10 +2290,11 @@
     <!-- ─── DUCK LEADERBOARD ─── -->
     <div id="duck-leaderboard-modal" class="modal-overlay" style="z-index: 9200;">
         <div class="modal-card" style="max-width: 380px; max-height: 80vh; display:flex; flex-direction:column;">
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
                 <span style="font-size:22px;">🏆</span>
                 <h3 style="margin:0;">Duck Leaderboard</h3>
             </div>
+            <p style="margin:0 0 16px; font-size:12.5px; color:var(--text-muted);">Click ducks to climb higher on the duck leaderboard. Each duck clicked adds one point.</p>
             <div id="duck-leaderboard-list" style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:6px;">
                 <div style="padding:20px; text-align:center; color:var(--text-muted);">Loading…</div>
             </div>
@@ -3230,26 +3233,34 @@
             document.body.appendChild(el);
         }
 
-        // Trophy button on the counter — fetches every user's lifetime duck score fresh
-        // from Firestore and ranks them highest-first.
-        window.openDuckLeaderboard = async function(e) {
+        // Trophy button on the counter — live-listens to every user's duck score so the
+        // board updates instantly as anyone clicks ducks, for as long as it's open.
+        let duckLeaderboardUnsub = null;
+
+        window.openDuckLeaderboard = function(e) {
             if (e) e.stopPropagation();
             toggleModal('duck-leaderboard-modal', true);
             const listEl = document.getElementById('duck-leaderboard-list');
             listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">Loading…</div>';
 
-            let entries = [];
-            try {
-                const snap = await getDocs(collection(db, 'users'));
+            if (duckLeaderboardUnsub) { duckLeaderboardUnsub(); duckLeaderboardUnsub = null; }
+
+            duckLeaderboardUnsub = onSnapshot(collection(db, 'users'), (snap) => {
+                const entries = [];
                 snap.forEach((d) => {
                     const data = d.data();
                     usersCache[d.id] = data;
                     entries.push({ username: d.id, score: (typeof data.duckScore === 'number') ? data.duckScore : 0, profile: data });
                 });
-            } catch (err) {
+                renderDuckLeaderboard(entries);
+            }, (err) => {
                 listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">Couldn\'t load the leaderboard.</div>';
-                return;
-            }
+            });
+        };
+
+        function renderDuckLeaderboard(entries) {
+            const listEl = document.getElementById('duck-leaderboard-list');
+            if (!listEl) return;
 
             entries.sort((a, b) => b.score - a.score);
 
@@ -3271,7 +3282,7 @@
                         <span style="font-weight:900;color:var(--text-dark);flex-shrink:0;">🦆 ${entry.score}</span>
                     </div>`;
             }).join('');
-        };
+        }
 
         window.updateHomeGreeting = function() {
             const profile = usersCache[currentUser] || {};
@@ -3281,7 +3292,7 @@
             const NEW_YEAR_GREETING_EXPIRY = new Date(2026, 8, 9, 0, 0, 0); // Sept 9, 2026, midnight local
             const titleEl = document.getElementById('home-greeting');
             if (new Date() < NEW_YEAR_GREETING_EXPIRY) {
-                if (titleEl) titleEl.innerText = `Welcome to Grade 11, ${name}!`;
+                if (titleEl) titleEl.innerText = `Welcome to the 2026-2027 School Year, ${name}!`;
             } else {
                 const hour = new Date().getHours();
                 let greeting = 'Good evening';
@@ -8257,6 +8268,9 @@
                 el.classList.remove('active');
                 setTimeout(() => { if(!el.classList.contains('active')) el.style.display = 'none'; }, 300);
                 
+                if (id === 'duck-leaderboard-modal') {
+                    if (typeof duckLeaderboardUnsub === 'function') { duckLeaderboardUnsub(); duckLeaderboardUnsub = null; }
+                }
                 if (id === 'new-chat-modal') {
                     tempBannerData = null;
                     document.getElementById('user-search').value = '';
@@ -10485,6 +10499,7 @@
                             <div class="admin-user-actions">
                                 ${!isBanned ? `<button class="admin-strike-btn" onclick="adminIssueStrike('${u.id}')">⚠ Strike</button>` : ''}
                                 <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
+                                ${u.id !== 'talkpage' ? `<button class="admin-danger-btn" onclick="adminDeleteUserAccount('${u.id}')">Delete Account</button>` : ''}
                             </div>
                         </div>
                         ${strikeRows}
@@ -10513,6 +10528,34 @@
                 alert(`User @${username} has been ${action}ned.`);
             } catch(e) {
                 alert('Error: ' + e.message);
+            }
+        };
+
+        // Deleting an account is permanent, so it requires re-entering the admin login
+        // password (verified against the real "talkpage" Firebase Auth account) before
+        // anything is deleted.
+        window.adminDeleteUserAccount = async function(username) {
+            if (username === 'talkpage') { alert("The admin account can't be deleted here."); return; }
+            if (!confirm(`Permanently delete the account @${username}? This cannot be undone.`)) return;
+
+            const pw = prompt('Enter the admin login password to confirm this deletion:');
+            if (!pw) return;
+
+            try {
+                const cred = EmailAuthProvider.credential('talkpage@talkpage.com', pw);
+                await reauthenticateWithCredential(auth.currentUser, cred);
+            } catch (e) {
+                alert('Incorrect admin password. Account was not deleted.');
+                return;
+            }
+
+            try {
+                const adb = getAdminDb();
+                await deleteDoc(doc(adb, 'users', username));
+                await loadAdminUsers();
+                alert(`Account @${username} has been deleted.`);
+            } catch (e) {
+                alert('Error deleting account: ' + e.message);
             }
         };
 

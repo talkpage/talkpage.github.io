@@ -259,6 +259,78 @@
             pointer-events: none;
             z-index: 0;
         }
+        /* ── Duck easter egg ─────────────────────────────────────── */
+        .duck-peek {
+            position: fixed;
+            bottom: -6px;
+            left: 10px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            transform: rotate(-10deg);
+            transition: transform 0.2s ease, left 0.15s ease;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            z-index: 3400;
+            display: none;
+        }
+        .duck-peek.visible { display: block; }
+        .duck-peek:hover { transform: rotate(-10deg) translateY(-8px); }
+        .duck-peek img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+        #duck-counter {
+            position: fixed;
+            bottom: 8px;
+            left: 58px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-main);
+            font-weight: 900;
+            font-size: 13px;
+            color: var(--text-dark);
+            background: var(--bg-main);
+            border: 2px solid var(--border-dark);
+            border-radius: 12px;
+            padding: 3px 10px;
+            opacity: 0;
+            transition: opacity 0.6s ease, left 0.15s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 3400;
+            cursor: pointer;
+        }
+        #duck-counter-trophy { font-size: 13px; line-height: 1; }
+        .falling-duck {
+            position: fixed;
+            top: -60px;
+            z-index: 9999;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-drag: none;
+            object-fit: contain;
+            animation-name: duckFall;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
+        @keyframes duckFall {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(calc(100vh + 120px)) rotate(var(--duck-rot, 25deg)); }
+        }
+        .duck-plus-one {
+            position: fixed;
+            z-index: 10000;
+            font-family: var(--font-main);
+            font-weight: 900;
+            font-size: 20px;
+            color: var(--accent);
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: duckPlusOneFloat 0.9s ease-out forwards;
+        }
+        @keyframes duckPlusOneFloat {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+            30% { transform: translate(-50%, -140%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -220%) scale(1); }
+        }
         #no-chat-screen::before {
             content: none;
         }
@@ -2204,11 +2276,35 @@
 
     <!-- Instant "Your Instants" gallery now lives inside the capture screen (below) -->
 
+    <!-- ─── DUCK EASTER EGG — peeks out bottom-left of the homescreen ─── -->
+    <div class="duck-peek" id="duck-peek" onclick="triggerDuckRain()" title="??">
+        <img src="https://freepngimg.com/thumb/duck/7-white-duck-png-image.png" alt="" draggable="false">
+    </div>
+    <div id="duck-counter" onclick="openDuckLeaderboard()" title="Duck Leaderboard">
+        <span id="duck-counter-trophy">🏆</span>
+        <span id="duck-counter-num">0</span>
+    </div>
+
+    <!-- ─── DUCK LEADERBOARD ─── -->
+    <div id="duck-leaderboard-modal" class="modal-overlay" style="z-index: 9200;">
+        <div class="modal-card" style="max-width: 380px; max-height: 80vh; display:flex; flex-direction:column;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+                <span style="font-size:22px;">🏆</span>
+                <h3 style="margin:0;">Duck Leaderboard</h3>
+            </div>
+            <div id="duck-leaderboard-list" style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:6px;">
+                <div style="padding:20px; text-align:center; color:var(--text-muted);">Loading…</div>
+            </div>
+            <button class="btn-primary btn-outline" style="margin-top:16px;" onclick="toggleModal('duck-leaderboard-modal', false)">Close</button>
+        </div>
+    </div>
+
     <script>
         // Refresh the Instant FAB whenever the app becomes active/inactive (e.g. login/logout),
         // or whenever the visible screen changes (chat opened/closed, a userpage opened/closed, etc).
         window._updateFabVisibility = function() {
             if (typeof updateInstantFab === 'function') updateInstantFab();
+            if (typeof updateDuckPeek === 'function') updateDuckPeek();
         };
         const _fabObserver = new MutationObserver(window._updateFabVisibility);
         const _appLayout = document.getElementById('app-layout');
@@ -2224,7 +2320,8 @@
 
         // Final safety net: re-check every second in case some navigation path (secret game
         // modes, admin tools, etc.) changes screens without notifying the FAB directly.
-        setInterval(() => { if (typeof updateInstantFab === 'function') updateInstantFab(); }, 800);
+        setInterval(() => { window._updateFabVisibility(); }, 800);
+        window.addEventListener('resize', () => { if (typeof updateDuckPeek === 'function') updateDuckPeek(); });
     </script>
 
 
@@ -2384,9 +2481,7 @@
 
             <div id="instant-cam-use-row">
                 <button class="instant-cam-use-btn" style="background:rgba(255,255,255,0.15);color:#FFF;border:1px solid rgba(255,255,255,0.4);flex:0 0 auto;padding:13px 16px;" onclick="retakeInstantPhoto()">Retake</button>
-                <button class="instant-cam-use-btn" style="background:var(--bg-sidebar);color:var(--text-dark);" onclick="useInstantPhotoAsPost()">Feed</button>
                 <button class="instant-cam-use-btn" style="background:linear-gradient(135deg, var(--accent), #ff6b9d);color:#000;" onclick="sendInstantToFriends()">Instant</button>
-                <button class="instant-cam-use-btn" style="background:var(--accent);color:#000;" onclick="useInstantPhotoAsStory()">Story</button>
             </div>
 
             <div id="instant-cam-mystrip">
@@ -3041,17 +3136,159 @@
             if (_qel) _qel.innerHTML = finalQuote;
         };
 
+        // ── Duck easter egg ──────────────────────────────────────────
+        let duckCount = null; // lazy-loaded from the user's saved lifetime score
+        let duckFadeTimeout = null;
+
+        function ensureDuckCountLoaded() {
+            if (duckCount === null) {
+                const saved = usersCache[currentUser] && usersCache[currentUser].duckScore;
+                duckCount = (typeof saved === 'number') ? saved : 0;
+            }
+        }
+
+        function showDuckCounter(fadeDelay) {
+            const counter = document.getElementById('duck-counter');
+            const numEl = document.getElementById('duck-counter-num');
+            if (numEl) numEl.textContent = duckCount;
+            if (counter) {
+                counter.style.opacity = '1';
+                counter.style.pointerEvents = 'auto';
+                clearTimeout(duckFadeTimeout);
+                duckFadeTimeout = setTimeout(() => {
+                    counter.style.opacity = '0';
+                    counter.style.pointerEvents = 'none';
+                }, fadeDelay);
+            }
+        }
+
+        window.triggerDuckRain = function() {
+            ensureDuckCountLoaded();
+            showDuckCounter(28 * 90 + 4500);
+
+            const numDucks = 28;
+            for (let i = 0; i < numDucks; i++) {
+                setTimeout(spawnFallingDuck, i * 90);
+            }
+        };
+
+        function spawnFallingDuck() {
+            const duck = document.createElement('img');
+            duck.src = 'https://freepngimg.com/thumb/duck/7-white-duck-png-image.png';
+            duck.className = 'falling-duck';
+            duck.draggable = false;
+            duck.alt = '';
+
+            // Fixed square box (object-fit: contain in CSS) so the clickable hit area is
+            // correct immediately, without waiting on the image to load and report its
+            // natural size.
+            const size = 34 + Math.random() * 26;
+            const startX = Math.random() * Math.max(0, window.innerWidth - size);
+            const duration = 3 + Math.random() * 2.2;
+            const rot = (Math.random() * 70 - 35);
+
+            duck.style.left = startX + 'px';
+            duck.style.width = size + 'px';
+            duck.style.height = size + 'px';
+            duck.style.animationDuration = duration + 's';
+            duck.style.setProperty('--duck-rot', rot + 'deg');
+
+            let caught = false;
+            const catchDuck = (e) => {
+                if (caught) return;
+                caught = true;
+                e.stopPropagation();
+                ensureDuckCountLoaded();
+                duckCount++;
+                showDuckCounter(2500);
+                showDuckPlusOne(e.clientX, e.clientY);
+                duck.remove();
+                saveDuckScore();
+            };
+            // pointerdown (not click) — the duck keeps falling between mousedown and mouseup,
+            // so by the time a "click" would fire the pointer is no longer over it and the
+            // click gets missed. Catching on pointerdown fires the instant it's pressed.
+            duck.addEventListener('pointerdown', catchDuck);
+            duck.addEventListener('animationend', () => duck.remove());
+
+            document.body.appendChild(duck);
+        }
+
+        function saveDuckScore() {
+            if (!currentUser) return;
+            usersCache[currentUser] = { ...(usersCache[currentUser] || {}), duckScore: duckCount };
+            updateDoc(doc(db, 'users', currentUser), { duckScore: increment(1) }).catch(() => {});
+        }
+
+        function showDuckPlusOne(x, y) {
+            const el = document.createElement('div');
+            el.className = 'duck-plus-one';
+            el.textContent = '+1';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.addEventListener('animationend', () => el.remove());
+            document.body.appendChild(el);
+        }
+
+        // Trophy button on the counter — fetches every user's lifetime duck score fresh
+        // from Firestore and ranks them highest-first.
+        window.openDuckLeaderboard = async function(e) {
+            if (e) e.stopPropagation();
+            toggleModal('duck-leaderboard-modal', true);
+            const listEl = document.getElementById('duck-leaderboard-list');
+            listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">Loading…</div>';
+
+            let entries = [];
+            try {
+                const snap = await getDocs(collection(db, 'users'));
+                snap.forEach((d) => {
+                    const data = d.data();
+                    usersCache[d.id] = data;
+                    entries.push({ username: d.id, score: (typeof data.duckScore === 'number') ? data.duckScore : 0, profile: data });
+                });
+            } catch (err) {
+                listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">Couldn\'t load the leaderboard.</div>';
+                return;
+            }
+
+            entries.sort((a, b) => b.score - a.score);
+
+            if (entries.length === 0) {
+                listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">No ducks caught yet!</div>';
+                return;
+            }
+
+            const medals = ['🥇', '🥈', '🥉'];
+            listEl.innerHTML = entries.map((entry, i) => {
+                const isMe = entry.username === currentUser;
+                const rankLabel = medals[i] || `#${i + 1}`;
+                const name = (entry.profile && entry.profile.fname) ? entry.profile.fname : entry.username;
+                return `
+                    <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;${isMe ? 'background:var(--bg-sidebar);border:1.5px solid var(--accent);' : ''}">
+                        <span style="width:28px;text-align:center;font-size:14px;font-weight:900;color:var(--text-muted);flex-shrink:0;">${rankLabel}</span>
+                        <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(entry.username, entry.profile, false)}</div>
+                        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;color:var(--text-dark);">${name}${isMe ? ' (You)' : ''}</span>
+                        <span style="font-weight:900;color:var(--text-dark);flex-shrink:0;">🦆 ${entry.score}</span>
+                    </div>`;
+            }).join('');
+        };
+
         window.updateHomeGreeting = function() {
-            const hour = new Date().getHours();
-            let greeting = 'Good evening';
-            if (hour < 12) greeting = 'Morning';
-            else if (hour < 18) greeting = 'Afternoon';
-            
             const profile = usersCache[currentUser] || {};
             const name = profile.fname || currentUser || '';
-            
+
+            // Temporary "new school year" greeting, expires Sept 9, 2026.
+            const NEW_YEAR_GREETING_EXPIRY = new Date(2026, 8, 9, 0, 0, 0); // Sept 9, 2026, midnight local
             const titleEl = document.getElementById('home-greeting');
-            if (titleEl) titleEl.innerText = `${greeting}, ${name}`;
+            if (new Date() < NEW_YEAR_GREETING_EXPIRY) {
+                if (titleEl) titleEl.innerText = `Welcome to Grade 11, ${name}!`;
+            } else {
+                const hour = new Date().getHours();
+                let greeting = 'Good evening';
+                if (hour < 12) greeting = 'Morning';
+                else if (hour < 18) greeting = 'Afternoon';
+                if (titleEl) titleEl.innerText = `${greeting}, ${name}`;
+            }
             
             // Set Home Avatar
             const avatarEl = document.getElementById('home-big-avatar');
@@ -3155,8 +3392,8 @@
         function getDayLabel() {
             const todayKey = getESTDateKey();
             const [y, m, d] = todayKey.split('-').map(Number);
-            const doy = Math.floor((Date.UTC(y, m - 1, d) - Date.UTC(y, 0, 1)) / 86400000) + 1;
-            return (doy % 2 === 1) ? 'Day 1' : 'Day 2';
+            // Day 1 falls on odd calendar dates (1, 3, 5...), Day 2 on even calendar dates (2, 4, 6...).
+            return (d % 2 === 1) ? 'Day 1' : 'Day 2';
         }
 
         function fmtClockMin(totalMin) {
@@ -6097,6 +6334,29 @@
             }
         }
         window.updateInstantFab = updateInstantFab; // expose globally — this function lives in a JS module block, so without this it's invisible to the plain script tag that drives navigation-triggered visibility checks
+
+        // Positions the duck peek + counter just inside the bottom-left of the chat area
+        // (i.e. to the right of the sidebar/chat list), and only shows it on the homescreen.
+        function updateDuckPeek() {
+            const duck = document.getElementById('duck-peek');
+            const counter = document.getElementById('duck-counter');
+            if (!duck) return;
+            const chatArea = document.getElementById('chat-area');
+            const appActive = document.getElementById('app-layout')?.classList.contains('active');
+            const onHome = window.isViewingHome && isHomeScreenActuallyVisible();
+            const shouldShow = !!(appActive && onHome && chatArea && chatArea.offsetParent !== null);
+
+            duck.classList.toggle('visible', shouldShow);
+            if (counter) counter.style.display = shouldShow ? 'flex' : 'none';
+
+            if (shouldShow && chatArea) {
+                const rect = chatArea.getBoundingClientRect();
+                const duckLeft = rect.left + 10;
+                duck.style.left = duckLeft + 'px';
+                if (counter) counter.style.left = (duckLeft + 48) + 'px';
+            }
+        }
+        window.updateDuckPeek = updateDuckPeek;
 
         // Tapping the stack: show any unseen instants from others one time only;
         // once there's nothing new, it opens the capture screen (with your own instants underneath).

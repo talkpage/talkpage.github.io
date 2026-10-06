@@ -1168,6 +1168,48 @@
         .daily-box-statement-text { font-size: 13px; line-height: 1.4; color: var(--text-dark); font-weight: 600; font-style: italic; flex: 1; word-break: break-word; }
         #home-recent-posts::-webkit-scrollbar { display:none; }
         @keyframes postFadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ── Smooth like animation (home feed) ── */
+        .hf-heart { transition: fill 0.25s ease, stroke 0.25s ease; transform-origin: 50% 55%; }
+        @keyframes hfHeartPop { 0% { transform: scale(1); } 28% { transform: scale(1.5); } 52% { transform: scale(0.86); } 78% { transform: scale(1.14); } 100% { transform: scale(1); } }
+        .hf-heart.hf-like-pop { animation: hfHeartPop 0.5s cubic-bezier(.2,.8,.3,1); }
+        @keyframes hfCountTick { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .hf-count-tick { display: inline-block; animation: hfCountTick 0.28s ease-out; }
+        @keyframes hfRing { 0% { transform: scale(0.4); opacity: 0.55; } 100% { transform: scale(1.9); opacity: 0; } }
+        .hf-like-ring { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #EE352E; pointer-events: none; animation: hfRing 0.5s ease-out forwards; }
+
+        /* ── Multi-photo posts ── */
+        .mp-thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+        .mp-thumb { position: relative; width: 84px; height: 84px; border-radius: 10px; overflow: hidden; background: var(--bg-sidebar); border: 1px solid var(--border-light); animation: postFadeInUp 0.25s ease both; }
+        .mp-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mp-thumb-x { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border-radius: 50%; border: none; background: rgba(0,0,0,0.65); color: #fff; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+        .mp-add { width: 84px; height: 84px; border-radius: 10px; border: 2px dashed var(--border-dark); background: transparent; color: var(--text-muted); font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: var(--font-main); transition: color 0.15s, border-color 0.15s; }
+        .mp-add:hover { color: var(--accent); border-color: var(--accent); }
+        .mp-carousel { position: relative; border-radius: 14px; overflow: hidden; background: var(--bg-sidebar); }
+        .mp-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .mp-track::-webkit-scrollbar { display: none; }
+        .mp-slide { flex: 0 0 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; }
+        .mp-slide img { width: 100%; object-fit: contain; display: block; cursor: pointer; image-orientation: from-image; }
+        .mp-count { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 12px; pointer-events: none; }
+        .mp-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; pointer-events: none; }
+        .mp-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); box-shadow: 0 0 2px rgba(0,0,0,0.4); transition: background 0.2s, transform 0.2s; }
+        .mp-dot.on { background: #fff; transform: scale(1.25); }
+        .mp-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; border: none; background: rgba(0,0,0,0.55); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; padding: 0 0 2px; }
+        .mp-prev { left: 8px; } .mp-next { right: 8px; }
+        .mp-carousel:hover .mp-nav { opacity: 1; }
+        @media (hover: none) { .mp-nav { display: none; } }
+        .mp-grid-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; pointer-events: none; }
+
+        /* ── Profile class schedule ── */
+        .pv-sched-day { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; background: var(--accent); color: #000; margin-left: 8px; letter-spacing: 0.3px; vertical-align: middle; text-transform: none; }
+        .pv-sched-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; font-size: 13px; text-align: left; transition: background 0.15s; }
+        .pv-sched-row + .pv-sched-row { margin-top: 2px; }
+        .pv-sched-row.now { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+        .pv-sched-time { width: 104px; flex-shrink: 0; font-size: 11px; font-weight: 800; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+        .pv-sched-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .pv-sched-name { flex: 1; min-width: 0; font-weight: 700; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .pv-sched-name.empty, .pv-sched-name.lunch { color: var(--text-muted); font-weight: 600; }
+        .pv-sched-now { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent); }
         .home-post-card {
             width: 100%; scroll-snap-align: start; flex-shrink: 0;
             background: var(--bg-main); border: 1px solid var(--border-light);
@@ -1473,8 +1515,7 @@
                             </div>
                             <!-- Image preview -->
                             <div id="hc-img-preview-box" style="display:none;position:relative;padding:0 16px 10px;">
-                                <img id="hc-img-preview" style="width:100%;max-height:320px;object-fit:contain;border-radius:10px;background:var(--bg-sidebar);">
-                                <button onclick="clearHcImage()" style="position:absolute;top:6px;right:22px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;">✕</button>
+                                <div id="hc-img-thumbs" class="mp-thumbs"></div>
                             </div>
                             <!-- Spotify song preview -->
                             <div id="hc-song-preview-box" style="display:none;position:relative;padding:0 16px 10px;">
@@ -1486,7 +1527,7 @@
                                     <button onclick="document.getElementById('hc-img-input').click()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;font-family:var(--font-main);transition:color 0.15s;padding:0;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Photo
                                     </button>
-                                    <input type="file" id="hc-img-input" accept="image/*" style="display:none;" onchange="handleHcImage(event)">
+                                    <input type="file" id="hc-img-input" accept="image/*" multiple style="display:none;" onchange="handleHcImage(event)">
                                     <button onclick="openHcSpotifyPopup()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;font-family:var(--font-main);transition:color 0.15s;padding:0;" onmouseover="this.style.color='#1DB954'" onmouseout="this.style.color='var(--text-muted)'" id="hc-music-btn">
                                         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg> Music
                                     </button>
@@ -1736,8 +1777,7 @@
                     </div>
                     
                     <div id="pc-img-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
-                        <img id="pc-img-preview" style="width:100%; max-height:300px; object-fit:contain; border-radius:12px; background:#111;">
-                        <button onclick="clearPcImage()" style="position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px);">✕</button>
+                        <div id="pc-img-thumbs" class="mp-thumbs"></div>
                     </div>
                     
                     <div id="pc-song-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
@@ -1751,7 +1791,7 @@
                         <button class="btn-primary btn-outline" onclick="document.getElementById('pc-img-input').click()" style="padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:5px; width:auto;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Image
                         </button>
-                        <input type="file" id="pc-img-input" accept="image/*" style="display:none;" onchange="handlePcImage(event)">
+                        <input type="file" id="pc-img-input" accept="image/*" multiple style="display:none;" onchange="handlePcImage(event)">
                         
                         <button class="btn-primary btn-outline" onclick="openSpotifyPopup()" style="padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:5px; width:auto;" onmouseover="this.style.color='#1DB954'" onmouseout="this.style.color=''">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg> Spotify
@@ -2052,6 +2092,11 @@
                     <div id="pv-song-content" class="pcv3-song-box"></div>
                 </div>
 
+                <div class="pcv3-section" id="pv-schedule-section" style="display:none;">
+                    <div class="pcv3-section-title">Class Schedule<span class="pv-sched-day" id="pv-schedule-day"></span></div>
+                    <div id="pv-schedule-content"></div>
+                </div>
+
                 <div class="pcv3-actions">
                     <button id="pv-msg-btn" class="pcv3-msg-btn" style="display:none;" onclick="pvStartChat()">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -2201,7 +2246,7 @@
     <div id="class-editor-modal" class="modal-overlay">
         <div class="modal-card" style="max-width:420px;">
             <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.3px; margin-bottom:4px;">Your Classes</h2>
-            <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px; line-height:1.5;"></p>
+            <div id="class-editor-day" style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:12.5px; color:var(--text-muted); line-height:1.5;"></div>
 
             <div class="settings-row">
                 <div>
@@ -3486,15 +3531,25 @@
             if (lunchEl && lunch) lunchEl.textContent = `${fmtClockMin(lunch.start)} – ${fmtClockMin(lunch.end)}`;
         }
 
+        // Classes are stored in Day 1 order. On Day 2 the first two and last two swap,
+        // so slot i on screen maps to stored index order[i] (the swap is its own inverse).
+        function getClassDayOrder(day) {
+            return (day || getDayLabel()) === 'Day 2' ? [1, 0, 3, 2] : [0, 1, 2, 3];
+        }
+
         window.openClassEditor = function() {
             const classes = getMyClasses();
             const colors = getMyClassColors();
+            const day = getDayLabel();
+            const order = getClassDayOrder(day);
             for (let i = 0; i < 4; i++) {
                 const inp = document.getElementById('class-edit-' + i);
-                if (inp) inp.value = classes[i] || '';
+                if (inp) inp.value = classes[order[i]] || '';
                 const colorInp = document.getElementById('class-color-' + i);
-                if (colorInp) colorInp.value = colors[i] || DEFAULT_CLASS_COLOR;
+                if (colorInp) colorInp.value = colors[order[i]] || DEFAULT_CLASS_COLOR;
             }
+            const dayEl = document.getElementById('class-editor-day');
+            if (dayEl) dayEl.innerHTML = `<span style="font-size:13px; font-weight:800; padding:3px 12px; border-radius:12px; background:var(--accent); color:#000;">Today is ${day}</span><span>Classes are shown in ${day} order</span>`;
             const { lateStart, assembly } = getScheduleState();
             const lsToggle = document.getElementById('late-start-toggle');
             if (lsToggle) lsToggle.checked = lateStart;
@@ -3532,8 +3587,14 @@
         window.saveClasses = async function() {
             const btn = document.getElementById('class-editor-save-btn');
             if (btn) { btn.innerText = 'Saving...'; btn.disabled = true; }
-            const classes = [0, 1, 2, 3].map(i => (document.getElementById('class-edit-' + i)?.value || '').trim().slice(0, 40));
-            const classColors = [0, 1, 2, 3].map(i => document.getElementById('class-color-' + i)?.value || DEFAULT_CLASS_COLOR);
+            // Map on-screen slots (today's order) back to the stored Day 1 order
+            const order = getClassDayOrder();
+            const classes = ['', '', '', ''];
+            const classColors = [DEFAULT_CLASS_COLOR, DEFAULT_CLASS_COLOR, DEFAULT_CLASS_COLOR, DEFAULT_CLASS_COLOR];
+            [0, 1, 2, 3].forEach(i => {
+                classes[order[i]] = (document.getElementById('class-edit-' + i)?.value || '').trim().slice(0, 40);
+                classColors[order[i]] = document.getElementById('class-color-' + i)?.value || DEFAULT_CLASS_COLOR;
+            });
             try {
                 await updateDoc(doc(db, "users", currentUser), { classes, classColors });
                 usersCache[currentUser] = { ...usersCache[currentUser], classes, classColors };
@@ -6234,13 +6295,11 @@
 
         window.useInstantPhotoAsPost = function() {
             if (!instantCamPhotoData) return;
-            _hcCapturedImage = instantCamPhotoData;
+            _hcImages.length = 0; _hcImages.push(instantCamPhotoData);
             closeInstantCamera();
             if (!window.isViewingHome && typeof window.goToHome === 'function') window.goToHome();
             setTimeout(() => {
-                const prev = document.getElementById('hc-img-preview');
-                const box = document.getElementById('hc-img-preview-box');
-                if (prev && box) { prev.src = instantCamPhotoData; box.style.display = 'block'; }
+                _mpRenderThumbs('hc');
                 const textEl = document.getElementById('home-compose-text');
                 if (textEl) { textEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); textEl.focus(); }
             }, 80);
@@ -7330,8 +7389,24 @@
                 return bt-at;
             }).slice(0,15);
             
-            feed.innerHTML = '';
+            // Reuse existing cards so a like/comment/repost update never rebuilds the feed
+            const existing = new Map();
+            Array.from(feed.children).forEach(c => {
+                if (c.dataset && c.dataset.pkey) existing.set(c.dataset.pkey, c);
+                else c.remove(); // loading / empty-state placeholders
+            });
+            const keep = new Set();
             sorted.forEach((post, postIdx) => {
+                const _pkey = post._author + '/' + post.id;
+                const _psig = _hfSig(post);
+                keep.add(_pkey);
+                const _ex = existing.get(_pkey);
+                if (_ex && _ex.dataset.psig === _psig) {
+                    _hfUpdateDynamic(_ex, post);
+                    _hfPlace(feed, _ex, postIdx);
+                    return;
+                }
+                if (_ex) _ex.remove(); // content changed — rebuild just this card
                 const u = post._author;
                 const prof = usersCache[u]||{};
                 const fname = prof.fname||u;
@@ -7372,7 +7447,8 @@
                         bodyHtml += `<div style="margin-top:8px;"><iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px;display:block;"></iframe></div>`;
                     }
                 }
-                if(post.imageData) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:400px;min-height:0;object-fit:contain;background:var(--bg-sidebar);border-radius:14px;margin-top:10px;display:block;image-orientation:from-image;cursor:pointer;transition:opacity 0.15s;" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">`;
+                if(getPostImages(post).length>1) bodyHtml+=mpCarouselHtml(getPostImages(post),{maxH:400,wrapStyle:'margin-top:10px;'});
+                if(post.imageData && getPostImages(post).length<=1) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:400px;min-height:0;object-fit:contain;background:var(--bg-sidebar);border-radius:14px;margin-top:10px;display:block;image-orientation:from-image;cursor:pointer;transition:opacity 0.15s;" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">`;
 
                 const likeCountStr = likeCount > 0 ? `<span id="hlcnt-${post.id}" style="font-size:12px;font-weight:700;color:var(--text-muted);">${likeCount}</span>` : `<span id="hlcnt-${post.id}"></span>`;
                 const commentCountStr = `<span id="hccnt-${post.id}" style="font-size:12px;font-weight:700;color:var(--text-muted);">${commentCount > 0 ? commentCount : '0'}</span>`;
@@ -7409,8 +7485,8 @@
                 </div>
                 ${bodyHtml}
                 <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border-light);">
-                    <button onclick="event.stopPropagation();homeLike('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;transition:background 0.15s,color 0.15s;flex:1;justify-content:center;" id="hlbtn-${post.id}" onmouseover="this.style.background='rgba(238,53,46,0.08)'" onmouseout="this.style.background='none'">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="${isLiked?'#EE352E':'none'}" stroke="${isLiked?'#EE352E':'var(--text-muted)'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <button onclick="event.stopPropagation();homeLike('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;transition:background 0.15s,color 0.15s;flex:1;justify-content:center;" id="hlbtn-${post.id}" data-liked="${isLiked?'1':'0'}" onmouseover="this.style.background='rgba(238,53,46,0.08)'" onmouseout="this.style.background='none'">
+                        <svg width="15" height="15" viewBox="0 0 24 24" class="hf-heart" fill="${isLiked?'#EE352E':'none'}" stroke="${isLiked?'#EE352E':'var(--text-muted)'}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                         ${likeCountStr}
                     </button>
                     <button onclick="event.stopPropagation();toggleHomeComments('${post.id}','${u}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;color:var(--text-muted);transition:background 0.15s,color 0.15s;flex:1;justify-content:center;" id="hcbtn-${post.id}" onmouseover="this.style.color='#3B82F6';this.style.background='rgba(59,130,246,0.08)'" onmouseout="this.style.color='var(--text-muted)';this.style.background='none'">
@@ -7432,62 +7508,113 @@
                         </button>
                     </div>
                 </div>`;
-                feed.appendChild(card);
+                card.dataset.pkey = _pkey;
+                card.dataset.psig = _psig;
+                card.addEventListener('animationend', () => { card.style.animation = 'none'; }, { once: true });
+                _hfPlace(feed, card, postIdx);
                 // Populate current user avatar in comment box
                 const myAvEl = card.querySelector(`#hc-my-av-${post.id}`);
                 if (myAvEl && usersCache[currentUser]) myAvEl.innerHTML = getAvatarHTML(currentUser, usersCache[currentUser], false);
             });
+            existing.forEach((el, k) => { if (!keep.has(k)) el.remove(); });
         }
 
-        window.homeLike = async function(pageOwner, postId) {
-            try {
-                const ref = doc(db,'pages',pageOwner,'posts',postId);
-                const snap = await getDoc(ref);
-                if(!snap.exists()) return;
-                const likes = snap.data().likes||{};
-                const nowLiked = !likes[currentUser];
-                if(nowLiked) likes[currentUser]=true;
-                else delete likes[currentUser];
-                await updateDoc(ref,{likes});
-                const btn = document.getElementById('hlbtn-'+postId);
-                const cnt = document.getElementById('hlcnt-'+postId);
-                if(btn){
-                    btn.style.color = nowLiked ? '#EE352E' : '#FFF';
-                    const svg = btn.querySelector('svg');
-                    if(svg){
-                        svg.setAttribute('fill', nowLiked ? '#EE352E' : 'none');
-                        svg.setAttribute('stroke', nowLiked ? '#EE352E' : '#FFF');
+        // Signature of everything that requires a card rebuild (likes / comments / reposts are updated in place)
+        function _hfSig(p) {
+            const im = getPostImages(p);
+            return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song,
+                    im.length, im.map(x => x.length + ':' + x.slice(-24)).join(',')].join('|');
+        }
+        function _hfPlace(feed, el, idx) {
+            const cur = feed.children[idx];
+            if (cur !== el) feed.insertBefore(el, cur || null);
+        }
+        function _hfApplyLikeUI(postId, liked, count, animate) {
+            const btn = document.getElementById('hlbtn-' + postId);
+            if (!btn) return;
+            const was = btn.dataset.liked === '1';
+            btn.dataset.liked = liked ? '1' : '0';
+            const svg = btn.querySelector('svg');
+            if (svg) {
+                svg.classList.add('hf-heart');
+                svg.style.fill = liked ? '#EE352E' : 'rgba(238,53,46,0)';
+                svg.style.stroke = liked ? '#EE352E' : 'var(--text-muted)';
+                if (animate && liked && !was) {
+                    svg.classList.remove('hf-like-pop');
+                    void svg.getBoundingClientRect();
+                    svg.classList.add('hf-like-pop');
+                    const ring = document.createElement('span');
+                    ring.className = 'hf-like-ring';
+                    const r = svg.getBoundingClientRect(), b = btn.getBoundingClientRect();
+                    ring.style.left = (r.left - b.left + r.width / 2 - 11) + 'px';
+                    ring.style.top = (r.top - b.top + r.height / 2 - 11) + 'px';
+                    if (getComputedStyle(btn).position === 'static') btn.style.position = 'relative';
+                    btn.appendChild(ring);
+                    setTimeout(() => ring.remove(), 550);
+                }
+            }
+            const cnt = document.getElementById('hlcnt-' + postId);
+            if (cnt) {
+                const next = count > 0 ? String(count) : '';
+                if (cnt.textContent !== next) {
+                    cnt.textContent = next;
+                    cnt.style.cssText = count > 0 ? 'font-size:12px;font-weight:700;color:var(--text-muted);' : '';
+                    if (animate && count > 0) {
+                        cnt.classList.remove('hf-count-tick');
+                        void cnt.offsetWidth;
+                        cnt.classList.add('hf-count-tick');
                     }
                 }
-                if(cnt){
-                    const n = Object.keys(likes).length;
-                    cnt.textContent = n || '';
-                }
-            } catch(e) { console.error('homeLike', e); }
-        };
+            }
+        }
+        function _hfUpdateDynamic(card, post) {
+            const likes = post.likes || {};
+            _hfApplyLikeUI(post.id, !!likes[currentUser], Object.keys(likes).length, false);
+            const cc = card.querySelector('#hccnt-' + post.id);
+            if (cc) cc.textContent = String(post.commentCount || 0);
+            const reposts = post.reposts || {};
+            const rc = card.querySelector('#hrcnt-' + post.id);
+            if (rc) {
+                const n = Object.keys(reposts).length;
+                rc.textContent = n > 0 ? String(n) : '';
+                rc.style.cssText = n > 0 ? 'font-size:12px;font-weight:700;color:var(--text-muted);' : '';
+            }
+            const rbtn = card.querySelector('button[onclick*="homeRepost"]');
+            if (rbtn) rbtn.style.color = reposts[currentUser] ? '#10B981' : 'var(--text-muted)';
+        }
 
+        const _hfLikeBusy = new Set();
         window.homeLike = async function(pageOwner, postId) {
+            const key = pageOwner + '/' + postId;
+            if (_hfLikeBusy.has(key)) return;
+            const btn = document.getElementById('hlbtn-' + postId);
+            const cnt = document.getElementById('hlcnt-' + postId);
+            const wasLiked = btn ? btn.dataset.liked === '1' : false;
+            const prevCount = parseInt(cnt && cnt.textContent, 10) || 0;
+            const nowLiked = !wasLiked;
+            _hfLikeBusy.add(key);
+            // Update the heart + count instantly (animated) — the feed itself is never re-rendered
+            _hfApplyLikeUI(postId, nowLiked, Math.max(0, prevCount + (nowLiked ? 1 : -1)), true);
             try {
-                const ref = doc(db,'pages',pageOwner,'posts',postId);
+                const ref = doc(db, 'pages', pageOwner, 'posts', postId);
                 const snap = await getDoc(ref);
-                if(!snap.exists()) return;
-                const likes = snap.data().likes||{};
-                const nowLiked = !likes[currentUser];
-                if(nowLiked) likes[currentUser]=true; else delete likes[currentUser];
-                await updateDoc(ref,{likes});
-                const btn = document.getElementById('hlbtn-'+postId);
-                const cnt = document.getElementById('hlcnt-'+postId);
-                if(btn){btn.style.color=nowLiked?'#e74c3c':'var(--text-muted)';const svg=btn.querySelector('svg');if(svg){svg.setAttribute('fill',nowLiked?'#e74c3c':'none');svg.setAttribute('stroke',nowLiked?'#e74c3c':'currentColor');}}
-                if(cnt){const n=Object.keys(likes).length;cnt.textContent=n||'';}
-                // Send notification when liking (not unliking)
+                if (!snap.exists()) throw new Error('post missing');
+                const likes = { ...(snap.data().likes || {}) };
+                if (nowLiked) likes[currentUser] = true; else delete likes[currentUser];
+                await updateDoc(ref, { likes });
                 if (nowLiked && pageOwner !== currentUser) {
                     addDoc(collection(db, 'notifications'), {
                         recipient: pageOwner, from: currentUser, type: 'like_post',
                         postId: postId, pageOwner: pageOwner,
                         read: false, createdAt: serverTimestamp()
-                    }).catch(()=>{});
+                    }).catch(() => {});
                 }
-            }catch(e){console.error('homeLike',e);}
+            } catch (e) {
+                console.error('homeLike', e);
+                _hfApplyLikeUI(postId, wasLiked, prevCount, false); // roll back
+            } finally {
+                _hfLikeBusy.delete(key);
+            }
         };
 
         // --- HOME FEED COMMENTS ---
@@ -7648,6 +7775,7 @@
                         text: postData.text || null,
                         richText: postData.richText || null,
                         imageData: postData.imageData || null,
+                        images: postData.images || null,
                         song: postData.song || null,
                         createdAt: serverTimestamp()
                     };
@@ -7728,7 +7856,7 @@
                         let escaped = (post.text||'').replace(/</g,'<').replace(/>/g,'>');
                         escaped = escaped.replace(/#([a-zA-Z0-9_]+)/g,'<span style="color:var(--accent);font-weight:600;">#$1</span>');
                         escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g,'<span style="color:var(--accent);font-weight:600;">@$1</span>');
-                        const imgHtml = post.imageData ? `<img src="${post.imageData}" style="width:100%;max-height:320px;object-fit:contain;background:var(--bg-sidebar);border-radius:10px;margin-top:8px;" loading="lazy">` : '';
+                        const imgHtml = getPostImages(post).length > 1 ? mpCarouselHtml(getPostImages(post), { maxH: 320, wrapStyle: 'margin-top:8px;' }) : post.imageData ? `<img src="${post.imageData}" style="width:100%;max-height:320px;object-fit:contain;background:var(--bg-sidebar);border-radius:10px;margin-top:8px;" loading="lazy">` : '';
                         div.innerHTML = `
                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                                 <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(u2,prof,false)}</div>
@@ -7751,6 +7879,52 @@
         };
 
         // --- PROFILE VIEW / EDITING ---
+        // Build a read-only class schedule for any user's profile (today's day order + that user's overrides)
+        function renderProfileSchedule(profile) {
+            const sec = document.getElementById('pv-schedule-section');
+            const box = document.getElementById('pv-schedule-content');
+            const dayEl = document.getElementById('pv-schedule-day');
+            if (!sec || !box) return;
+            const raw = [0, 1, 2, 3].map(i => ((Array.isArray(profile.classes) ? profile.classes[i] : '') || '').trim());
+            if (raw.every(c => !c)) { sec.style.display = 'none'; box.innerHTML = ''; return; }
+            const rawColors = [0, 1, 2, 3].map(i => (Array.isArray(profile.classColors) && profile.classColors[i]) || DEFAULT_CLASS_COLOR);
+
+            const day = getDayLabel();
+            const order = getClassDayOrder(day);
+            const classes = order.map(i => raw[i]);
+            const colors = order.map(i => rawColors[i]);
+
+            // That user's Late Start / Assembly state for today
+            const todayKey = getESTDateKey();
+            const [y, m, d] = todayKey.split('-').map(Number);
+            let lateStart = isAutoLateStartDay(y, m, d), assembly = false;
+            const ov = profile.scheduleOverrides;
+            if (ov && ov.date === todayKey) {
+                if (typeof ov.lateStart === 'boolean') lateStart = ov.lateStart;
+                if (typeof ov.assembly === 'boolean') assembly = ov.assembly;
+            }
+            const periods = assembly ? ASSEMBLY_PERIODS : (lateStart ? LATE_START_PERIODS : REGULAR_PERIODS);
+
+            const nowParts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hour12: false, weekday: 'short' })
+                .formatToParts(new Date()).reduce((a, p) => { a[p.type] = p.value; return a; }, {});
+            const isWeekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(nowParts.weekday);
+            const nowMin = (parseInt(nowParts.hour, 10) % 24) * 60 + parseInt(nowParts.minute, 10);
+            const esc = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            if (dayEl) dayEl.textContent = day;
+            box.innerHTML = periods.map(p => {
+                const isNow = isWeekday && nowMin >= p.start && nowMin < p.end;
+                const time = `${fmtClockMin(p.start)} – ${fmtClockMin(p.end)}`;
+                const nowTag = isNow ? '<span class="pv-sched-now">Now</span>' : '';
+                if (p.lunch) {
+                    return `<div class="pv-sched-row${isNow ? ' now' : ''}"><span class="pv-sched-time">${time}</span><span class="pv-sched-dot" style="background:var(--border-dark);"></span><span class="pv-sched-name lunch">Lunch</span>${nowTag}</div>`;
+                }
+                const name = classes[p.classIdx];
+                return `<div class="pv-sched-row${isNow ? ' now' : ''}"><span class="pv-sched-time">${time}</span><span class="pv-sched-dot" style="background:${esc(colors[p.classIdx])};"></span><span class="pv-sched-name${name ? '' : ' empty'}">${name ? esc(name) : esc(p.label)}</span>${nowTag}</div>`;
+            }).join('');
+            sec.style.display = 'block';
+        }
+
         window.viewMyProfile = function() {
             if(currentUser) window.viewProfile(currentUser);
         };
@@ -7869,6 +8043,8 @@
             } else {
                 songSection.style.display = 'none';
             }
+
+            renderProfileSchedule(profile);
 
             // Edit overlay labels visible in edit mode only — hide for view
             document.getElementById('pv-banner-edit-lbl').style.display = 'none';
@@ -9400,7 +9576,9 @@
                 }
 
                 let imgHtml = '';
-                if (post.imageData) {
+                if (getPostImages(post).length > 1) {
+                    imgHtml = mpCarouselHtml(getPostImages(post), { maxH: 500, wrapStyle: 'margin-top:12px;' });
+                } else if (post.imageData) {
                     imgHtml = `<img class="page-post-img" src="${post.imageData}" onclick="openLightbox(this.src)" loading="lazy" style="border-radius:12px;">`;
                 }
 
@@ -9476,10 +9654,116 @@
                     thumb.className = 'page-grid-thumb';
                     thumb.onclick = () => { setPageView('list'); const el = document.getElementById('page-post-'+post.id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); };
                     thumb.innerHTML = `<img src="${post.imageData}" loading="lazy" alt="">`;
+                    if (getPostImages(post).length > 1) thumb.insertAdjacentHTML('beforeend', '<span class="mp-grid-badge">' + getPostImages(post).length + '</span>');
                     gridEl.appendChild(thumb);
                 }
             });
         }
+
+        // ── MULTI-PHOTO POSTS ─────────────────────────────────────
+        // Posts keep `imageData` (first photo, for older code paths) and add `images: [...]` when there is more than one.
+        const MP_MAX_PHOTOS = 4;
+        const MP_BUDGET = 215000;      // max base64 chars per photo (keeps the post under Firestore's 1 MB doc limit)
+        let _pcImages = [];
+        let _hcImages = [];
+
+        function getPostImages(post) {
+            if (post && Array.isArray(post.images) && post.images.length) return post.images;
+            return post && post.imageData ? [post.imageData] : [];
+        }
+
+        function _mpCompress(file, maxDim) {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onerror = () => resolve(null);
+                reader.onload = ev => {
+                    const img = new Image();
+                    img.onerror = () => resolve(null);
+                    img.onload = () => {
+                        const attempts = [[maxDim, 0.85], [900, 0.75], [720, 0.65], [600, 0.55]];
+                        let out = null;
+                        for (const [dim, q] of attempts) {
+                            let w = img.width, h = img.height;
+                            const r = Math.min(dim / w, dim / h);
+                            if (r < 1) { w = Math.round(w * r); h = Math.round(h * r); }
+                            const c = document.createElement('canvas');
+                            c.width = w; c.height = h;
+                            c.getContext('2d').drawImage(img, 0, 0, w, h);
+                            out = c.toDataURL('image/jpeg', q);
+                            if (out.length <= MP_BUDGET) break;
+                        }
+                        resolve(out);
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function _mpRenderThumbs(kind) {
+            const arr = kind === 'hc' ? _hcImages : _pcImages;
+            const box = document.getElementById(kind + '-img-preview-box');
+            const wrap = document.getElementById(kind + '-img-thumbs');
+            if (!box || !wrap) return;
+            box.style.display = arr.length ? 'block' : 'none';
+            wrap.innerHTML = '';
+            arr.forEach((src, i) => {
+                const t = document.createElement('div');
+                t.className = 'mp-thumb';
+                const im = document.createElement('img');
+                im.src = src; im.alt = '';
+                const x = document.createElement('button');
+                x.type = 'button'; x.className = 'mp-thumb-x'; x.textContent = '✕'; x.title = 'Remove photo';
+                x.onclick = ev => { ev.stopPropagation(); arr.splice(i, 1); _mpRenderThumbs(kind); };
+                t.appendChild(im); t.appendChild(x);
+                wrap.appendChild(t);
+            });
+            if (arr.length && arr.length < MP_MAX_PHOTOS) {
+                const add = document.createElement('button');
+                add.type = 'button'; add.className = 'mp-add'; add.textContent = '+'; add.title = 'Add another photo';
+                add.onclick = () => document.getElementById(kind + '-img-input')?.click();
+                wrap.appendChild(add);
+            }
+        }
+
+        async function _mpAddFiles(kind, files, maxDim) {
+            const arr = kind === 'hc' ? _hcImages : _pcImages;
+            files = files.filter(f => f && f.type && f.type.startsWith('image/'));
+            if (!files.length) return;
+            const room = MP_MAX_PHOTOS - arr.length;
+            if (room <= 0 || files.length > room) alert('You can add up to ' + MP_MAX_PHOTOS + ' photos per post.');
+            for (const f of files.slice(0, Math.max(0, room))) {
+                const data = await _mpCompress(f, maxDim);
+                if (data) { arr.push(data); _mpRenderThumbs(kind); }
+            }
+        }
+
+        function _mpApplyToPost(postData, arr) {
+            if (!arr.length) return;
+            postData.imageData = arr[0];
+            if (arr.length > 1) postData.images = [...arr];
+        }
+
+        function mpCarouselHtml(imgs, o) {
+            o = o || {};
+            const maxH = o.maxH || 400;
+            const slides = imgs.map(src => `<div class="mp-slide"><img src="${src}" loading="lazy" style="max-height:${maxH}px;" onclick="event.stopPropagation();openLightbox(this.src)"></div>`).join('');
+            const dots = imgs.map((_, i) => `<span class="mp-dot${i === 0 ? ' on' : ''}"></span>`).join('');
+            return `<div class="mp-carousel" style="${o.wrapStyle || ''}"><div class="mp-track" onscroll="_mpScroll(this)">${slides}</div><button type="button" class="mp-nav mp-prev" onclick="event.stopPropagation();_mpNav(this,-1)">‹</button><button type="button" class="mp-nav mp-next" onclick="event.stopPropagation();_mpNav(this,1)">›</button><div class="mp-count">1/${imgs.length}</div><div class="mp-dots">${dots}</div></div>`;
+        }
+        window._mpScroll = function(track) {
+            if (!track.clientWidth) return;
+            const i = Math.round(track.scrollLeft / track.clientWidth);
+            const wrap = track.parentElement;
+            const total = track.children.length;
+            const cnt = wrap.querySelector('.mp-count');
+            if (cnt) cnt.textContent = (i + 1) + '/' + total;
+            wrap.querySelectorAll('.mp-dot').forEach((d, k) => d.classList.toggle('on', k === i));
+        };
+        window._mpNav = function(btn, dir) {
+            const track = btn.parentElement.querySelector('.mp-track');
+            if (track) track.scrollBy({ left: dir * track.clientWidth, behavior: 'smooth' });
+        };
 
         // ── PAGE COMPOSER ─────────────────────────────────────────
         let _pcCapturedImage = null;
@@ -9508,31 +9792,14 @@
         };
 
         window.handlePcImage = function(e) {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                const img = new Image();
-                img.onload = () => {
-                    const c = document.createElement('canvas');
-                    const MAX = 1000; let w=img.width, h=img.height;
-                    const r = Math.min(MAX/w, MAX/h); if(r<1){w=Math.round(w*r);h=Math.round(h*r);}
-                    c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-                    _pcCapturedImage = c.toDataURL('image/jpeg', 0.85);
-                    const prev = document.getElementById('pc-img-preview');
-                    const box = document.getElementById('pc-img-preview-box');
-                    if (prev && box) { prev.src = _pcCapturedImage; box.style.display = 'block'; }
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+            const files = [...e.target.files];
+            e.target.value = '';
+            _mpAddFiles('pc', files, 1000);
         };
 
         window.clearPcImage = function() {
-            _pcCapturedImage = null;
-            const prev = document.getElementById('pc-img-preview');
-            const box = document.getElementById('pc-img-preview-box');
-            if (prev) prev.src = '';
-            if (box) box.style.display = 'none';
+            _pcImages.length = 0;
+            _mpRenderThumbs('pc');
             const inp = document.getElementById('pc-img-input');
             if (inp) inp.value = '';
         };
@@ -9589,7 +9856,7 @@
                 const htmlContent = textEl ? textEl.innerHTML.trim() : '';
                 const text = plainText;
 
-                if (!text && !_pcCapturedImage && !_pcCapturedSong) {
+                if (!text && !_pcImages.length && !_pcCapturedSong) {
                     alert('Write something, add a photo, or attach a song!');
                     if (postBtn) { postBtn.textContent = 'Post'; postBtn.disabled = false; }
                     return;
@@ -9600,7 +9867,7 @@
                 // Preserve rich formatting (bold/italic/color) if present
                 const hasFormatting = /<(b|strong|i|em|u|span)[\s>]/i.test(htmlContent);
                 if (hasFormatting) postData.richText = htmlContent;
-                if (_pcCapturedImage) postData.imageData = _pcCapturedImage;
+                _mpApplyToPost(postData, _pcImages);
                 if (_pcCapturedSong) postData.song = _pcCapturedSong;
                 // Extract hashtags
                 const tags = [...new Set((text.match(/#([a-zA-Z0-9_]+)/g)||[]).map(t=>t.slice(1).toLowerCase()))];
@@ -9631,14 +9898,14 @@
             if (!textEl) return;
             const plainText = textEl.innerText.trim();
             const htmlContent = textEl.innerHTML.trim();
-            if (!plainText && !_hcCapturedImage && !_hcCapturedSong) { textEl.focus(); return; }
+            if (!plainText && !_hcImages.length && !_hcCapturedSong) { textEl.focus(); return; }
             if (btn) { btn.textContent = 'Posting…'; btn.disabled = true; }
             try {
                 let postData = { type: 'unified', createdAt: serverTimestamp() };
                 if (plainText) postData.text = plainText;
                 const hasFormatting = /<(b|strong|i|em|u|span|font)[\s>]/i.test(htmlContent);
                 if (hasFormatting) postData.richText = htmlContent;
-                if (_hcCapturedImage) postData.imageData = _hcCapturedImage;
+                _mpApplyToPost(postData, _hcImages);
                 if (_hcCapturedSong) postData.song = _hcCapturedSong;
                 const tags = [...new Set((plainText.match(/#([a-zA-Z0-9_]+)/g)||[]).map(t=>t.slice(1).toLowerCase()))];
                 if (tags.length) postData.hashtags = tags;
@@ -9699,30 +9966,13 @@
             if (box) box.style.display = 'none';
         };
         window.handleHcImage = function(e) {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                const img = new Image();
-                img.onload = () => {
-                    const c = document.createElement('canvas');
-                    const MAX = 1200; let w=img.width, h=img.height;
-                    const r = Math.min(MAX/w, MAX/h); if(r<1){w=Math.round(w*r);h=Math.round(h*r);}
-                    c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h);
-                    _hcCapturedImage = c.toDataURL('image/jpeg', 0.85);
-                    const prev = document.getElementById('hc-img-preview');
-                    const box = document.getElementById('hc-img-preview-box');
-                    if (prev && box) { prev.src = _hcCapturedImage; box.style.display = 'block'; }
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+            const files = [...e.target.files];
+            e.target.value = '';
+            _mpAddFiles('hc', files, 1200);
         };
         window.clearHcImage = function() {
-            _hcCapturedImage = null;
-            const prev = document.getElementById('hc-img-preview');
-            const box = document.getElementById('hc-img-preview-box');
-            if (prev) prev.src = '';
-            if (box) box.style.display = 'none';
+            _hcImages.length = 0;
+            _mpRenderThumbs('hc');
             const inp = document.getElementById('hc-img-input');
             if (inp) inp.value = '';
         };
@@ -9759,7 +10009,7 @@
                     reposts[currentUser] = true;
                     await updateDoc(ref, { reposts });
                     const repostDoc = { type:'repost', repostOf:postId, repostBy:currentUser, originalAuthor:pageOwner,
-                        text:postData.text||null, richText:postData.richText||null, imageData:postData.imageData||null,
+                        text:postData.text||null, richText:postData.richText||null, imageData:postData.imageData||null, images:postData.images||null,
                         song:postData.song||null, createdAt:serverTimestamp() };
                     Object.keys(repostDoc).forEach(k => repostDoc[k]===null && delete repostDoc[k]);
                     await addDoc(collection(db, 'pages', currentUser, 'posts'), repostDoc);

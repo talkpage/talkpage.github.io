@@ -2804,6 +2804,7 @@
 
         window.toggleSmartContrast = function(cb) {
             localStorage.setItem('talkpage_smart_contrast', cb.checked);
+            if (window.applyDmSmartContrast) window.applyDmSmartContrast();
             if(activeChatId) openChat(activeChatId);
         };
         
@@ -2817,7 +2818,94 @@
             const b = parseInt(hexcolor.substr(4,2),16);
             const yiq = ((r*299)+(g*587)+(b*114))/1000;
             return (yiq >= 128) ? '#000000' : '#FFFFFF';
-        }
+        };
+
+        // ── Smart Text Contrast for DMs ───────────────────────────
+        // Group bubbles get per-user colors; DM bubbles take theirs from the theme + accent color.
+        // Resolve the real bubble colors and, when the theme's text would be hard to read on them
+        // (e.g. black text on a dark accent), flip the text to black/white. Honors the Smart Text Contrast setting.
+        (function() {
+            let probe = null, styleEl = null, queued = false;
+
+            function parseColor(str) {
+                if (!str) return null;
+                let m = str.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.%]+))?\s*\)$/);
+                if (m) {
+                    let a = 1;
+                    if (m[4] !== undefined) a = m[4].endsWith('%') ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
+                    return { r: +m[1], g: +m[2], b: +m[3], a };
+                }
+                m = str.match(/^color\(\s*srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.%]+))?\s*\)$/);
+                if (m) {
+                    let a = 1;
+                    if (m[4] !== undefined) a = m[4].endsWith('%') ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
+                    return { r: +m[1] * 255, g: +m[2] * 255, b: +m[3] * 255, a };
+                }
+                return null;
+            }
+            function lum(c) {
+                const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+                return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+            }
+            function ratio(a, b) {
+                const l1 = lum(a), l2 = lum(b);
+                return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            }
+            function toHex(c) {
+                return '#' + [c.r, c.g, c.b].map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+            }
+            function resolve(prop, cssValue) {
+                probe.style[prop] = '';
+                probe.style[prop] = cssValue;
+                return parseColor(getComputedStyle(probe)[prop === 'background' ? 'backgroundColor' : prop]);
+            }
+            // Returns a text color to force, or null to leave the theme's own text color alone
+            function fix(side) {
+                const bg = resolve('background', `var(--msg-${side}-bg)`);
+                const txt = resolve('color', `var(--msg-${side}-txt)`);
+                if (!bg || bg.a < 0.35) return null;      // transparent / gradient — can't judge reliably
+                if (txt && ratio(bg, txt) >= 4.5) return null;   // theme text is already readable
+                return window.getContrastYIQ(toHex(bg));
+            }
+
+            window.applyDmSmartContrast = function() {
+                queued = false;
+                if (!document.body) return;
+                if (!probe) {
+                    probe = document.createElement('div');
+                    probe.setAttribute('aria-hidden', 'true');
+                    probe.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;visibility:hidden;pointer-events:none;';
+                    document.body.appendChild(probe);
+                }
+                if (!styleEl) {
+                    styleEl = document.createElement('style');
+                    styleEl.id = 'dm-smart-contrast-style';
+                    document.head.appendChild(styleEl);
+                }
+                let css = '';
+                if (localStorage.getItem('talkpage_smart_contrast') !== 'false') {
+                    ['sent', 'recv'].forEach(side => {
+                        const color = fix(side);
+                        if (!color) return;
+                        const cls = side === 'sent' ? '.sent' : '.received';
+                        css += `${cls} .bubble:not(.emoji-only):not(.image-only) { color: ${color}; }\n`;
+                        if (side === 'recv') css += `.typing-dots span { background: ${color}; }\n`;
+                    });
+                }
+                if (styleEl.textContent !== css) styleEl.textContent = css;
+            };
+
+            function queue() {
+                if (queued) return;
+                queued = true;
+                requestAnimationFrame(() => window.applyDmSmartContrast());
+            }
+            // Re-check whenever the theme (body class) or accent color (inline style on <html>/<body>) changes
+            const mo = new MutationObserver(queue);
+            mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+            if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+            queue();
+        })();
 
         // Auto-cleanup stale typing indicators — runs every 1s, re-renders bubbles without mutating cache
         setInterval(() => {
@@ -6579,7 +6667,7 @@
                     const smatch = embedUrl.match(/(track|album|playlist)\/([a-zA-Z0-9]+)/);
                     if (smatch && !embedUrl.includes('embed')) embedUrl = 'https://open.spotify.com/embed/' + smatch[1] + '/' + smatch[2] + '?utm_source=generator&theme=0';
                     if (embedUrl.includes('embed')) {
-                        body.innerHTML = `<iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:8px;display:block;"></iframe><div class="daily-box-credit">📌 ${name}</div>`;
+                        body.innerHTML = `<iframe src="${embedUrl}" loading="lazy" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:8px;display:block;"></iframe><div class="daily-box-credit">📌 ${name}</div>`;
                     } else {
                         body.innerHTML = `<div class="daily-box-statement-text" style="font-style:normal;">${entry.value.replace(/</g,'&lt;')}</div><div class="daily-box-credit">📌 ${name}</div>`;
                     }
@@ -7444,7 +7532,7 @@
                         embedUrl = 'https://open.spotify.com/embed/' + smatch[1] + '/' + smatch[2] + '?utm_source=generator&theme=0';
                     }
                     if(embedUrl.includes('embed')) {
-                        bodyHtml += `<div style="margin-top:8px;"><iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px;display:block;"></iframe></div>`;
+                        bodyHtml += `<div style="margin-top:8px;"><iframe src="${embedUrl}" loading="lazy" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px;display:block;"></iframe></div>`;
                     }
                 }
                 if(getPostImages(post).length>1) bodyHtml+=mpCarouselHtml(getPostImages(post),{maxH:400,wrapStyle:'margin-top:10px;'});
@@ -9571,7 +9659,7 @@
                         embedUrl = 'https://open.spotify.com/embed/' + match[1] + '/' + match[2] + '?utm_source=generator';
                     }
                     if (embedUrl.includes('embed')) {
-                        songHtml = `<div class="page-post-song" style="margin-bottom:10px;"><iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px; display:block;"></iframe></div>`;
+                        songHtml = `<div class="page-post-song" style="margin-bottom:10px;"><iframe src="${embedUrl}" loading="lazy" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px; display:block;"></iframe></div>`;
                     }
                 }
 

@@ -16,6 +16,7 @@
         /* --- THEME VARIABLES (CSS ENGINE) --- */
         :root {
             --accent: #F6A800; 
+            --on-accent: #000000; /* readable text colour on top of --accent (set by JS) */
             --bg-main: #FFFFFF;
             --bg-sidebar: #F2F2F2;
             --bg-input: rgba(255, 255, 255, 0.9);
@@ -25,7 +26,7 @@
             --text-dark: #111111;
             --text-muted: #777777;
             --msg-sent-bg: var(--accent);
-            --msg-sent-txt: #000000;
+            --msg-sent-txt: var(--on-accent);
             --msg-recv-bg: #F2F2F2;
             --msg-recv-txt: #111111;
             --font-main: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -38,19 +39,19 @@
         body.theme-dark {
             --bg-main: #121212; --bg-sidebar: #1E1E1E; --bg-input: rgba(44, 44, 44, 0.9); --bg-chat: transparent;
             --border-dark: #3D3D3D; --border-light: #3A3A3A; --text-dark: #E0E0E0; --text-muted: #999999;
-            --msg-sent-bg: var(--accent); --msg-sent-txt: #000000; --msg-recv-bg: #2C2C2C; --msg-recv-txt: #E0E0E0;
+            --msg-sent-bg: var(--accent); --msg-sent-txt: var(--on-accent); --msg-recv-bg: #2C2C2C; --msg-recv-txt: #E0E0E0;
         }
 
         body.theme-midnight {
             --bg-main: #000000; --bg-sidebar: #000000; --bg-input: rgba(0, 0, 0, 0.9); --bg-chat: transparent;
             --border-dark: #2A2A2A; --border-light: #232323; --text-dark: #EAEAEA; --text-muted: #808080;
-            --msg-sent-bg: var(--accent); --msg-sent-txt: #000000; --msg-recv-bg: #0A0A0A; --msg-recv-txt: #EAEAEA;
+            --msg-sent-bg: var(--accent); --msg-sent-txt: var(--on-accent); --msg-recv-bg: #0A0A0A; --msg-recv-txt: #EAEAEA;
         }
 
         body.theme-stranger {
             --bg-main: #050000; --bg-sidebar: #0A0000; --bg-input: rgba(26, 0, 0, 0.9); --bg-chat: transparent;
             --border-dark: #FF0000; --border-light: #550000; --text-dark: #FF0000; --text-muted: #AA0000;
-            --msg-sent-bg: var(--accent); --msg-sent-txt: #000000; --msg-recv-bg: #1A0000; --msg-recv-txt: #FF0000;
+            --msg-sent-bg: var(--accent); --msg-sent-txt: var(--on-accent); --msg-recv-bg: #1A0000; --msg-recv-txt: #FF0000;
             --glow: 0 0 8px rgba(255,0,0,0.6);
         }
 
@@ -67,7 +68,7 @@
             --bg-main: linear-gradient(124deg, #ffecd2, #fcb69f, #ffccff, #ccddff, #ccffdd); background-size: 400% 400%; animation: pastelRainbow 15s ease infinite;
             --bg-sidebar: rgba(255, 255, 255, 0.6); --bg-input: rgba(255, 255, 255, 0.7); --bg-chat: transparent;
             --border-dark: rgba(0,0,0,0.2); --border-light: rgba(0,0,0,0.1); --text-dark: #222222; --text-muted: #555555;
-            --msg-sent-bg: var(--accent); --msg-sent-txt: #FFFFFF; --msg-recv-bg: rgba(255,255,255,0.8); --msg-recv-txt: #222222;
+            --msg-sent-bg: var(--accent); --msg-sent-txt: var(--on-accent); --msg-recv-bg: rgba(255,255,255,0.8); --msg-recv-txt: #222222;
         }
         
         body.theme-lesbian {
@@ -133,7 +134,7 @@
         input:focus, textarea:focus { border-bottom-color: var(--accent); }
         .btn-primary { width: 100%; padding: 14px; background: var(--border-dark); color: var(--bg-main); border: none; border-radius: var(--radius-btn); font-weight: bold; font-size: 15px; transition: transform 0.1s, background 0.15s ease-out; box-shadow: var(--glow); display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .btn-primary:active { transform: scale(0.97); }
-        .btn-primary:hover { background: var(--accent); color: var(--bg-main); border-color: var(--accent); }
+        .btn-primary:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
         .btn-outline { background: transparent; color: var(--text-dark); border: 2px solid var(--border-dark); }
         .btn-outline:hover { background: var(--border-dark); color: var(--bg-main); }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -142,7 +143,7 @@
         .pic-preview { width: 60px; height: 60px; border-radius: 50%; background: var(--border-light); display: flex; align-items: center; justify-content: center; overflow: hidden; font-weight: bold; font-size: 20px; border: 2px solid var(--border-dark); text-transform: uppercase; color: var(--text-dark);}
         .pic-preview img { width: 100%; height: 100%; object-fit: cover; }
         .upload-btn-fake { padding: 8px 12px; border: 2px solid var(--border-dark); font-size: 13px; font-weight: bold; display: inline-block; box-shadow: var(--glow); border-radius: var(--radius-btn); background: var(--border-dark); color: var(--bg-main); transition: 0.15s ease-out; }
-        .upload-btn-fake:hover { background: var(--accent); border-color: var(--accent); color: var(--bg-main); }
+        .upload-btn-fake:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
         /* --- APP LAYOUT --- */
         #app-layout { display: none; height: 100vh; width: 100vw; background: transparent; overflow: hidden; position: relative; flex-direction: row;}
@@ -223,7 +224,7 @@
         .conv-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: center;}
         .conv-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
         .conv-name { font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
-        .unread-dot { background: var(--accent); color: var(--bg-main); font-size: 11px; font-weight: bold; border-radius: 12px; display: none; box-shadow: var(--glow); align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box;}
+        .unread-dot { background: var(--accent); color: var(--on-accent); font-size: 11px; font-weight: bold; border-radius: 12px; display: none; box-shadow: var(--glow); align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box;}
         .conv-preview { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
         .chat-options-wrapper { position: relative; margin-left: 10px; display: flex; align-items: center; }
@@ -360,7 +361,7 @@
         /* Jump to Present Button */
         #jump-down-btn {
             display: none; position: absolute; bottom: 85px; right: 25px; z-index: 50; border-radius: 50%; width: 45px; height: 45px;
-            background: var(--accent); color: #FFF; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-weight: bold; font-size: 20px;
+            background: var(--accent); color: var(--on-accent); border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-weight: bold; font-size: 20px;
             align-items: center; justify-content: center; transition: transform 0.15s ease-out;
         }
         @media (hover: hover) and (pointer: fine) { #jump-down-btn:hover { transform: scale(1.1); } }
@@ -436,7 +437,7 @@
         .swipe-reply-indicator {
             position: absolute; top: 50%; transform: translateY(-50%);
             width: 32px; height: 32px; border-radius: 50%;
-            background: var(--accent); color: #000;
+            background: var(--accent); color: var(--on-accent);
             display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: opacity 0.15s;
             z-index: 50; flex-shrink: 0;
@@ -704,7 +705,7 @@
         .pcv3-song-box iframe { display: block; }
         .pcv3-actions { display: flex; flex-direction: column; gap: 9px; margin-top: 18px; }
         #pv-edit-btn:hover { color: var(--accent) !important; }
-        .pcv3-msg-btn { background: var(--accent); color: #000; border: none; border-radius: 9px; padding: 11px 20px; font-weight: bold; font-size: 14px; cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; font-family: var(--font-main); }
+        .pcv3-msg-btn { background: var(--accent); color: var(--on-accent); border: none; border-radius: 9px; padding: 11px 20px; font-weight: bold; font-size: 14px; cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; font-family: var(--font-main); }
         .pcv3-msg-btn:hover { opacity: 0.82; }
         .pcv3-edit-form { overflow-y: auto; padding: 0 26px 22px; flex: 1; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; }
         .pcv3-ef-section { margin-bottom: 14px; }
@@ -814,7 +815,10 @@
         #stories-bar { padding-left: 20px !important; } 
         
         /* Make posts thinner on web and perfectly centered */
-        .page-post { max-width: 600px !important; margin: 0 auto 20px auto !important; width: 100% !important; box-sizing: border-box; }
+        .page-post { max-width: 600px !important; margin: 0 auto !important; width: 100% !important; box-sizing: border-box; }
+        /* Same 12px rhythm between posts as the homescreen feed */
+        #page-body { gap: 12px !important; }
+        #page-posts-list { display: flex; flex-direction: column; gap: 12px; }
         
         /* Removes comment bubbles and prepares for infinite replies */
         .page-comment-item { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start; background: transparent !important; border: none !important; padding: 0 !important; }
@@ -828,6 +832,61 @@
         .page-comment-reply-btn { font-size: 11px; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0; margin-top: 2px; font-weight: 700; transition: color 0.15s; }
         .page-comment-reply-btn:hover { color: var(--accent); }
         
+        /* ── USERPAGE: centered header, inline post box, homepage-style action row ── */
+        #page-header .page-header-actions { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 20px; z-index: 30; }
+        #page-title { text-align: center; width: 100%; flex: 1; }
+        .pg-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; margin-top: 10px; }
+        .pg-hero-avatar { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; margin-bottom: 12px; flex-shrink: 0; }
+        .pg-hero-name { font-size: 32px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.1; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; word-break: break-word; max-width: 100%; }
+        .pg-hero-handle { font-size: 14px; font-weight: 600; margin-top: 6px; }
+
+        #page-inline-composer { display: none; width: 100%; max-width: 600px; margin: 0 auto 4px; box-sizing: border-box; }
+        #page-inline-composer #page-composer-modal { width: 100%; max-width: 100%; max-height: none; transform: none !important; border: 1px solid var(--border-light); border-radius: 14px; box-shadow: none; overflow: visible; background: var(--bg-main); }
+        #page-inline-composer .pcm-header { display: none; }
+        #page-inline-composer .pcm-body { max-height: none !important; overflow: visible !important; padding: 14px 16px 8px !important; }
+        #page-inline-composer #pc-unified-text { min-height: 52px !important; font-size: 15px !important; line-height: 1.5; padding-top: 0 !important; }
+        #page-inline-composer .pcm-footer { padding: 10px 16px !important; background: var(--bg-sidebar) !important; border-radius: 0 0 14px 14px; }
+
+        .page-post-actions { justify-content: center; gap: 6px; }
+        .page-post-actions > .page-action-btn, .page-post-actions > .page-like-group { flex: 1; justify-content: center; }
+        .page-post-actions > .page-action-btn { padding: 6px 12px; border-radius: 20px; }
+        .page-action-btn span { font-size: 12px; font-weight: 700; }
+        .page-like-group { display: flex; align-items: center; justify-content: center; gap: 2px; }
+        .page-like-count { background: none; border: none; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--text-muted); font-family: var(--font-main); padding: 6px 8px 6px 2px; border-radius: 12px; transition: color 0.15s; }
+        .page-like-count:empty { display: none; }
+        .page-like-count:hover { color: var(--accent); text-decoration: underline; }
+
+        /* ── PAGE FONT PICKER ── */
+        #page-bg-picker { max-height: 75vh; overflow-y: auto; }
+        .pfont-list { display: flex; flex-direction: column; gap: 4px; max-height: 190px; overflow-y: auto; padding-right: 2px; }
+        .pfont-opt { text-align: left; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border-light); background: var(--bg-sidebar); color: var(--text-dark); cursor: pointer; font-size: 15px; transition: border-color 0.15s; }
+        .pfont-opt:hover { border-color: var(--accent); }
+        .pfont-opt.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+        /* ── THREADED COMMENTS (homepage + userpages): replies can nest forever ── */
+        .cm-list { display: flex; flex-direction: column; gap: 12px; }
+        .cm-list.cm-compact { gap: 8px; }
+        .cm-row { display: flex; gap: 8px; align-items: flex-start; }
+        .cm-av { border-radius: 50%; overflow: hidden; flex-shrink: 0; margin-top: 2px; background: var(--border-dark); }
+        .cm-main { flex: 1; min-width: 0; }
+        .cm-bubble { font-size: 14px; line-height: 1.4; color: var(--text-dark); word-break: break-word; }
+        .cm-compact .cm-bubble { font-size: 13px; }
+        .cm-name { font-weight: 800; cursor: pointer; margin-right: 4px; }
+        .cm-text { white-space: pre-wrap; }
+        .cm-mention { color: var(--accent); font-weight: 600; cursor: pointer; }
+        .cm-actions { display: flex; align-items: center; gap: 14px; margin-top: 3px; }
+        .cm-btn { background: none; border: none; padding: 2px 0; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; font-family: var(--font-main); display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s; }
+        .cm-btn:hover { color: var(--accent); }
+        .cm-btn.liked { color: #EE352E; }
+        .cm-children { margin-top: 8px; margin-left: 11px; padding-left: 12px; border-left: 2px solid var(--border-light); display: flex; flex-direction: column; gap: 10px; }
+        .cm-compact .cm-children { margin-left: 10px; padding-left: 10px; gap: 8px; }
+        .cm-children.flat { margin-left: 0; padding-left: 0; border-left: none; }
+        .cm-reply-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+        .cm-reply-input { flex: 1; min-width: 0; border: 1px solid var(--border-light); border-radius: 16px; padding: 6px 12px; font-size: 13px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); outline: none; transition: border-color 0.15s; }
+        .cm-reply-input:focus { border-color: var(--accent); }
+        .cm-send { background: var(--accent); color: var(--on-accent); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        .cm-cancel { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 2px 4px; }
+
         /* ── TALKPAGE STORIES ──────────────────────────────────────── */
         /* Chat Story Reply Embed */
         .chat-story-reply {
@@ -1057,7 +1116,7 @@
         .page-comment-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
         .page-comment-input { flex: 1; border: 1px solid var(--border-light); border-radius: 20px; padding: 8px 14px; font-size: 13px; font-family: var(--font-main); background: var(--bg-main); color: var(--text-dark); outline: none; transition: border-color 0.15s; }
         .page-comment-input:focus { border-color: var(--accent); }
-        .page-comment-send { background: var(--accent); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: opacity 0.15s; color: #000; }
+        .page-comment-send { background: var(--accent); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: opacity 0.15s; color: var(--on-accent); }
         .page-comment-send:hover { opacity: 0.8; }
         .page-comment-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
         .page-comment-action { background: none; border: none; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; font-family: var(--font-main); padding: 0; transition: color 0.15s; display: flex; align-items: center; gap: 4px; }
@@ -1076,7 +1135,7 @@
         #page-bg-picker { display: none; position: absolute; right: 0; top: calc(100% + 4px); background: var(--bg-main); border: 2px solid var(--border-dark); border-radius: 14px; padding: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); z-index: 600; min-width: 230px; }
         #page-bg-picker h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; font-weight: 800; }
         .pbg-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-        .pbg-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+        .pbg-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
         .pbg-swatch:hover { transform: scale(1.15); }
         .pbg-swatch.active { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
         .pbg-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; margin-top: 4px; display: block; }
@@ -1201,7 +1260,7 @@
         .mp-grid-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; pointer-events: none; }
 
         /* ── Profile class schedule ── */
-        .pv-sched-day { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; background: var(--accent); color: #000; margin-left: 8px; letter-spacing: 0.3px; vertical-align: middle; text-transform: none; }
+        .pv-sched-day { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 9px; border-radius: 10px; background: var(--accent); color: var(--on-accent); margin-left: 8px; letter-spacing: 0.3px; vertical-align: middle; text-transform: none; }
         .pv-sched-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; font-size: 13px; text-align: left; transition: background 0.15s; }
         .pv-sched-row + .pv-sched-row { margin-top: 2px; }
         .pv-sched-row.now { background: color-mix(in srgb, var(--accent) 14%, transparent); }
@@ -1240,6 +1299,24 @@
         .page-view-toggle { display:flex; justify-content:center; gap:4px; margin:8px 0 4px; padding:0 8px; }
         .page-view-btn { padding:8px 14px; background:none; border:none; cursor:pointer; color:var(--text-muted); display:flex; align-items:center; justify-content:center; transition:color 0.15s; border-radius:8px; }
         .page-view-btn.active { color:var(--text-dark); background:var(--bg-sidebar); }
+
+        /* ── FORCED PAGE THEME + POST COLOUR (scoped to the userpage only) ── */
+        /* The per-theme variable blocks are generated at runtime from the real theme rules (see _ensurePageThemeCSS). */
+        #page-screen[data-ptheme] { color: var(--text-dark); text-shadow: var(--glow); }
+        #page-screen[data-pcolor] .page-post {
+            background: var(--pp-bg) !important; color: var(--pp-text);
+            --bg-main: var(--pp-bg); --bg-sidebar: var(--pp-side); --bg-input: var(--pp-side);
+            --text-dark: var(--pp-text); --text-muted: var(--pp-muted); --border-light: var(--pp-border);
+        }
+        .ptheme-list { display: flex; flex-direction: column; gap: 4px; max-height: 190px; overflow-y: auto; padding-right: 2px; }
+        .ptheme-opt { display: flex; align-items: center; gap: 8px; text-align: left; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border-light); background: var(--bg-sidebar); color: var(--text-dark); cursor: pointer; font-size: 13px; font-weight: 600; font-family: var(--font-main); transition: border-color 0.15s; }
+        .ptheme-opt:hover { border-color: var(--accent); }
+        .ptheme-opt.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+        .ptheme-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(128,128,128,0.4); }
+        .pbg-section { margin-top: 12px; }
+        .pbg-help { font-size: 11px; color: var(--text-muted); margin: -4px 0 8px; line-height: 1.35; }
+        .pbg-mini-btn { background: none; border: 1px solid var(--border-light); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--text-muted); font-family: var(--font-main); }
+        .pbg-mini-btn:hover { border-color: var(--accent); }
 
         /* ─ Square grid ──────────────────────────────────────────── */
         #page-grid-view { display:none; grid-template-columns:repeat(3,1fr); gap:2px; padding-bottom:40px; }
@@ -1300,7 +1377,26 @@
         .chat-bg-swatch { width: 34px; height: 34px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.15s, border-color 0.15s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
         .chat-bg-swatch:hover { transform: scale(1.15); border-color: var(--accent); }
 
-    </style>
+    
+        /* ── PATCH: Custom Colour theme (fallback until JS applies derived palette) ── */
+        body.theme-custom {
+            --bg-main: #1F2A44; --bg-sidebar: #26334F; --bg-input: rgba(31, 42, 68, 0.9); --bg-chat: transparent;
+            --border-dark: #4A5878; --border-light: #34425E; --text-dark: #EAEAEA; --text-muted: #9AA6BD;
+            --msg-sent-bg: var(--accent); --msg-sent-txt: var(--on-accent); --msg-recv-bg: #2C3A57; --msg-recv-txt: #EAEAEA;
+        }
+        #custom-colour-input { -webkit-appearance: none; -moz-appearance: none; appearance: none; width: 100%; height: 120px; border: 2px solid var(--border-light); border-radius: 14px; padding: 0; background: none; cursor: pointer; }
+        #custom-colour-input::-webkit-color-swatch-wrapper { padding: 0; }
+        #custom-colour-input::-webkit-color-swatch { border: none; border-radius: 12px; }
+        #custom-colour-input::-moz-color-swatch { border: none; border-radius: 12px; }
+
+        /* ── PATCH: mobile — no top clock/class widget, home button replaces collapse ── */
+        #sidebar-home-btn-mobile { display: none; }
+        @media (max-width: 768px) {
+            .top-status-bar-anchor { display: none !important; }
+            #sidebar-collapse-btn { display: none !important; }
+            #sidebar-home-btn-mobile { display: flex !important; }
+        }
+</style>
 </head>
 <body>
 
@@ -1378,6 +1474,9 @@
                         </div>
                     </div>
                     <div class="sb-actions">
+                        <button id="sidebar-home-btn-mobile" class="theme-btn" onclick="goToHome()" title="Home">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        </button>
                         <button id="sidebar-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
@@ -1551,7 +1650,7 @@
 
                                     <span id="home-compose-char" style="font-size:11px;color:var(--text-muted);"></span>
                                 </div>
-                                <button onclick="submitHomeCompose()" style="background:var(--accent);color:#000;border:none;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;font-family:var(--font-main);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Post</button>
+                                <button onclick="submitHomeCompose()" style="background:var(--accent);color: var(--on-accent);border:none;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;font-family:var(--font-main);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Post</button>
                             </div>
                         </div>
 
@@ -1732,11 +1831,13 @@
                     <button id="page-bg-btn" onclick="togglePageBgPicker(event)" title="Customize background">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
-                    <button id="page-edit-btn" onclick="togglePageComposer()" style="display:none;background:none;border:none;cursor:pointer;color:var(--text-muted);padding:8px;transition:color 0.15s;" title="New post">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                    </button>
+                    
                     <div id="page-bg-picker">
-                        <h4>Page Background</h4>
+                        <h4>Page Theme</h4>
+                        <div class="pbg-help">What theme do you want people to view your page in? Only your page changes.</div>
+                        <div class="ptheme-list" id="page-theme-list"></div>
+
+                        <h4 style="margin-top:16px;">Page Background</h4>
                         <div class="pbg-swatches" id="pbg-swatches"></div>
                         <span class="pbg-label">Custom Color</span>
                         <div style="display:flex; gap:8px; align-items:center;">
@@ -1750,6 +1851,28 @@
                                 Upload Image
                                 <input type="file" id="pbg-img-input" accept="image/*" style="display:none;" onchange="handlePageBgImage(event)">
                             </label>
+                        </div>
+                        <div class="pbg-section">
+                            <span class="pbg-label">Overlay Opacity <span id="page-overlay-pct" style="font-weight:700;color:var(--accent);float:right;">0%</span></span>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <span style="font-size:11px;color:var(--text-muted);">None</span>
+                                <input type="range" id="page-overlay-slider" min="0" max="80" value="0" style="flex:1;accent-color:var(--accent);" oninput="applyPageOverlay(this.value,false)" onchange="applyPageOverlay(this.value,true)">
+                                <span style="font-size:11px;color:var(--text-muted);">Max</span>
+                            </div>
+                            <div class="pbg-help" style="margin:6px 0 0;">Darkens or lightens a background image so posts stay readable.</div>
+                        </div>
+                        <div class="pbg-section">
+                            <span class="pbg-label">Post Color</span>
+                            <div class="pbg-swatches" id="ppc-swatches"></div>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <input type="color" id="ppc-custom" class="color-picker-circle" value="#ffffff" oninput="previewPagePostColor(this.value)" onchange="setPagePostColor(this.value)" style="width:36px;height:36px;">
+                                <span style="font-size:12px; color:var(--text-muted); flex:1;">Custom</span>
+                                <button type="button" class="pbg-mini-btn" onclick="setPagePostColor(null)">Default</button>
+                            </div>
+                        </div>
+                        <div class="pbg-section">
+                            <span class="pbg-label">Page Font</span>
+                            <div class="pfont-list" id="page-font-list"></div>
                         </div>
                         <button onclick="applyPageBg('reset')" style="margin-top:12px;width:100%;background:none;border:1px solid var(--border-light);border-radius:8px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;color:var(--text-muted);font-family:var(--font-main);transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border-light)'">Reset to Default</button>
                     </div>
@@ -1769,41 +1892,50 @@
                     </button>
                 </div>
                 
-                <div class="pcm-body" style="padding:15px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; max-height:60vh;">
-                    <div style="display:flex; gap:12px; position:relative;">
-                        <div id="pc-unified-avatar" style="width:40px; height:40px; border-radius:50%; flex-shrink:0; background:var(--border-light); overflow:hidden;"></div>
-                        <div id="pc-unified-text" contenteditable="true" data-placeholder="What's on your mind? Use @ to mention" style="flex:1; border:none; background:transparent; font-family:var(--font-main); font-size:16px; color:var(--text-dark); resize:none; outline:none; min-height:80px; padding-top:8px; word-break:break-word; white-space:pre-wrap;" oninput="pcHandleInput(event)" onkeydown="pcHandleKeydown(event)"></div>
+                <div class="pcm-body" style="padding:14px 16px 8px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; max-height:60vh;">
+                    <div style="display:flex; gap:12px; align-items:flex-start; position:relative;">
+                        <div id="pc-unified-avatar" style="width:40px;height:40px;border-radius:50%;background:var(--border-dark);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#FFF;"></div>
+                        <div id="pc-unified-text" contenteditable="true" data-placeholder="What's on your mind? Use @ and #" style="flex:1;min-width:0;min-height:52px;background:transparent;border:none;outline:none;font-size:15px;font-family:var(--font-main);color:var(--text-dark);line-height:1.5;word-break:break-word;white-space:pre-wrap;" oninput="pcHandleInput(event)" onkeydown="pcHandleKeydown(event)"></div>
                         <div id="pc-mention-popup" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-main);border:2px solid var(--border-dark);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.25);z-index:300;max-height:200px;overflow-y:auto;padding:4px;margin-top:4px;"></div>
                     </div>
-                    
-                    <div id="pc-img-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
+
+                    <div id="pc-img-preview-box" style="display:none; position:relative; width:100%;">
                         <div id="pc-img-thumbs" class="mp-thumbs"></div>
                     </div>
-                    
-                    <div id="pc-song-preview-box" style="display:none; position:relative; width:100%; margin-top:5px;">
+
+                    <div id="pc-song-preview-box" style="display:none; position:relative; width:100%;">
                         <iframe id="pc-song-iframe" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px; border:none; background:#111;"></iframe>
-                        <button onclick="clearPcSong()" style="position:absolute; top:25px; right:-10px; background:var(--bg-main); color:var(--text-dark); border:1px solid var(--border-light); border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✕</button>
+                        <button onclick="clearPcSong()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;">✕</button>
                     </div>
                 </div>
-                
-                <div class="pcm-footer" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border-light); padding:12px 20px; background:var(--bg-main); flex-wrap:wrap; gap:10px;">
-                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                        <button class="btn-primary btn-outline" onclick="document.getElementById('pc-img-input').click()" style="padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:5px; width:auto;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Image
+
+                <div class="pcm-footer" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border-light);background:var(--bg-sidebar);flex-wrap:wrap;gap:8px;">
+                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                        <button onclick="document.getElementById('pc-img-input').click()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;font-family:var(--font-main);transition:color 0.15s;padding:0;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Photo
                         </button>
                         <input type="file" id="pc-img-input" accept="image/*" multiple style="display:none;" onchange="handlePcImage(event)">
-                        
-                        <button class="btn-primary btn-outline" onclick="openSpotifyPopup()" style="padding:8px 12px; font-size:13px; display:flex; align-items:center; gap:5px; width:auto;" onmouseover="this.style.color='#1DB954'" onmouseout="this.style.color=''">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg> Spotify
+                        <button onclick="openSpotifyPopup()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;font-family:var(--font-main);transition:color 0.15s;padding:0;" onmouseover="this.style.color='#1DB954'" onmouseout="this.style.color='var(--text-muted)'">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.394-.751.522-1.146.281-3.139-1.912-7.09-2.341-11.747-1.282-.465.105-.916-.184-1.021-.649-.105-.465.184-.916.649-1.021 5.093-1.157 9.444-.668 13.003 1.206.393.22.521.731.262 1.126zm1.428-3.184c-.302.493-.935.651-1.428.349-3.585-2.203-9.08-2.823-12.639-1.545-.558.199-1.162-.091-1.361-.649-.199-.558.091-1.162.649-1.361 4.14-1.487 10.222-.816 14.41 1.761.493.302.651.935.349 1.428zm.13-3.32c-4.281-2.542-11.35-2.775-15.438-1.536-.677.205-1.4-.176-1.605-.853-.205-.677.176-1.4.853-1.605 4.773-1.446 12.56-1.175 17.55 1.789.608.361.804 1.146.443 1.754-.361.608-1.146.804-1.754.443z"/></svg> Music
                         </button>
 
-                        <span style="width:1px; height:22px; background:var(--border-light); margin:0 2px;"></span>
+                        <span class="hc-toolbar-divider"></span>
 
-                        <button onclick="pcFmt('bold')" title="Bold" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:7px 10px;font-weight:bold;cursor:pointer;color:var(--text-dark);font-size:13px;font-family:var(--font-main);">B</button>
-                        <button onclick="pcFmt('italic')" title="Italic" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:7px 10px;font-style:italic;cursor:pointer;color:var(--text-dark);font-size:13px;font-family:var(--font-main);">I</button>
-                        <button onclick="pcFmt('underline')" title="Underline" style="background:none;border:1px solid var(--border-light);border-radius:6px;padding:7px 10px;text-decoration:underline;cursor:pointer;color:var(--text-dark);font-size:13px;font-family:var(--font-main);">U</button>
+                        <div class="hc-toolbar" style="padding-top:0;">
+                            <button class="hc-fmt-btn" onmousedown="event.preventDefault()" onclick="pcFmt('bold')" title="Bold" style="font-weight:bold;">B</button>
+                            <button class="hc-fmt-btn" onmousedown="event.preventDefault()" onclick="pcFmt('italic')" title="Italic" style="font-style:italic;">I</button>
+                            <button class="hc-fmt-btn" onmousedown="event.preventDefault()" onclick="pcFmt('underline')" title="Underline" style="text-decoration:underline;">U</button>
+                            <span class="hc-toolbar-divider"></span>
+                            <button class="hc-color-swatch hc-color-reset" onmousedown="event.preventDefault()" onclick="pcColor('reset')" title="Default color"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#EE352E')" title="Red" style="background:#EE352E;"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#F6A800')" title="Orange" style="background:#F6A800;"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#10B981')" title="Green" style="background:#10B981;"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#3B82F6')" title="Blue" style="background:#3B82F6;"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#A855F7')" title="Purple" style="background:#A855F7;"></button>
+                            <button class="hc-color-swatch" onmousedown="event.preventDefault()" onclick="pcColor('#EC4899')" title="Pink" style="background:#EC4899;"></button>
+                        </div>
                     </div>
-                    <button id="pc-submit-btn" class="btn-primary" style="width:auto; padding:8px 24px;" onclick="submitPagePost()">Post</button>
+                    <button id="pc-submit-btn" onclick="submitPagePost()" style="background:var(--accent);color:var(--on-accent);border:none;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;font-family:var(--font-main);cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Post</button>
                 </div>
             </div>
         </div>
@@ -2332,14 +2464,28 @@
         <span id="duck-counter-num">0</span>
     </div>
 
+    <!-- ─── CUSTOM COLOUR THEME PICKER ─── -->
+    <div id="custom-colour-modal" class="modal-overlay" style="z-index: 9300;" onclick="if(event.target===this)cancelCustomColour()">
+        <div class="modal-card" style="max-width: 340px; text-align:center;">
+            <h3 style="margin:0 0 4px;">Custom Colour</h3>
+            <p style="margin:0 0 14px; font-size:12.5px; color:var(--text-muted);">Pick any colour. Text and accents adjust automatically so it stays readable.</p>
+            <input type="color" id="custom-colour-input" value="#1F2A44" oninput="previewCustomColour(this.value)">
+            <div id="custom-colour-hex" style="margin-top:10px; font-weight:800; font-size:13px; letter-spacing:1px; color:var(--text-dark);">#1F2A44</div>
+            <div style="display:flex; gap:8px; margin-top:16px;">
+                <button class="btn-primary btn-outline" style="flex:1;" onclick="cancelCustomColour()">Cancel</button>
+                <button class="btn-primary" style="flex:1;" onclick="confirmCustomColour()">Done</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ─── DUCK LEADERBOARD ─── -->
     <div id="duck-leaderboard-modal" class="modal-overlay" style="z-index: 9200;">
         <div class="modal-card" style="max-width: 380px; max-height: 80vh; display:flex; flex-direction:column;">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
                 <span style="font-size:22px;">🏆</span>
-                <h3 style="margin:0;">Duck Leaderboard</h3>
+                <h3 style="margin:0;" id="duck-lb-title">Duck Leaderboard</h3>
             </div>
-            <p style="margin:0 0 16px; font-size:12.5px; color:var(--text-muted);">Click ducks to climb higher on the duck leaderboard. Each duck clicked adds one point.</p>
+            <p id="duck-lb-desc" style="margin:0 0 16px; font-size:12.5px; color:var(--text-muted);">Click ducks to climb higher on the duck leaderboard. Each duck clicked adds one point.</p>
             <div id="duck-leaderboard-list" style="overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:6px;">
                 <div style="padding:20px; text-align:center; color:var(--text-muted);">Loading…</div>
             </div>
@@ -2462,7 +2608,7 @@
                 </div>
 
                 <div style="flex:1;"></div>
-                <button class="btn-primary" onclick="submitStory()" id="sc-submit-btn" style="background: var(--accent); color:#000;">Post Story</button>
+                <button class="btn-primary" onclick="submitStory()" id="sc-submit-btn" style="background: var(--accent); color: var(--on-accent);">Post Story</button>
                 <button class="btn-primary btn-outline" onclick="closeStoryCreator()">Cancel</button>
             </div>
             
@@ -2501,7 +2647,7 @@
                     <button onclick="clearSCDraw()" style="padding:6px 12px;border-radius:8px;background:#555;color:#FFF;border:none;font-size:13px;cursor:pointer;">Clear</button>
                 </div>
                 <div style="display:flex;gap:10px;">
-                    <button class="btn-primary" style="background:var(--accent);color:#000;border:none;" onclick="confirmSCDraw()">Add to Story</button>
+                    <button class="btn-primary" style="background:var(--accent);color: var(--on-accent);border:none;" onclick="confirmSCDraw()">Add to Story</button>
                     <button class="btn-primary btn-outline" style="color:#FFF;border-color:#FFF;" onclick="closeSCDraw()">Cancel</button>
                 </div>
             </div>
@@ -2540,7 +2686,7 @@
             <div id="instant-cam-error">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
                 <div style="font-size:14px;font-weight:600;max-width:260px;">Camera access is unavailable. Check your browser permissions and try again.</div>
-                <button class="instant-cam-use-btn" style="background:var(--accent);color:#000;max-width:160px;" onclick="closeInstantCamera()">Close</button>
+                <button class="instant-cam-use-btn" style="background:var(--accent);color: var(--on-accent);max-width:160px;" onclick="closeInstantCamera()">Close</button>
             </div>
         </div>
     </div>
@@ -2601,7 +2747,7 @@
                 <div class="admin-section">
                     <h2>Official Talkpage Story</h2>
                     <p style="font-size:12px;color:#666;margin-bottom:12px;">Post a story that appears in every user's stories bar as an official Talkpage announcement.</p>
-                    <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color:#000;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="openAdminStoryCreator()">
+                    <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color: var(--on-accent);display:flex;align-items:center;justify-content:center;gap:8px;" onclick="openAdminStoryCreator()">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                         Create Official Story
                     </button>
@@ -2648,7 +2794,7 @@
                     <p style="font-size:12px;color:#666;margin-bottom:14px;">Select a user to view and delete their posts.</p>
                     <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
                         <input type="text" id="admin-posts-user-input" placeholder="Enter username..." style="flex:1;background:#111;border:1px solid #333;border-radius:8px;padding:9px 12px;font-size:13px;color:#fff;outline:none;font-family:var(--font-main);" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#333'">
-                        <button onclick="adminLoadUserPosts()" style="background:var(--accent);border:none;color:#000;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Load Posts</button>
+                        <button onclick="adminLoadUserPosts()" style="background:var(--accent);border:none;color: var(--on-accent);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Load Posts</button>
                     </div>
                     <div id="admin-user-posts-list" style="font-size:13px;color:#666;"></div>
                 </div>
@@ -2715,13 +2861,13 @@
             </label>
 
             <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:6px;">
-                Dark Overlay Opacity
+                Overlay Opacity
                 <span id="chat-overlay-pct" style="font-weight:700;color:var(--accent);float:right;">0%</span>
             </span>
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
                 <span style="font-size:11px;color:var(--text-muted);">None</span>
                 <input type="range" id="chat-overlay-slider" min="0" max="80" value="0" style="flex:1;accent-color:var(--accent);" oninput="applyChatOverlay(this.value)">
-                <span style="font-size:11px;color:var(--text-muted);">Dark</span>
+                <span style="font-size:11px;color:var(--text-muted);">Max</span>
             </div>
 
             <div style="display:flex;gap:8px;">
@@ -3080,7 +3226,7 @@
                 document.getElementById('no-chat-screen').style.display = 'none';
                 document.getElementById('active-chat-screen').style.display = 'flex';
                 window.isViewingHome = false;
-                homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
+                window.updateHomeBtnIcon && window.updateHomeBtnIcon();
                 document.body.classList.add('mobile-chat-open');
                 if (window._updateFabVisibility) window._updateFabVisibility();
                 
@@ -3273,6 +3419,23 @@
         };
 
         // ── Duck easter egg ──────────────────────────────────────────
+        const DUCK_IMG_SRC = 'https://freepngimg.com/thumb/duck/7-white-duck-png-image.png';
+        const VON_SIMON_IMG_SRC = 'https://raw.githubusercontent.com/talkpage/talkpage.github.io/refs/heads/main/images/von-simon-fall.png';
+        function isVonSimonTheme() { return document.body.classList.contains('theme-von-simon'); }
+        function getDuckImgSrc() { return isVonSimonTheme() ? VON_SIMON_IMG_SRC : DUCK_IMG_SRC; }
+        function duckEmojiHTML() { return isVonSimonTheme() ? `<img src="${VON_SIMON_IMG_SRC}" alt="" style="height:16px;width:auto;vertical-align:-3px;">` : '🦆'; }
+        // Theme-only reskin: same mechanics + scores, just different image and wording on Von Simon
+        window.updateDuckTheme = function() {
+            const vs = isVonSimonTheme();
+            const peek = document.getElementById('duck-peek');
+            if (peek) { peek.title = vs ? 'Click Von Simon' : '??'; const im = peek.querySelector('img'); if (im) im.src = getDuckImgSrc(); }
+            const counter = document.getElementById('duck-counter');
+            if (counter) counter.title = vs ? 'Von Simon Leaderboard' : 'Duck Leaderboard';
+            const t = document.getElementById('duck-lb-title'); if (t) t.textContent = vs ? 'Von Simon Leaderboard' : 'Duck Leaderboard';
+            const d = document.getElementById('duck-lb-desc'); if (d) d.textContent = vs ? 'Click Von Simon to climb higher on the Von Simon leaderboard. Each Von Simon clicked adds one point.' : 'Click ducks to climb higher on the duck leaderboard. Each duck clicked adds one point.';
+        };
+        new MutationObserver(() => window.updateDuckTheme()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        window.updateDuckTheme();
         let duckCount = null; // lazy-loaded from the user's saved lifetime score
         let duckFadeTimeout = null;
 
@@ -3310,7 +3473,7 @@
 
         function spawnFallingDuck() {
             const duck = document.createElement('img');
-            duck.src = 'https://freepngimg.com/thumb/duck/7-white-duck-png-image.png';
+            duck.src = getDuckImgSrc();
             duck.className = 'falling-duck';
             duck.draggable = false;
             duck.alt = '';
@@ -3398,7 +3561,7 @@
             entries.sort((a, b) => b.score - a.score);
 
             if (entries.length === 0) {
-                listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">No ducks caught yet!</div>';
+                listEl.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted);">' + (isVonSimonTheme() ? 'No Von Simons clicked yet!' : 'No ducks caught yet!') + '</div>';
                 return;
             }
 
@@ -3412,7 +3575,7 @@
                         <span style="width:28px;text-align:center;font-size:14px;font-weight:900;color:var(--text-muted);flex-shrink:0;">${rankLabel}</span>
                         <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(entry.username, entry.profile, false)}</div>
                         <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;color:var(--text-dark);">${name}${isMe ? ' (You)' : ''}</span>
-                        <span style="font-weight:900;color:var(--text-dark);flex-shrink:0;">🦆 ${entry.score}</span>
+                        <span style="font-weight:900;color:var(--text-dark);flex-shrink:0;">${duckEmojiHTML()} ${entry.score}</span>
                     </div>`;
             }).join('');
         }
@@ -3637,7 +3800,7 @@
                 if (colorInp) colorInp.value = colors[order[i]] || DEFAULT_CLASS_COLOR;
             }
             const dayEl = document.getElementById('class-editor-day');
-            if (dayEl) dayEl.innerHTML = `<span style="font-size:13px; font-weight:800; padding:3px 12px; border-radius:12px; background:var(--accent); color:#000;">Today is ${day}</span><span>Classes are shown in ${day} order</span>`;
+            if (dayEl) dayEl.innerHTML = `<span style="font-size:13px; font-weight:800; padding:3px 12px; border-radius:12px; background:var(--accent); color: var(--on-accent);">Today is ${day}</span><span>Classes are shown in ${day} order</span>`;
             const { lateStart, assembly } = getScheduleState();
             const lsToggle = document.getElementById('late-start-toggle');
             if (lsToggle) lsToggle.checked = lateStart;
@@ -3899,9 +4062,95 @@
             }
         };
 
+
+
+        // ── Readable text on the accent colour: white on dark accents, black on light ones ──
+        (function setupOnAccent() {
+            const root = document.documentElement;
+            const lum = (rgb) => {
+                const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+                return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]);
+            };
+            function parse(c) {
+                c = (c || '').trim();
+                let m = c.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+                if (m) {
+                    let h = m[1]; if (h.length === 3) h = h.split('').map(x => x + x).join('');
+                    const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+                }
+                m = c.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/i);
+                return m ? [+m[1], +m[2], +m[3]] : null;
+            }
+            window.updateOnAccent = function() {
+                const rgb = parse(root.style.getPropertyValue('--accent') || getComputedStyle(root).getPropertyValue('--accent'));
+                if (!rgb) return;
+                const L = lum(rgb);
+                // pick whichever of white/black has the higher contrast ratio against the accent
+                const onAccent = ((1.05) / (L + 0.05)) > ((L + 0.05) / 0.05) ? '#FFFFFF' : '#000000';
+                if (root.style.getPropertyValue('--on-accent') !== onAccent) root.style.setProperty('--on-accent', onAccent);
+            };
+            new MutationObserver(window.updateOnAccent).observe(root, { attributes: true, attributeFilter: ['style'] });
+            window.updateOnAccent();
+        })();
+
+        // ── Theme colour helpers (Custom Colour theme + overlay tint) ──
+        const CUSTOM_THEME_KEY = 'talkpage_custom_theme_color';
+        const CUSTOM_THEME_DEFAULT = '#1F2A44';
+        const CUSTOM_THEME_VARS = ['--bg-main','--bg-sidebar','--bg-input','--border-dark','--border-light','--text-dark','--text-muted','--msg-recv-bg','--msg-recv-txt'];
+        function _hexToRgb(hex) {
+            hex = (hex || '').replace('#','');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            const n = parseInt(hex, 16);
+            if (isNaN(n)) return [31, 42, 68];
+            return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+        }
+        function _mixRgb(a, b, t) { return a.map((v, i) => Math.round(v + (b[i] - v) * t)); }
+        function _rgbCss(a) { return `rgb(${a[0]},${a[1]},${a[2]})`; }
+        function _relLum(rgb) {
+            const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+            return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]);
+        }
+        window.isCustomColorDark = function(hex) { return _relLum(_hexToRgb(hex)) < 0.18; };
+
+        // Derives a full palette from the one colour the user picked, light or dark as needed.
+        window.applyCustomThemeVars = function(active, color) {
+            const b = document.body;
+            CUSTOM_THEME_VARS.forEach(v => b.style.removeProperty(v));
+            if (!active) { delete b.dataset.customColor; delete b.dataset.customDark; return; }
+            const hex = color || localStorage.getItem(CUSTOM_THEME_KEY) || CUSTOM_THEME_DEFAULT;
+            const base = _hexToRgb(hex);
+            const dark = window.isCustomColorDark(hex);
+            const toward = dark ? [255,255,255] : [0,0,0];
+            const set = (k, v) => b.style.setProperty(k, v);
+            set('--bg-main', hex);
+            set('--bg-sidebar', _rgbCss(_mixRgb(base, toward, 0.07)));
+            set('--bg-input', `rgba(${base[0]},${base[1]},${base[2]},0.9)`);
+            set('--border-dark', _rgbCss(dark ? _mixRgb(base, [255,255,255], 0.28) : _mixRgb(base, [0,0,0], 0.8)));
+            set('--border-light', _rgbCss(_mixRgb(base, toward, 0.15)));
+            set('--text-dark', dark ? '#EAEAEA' : '#111111');
+            set('--text-muted', _rgbCss(_mixRgb(base, toward, dark ? 0.6 : 0.55)));
+            set('--msg-recv-bg', _rgbCss(_mixRgb(base, toward, 0.1)));
+            set('--msg-recv-txt', dark ? '#EAEAEA' : '#111111');
+            b.dataset.customColor = hex;
+            b.dataset.customDark = dark ? '1' : '0';
+        };
+
+        // Overlay tint: matches the active theme (white on light themes, the theme's own dark on dark ones)
+        window.getOverlayTint = function() {
+            const b = document.body;
+            if (b.classList.contains('theme-custom')) {
+                const c = _hexToRgb(b.dataset.customColor || localStorage.getItem(CUSTOM_THEME_KEY) || CUSTOM_THEME_DEFAULT);
+                return c.join(',');
+            }
+            const dark = { 'dark':'18,18,18', 'midnight':'0,0,0', 'stranger':'5,0,0', 'byler':'11,25,44', 'von-simon':'17,0,0', 'bisexual':'10,10,15' };
+            for (const k in dark) if (b.classList.contains('theme-' + k)) return dark[k];
+            return '255,255,255';
+        };
+
         window.setTheme = function(themeName) {
             document.body.className = ''; 
             if (themeName !== 'default') document.body.classList.add(`theme-${themeName}`);
+            window.applyCustomThemeVars(themeName === 'custom');
             
             let defaultColor = '#F6A800'; 
             if (themeName === 'dark') defaultColor = '#FFD700'; 
@@ -3912,6 +4161,7 @@
             if (themeName === 'bisexual') defaultColor = '#D60270';
             if (themeName === 'trans') defaultColor = '#5BCEFA';
             if (themeName === 'byler') defaultColor = '#FFD700';
+            if (themeName === 'custom') defaultColor = window.isCustomColorDark(localStorage.getItem(CUSTOM_THEME_KEY) || CUSTOM_THEME_DEFAULT) ? '#FFFFFF' : '#F6A800';
 
             const savedCustomAccent = localStorage.getItem('talkpage_custom_accent');
             if (savedCustomAccent) {
@@ -4578,7 +4828,7 @@
                     } else if (!chat.isGroup) {
                         const targetUser = safeParticipants.find(p => p !== currentUser) || currentUser || "Unknown";
                         chatTitle = getFullName(targetUser);
-                        avatarContent = getAvatarHTML(targetUser, usersCache[targetUser]);
+                        avatarContent = getAvatarHTML(targetUser, usersCache[targetUser], false);
                     }
 
                     const item = document.createElement('div');
@@ -4853,7 +5103,6 @@
                 if (window._updateFabVisibility) window._updateFabVisibility();
                 window.updateHomeBtnIcon && window.updateHomeBtnIcon();
                 const homeBtnIcon = document.getElementById('home-btn-icon');
-                if (homeBtnIcon) homeBtnIcon.innerHTML = `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>`;
                 document.body.classList.add('mobile-chat-open');
 
                 if (activeChatId && activeChatId !== chatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') {
@@ -5906,14 +6155,13 @@
                 addBtn.onclick = () => window.openStoryCreator(); 
             }
 
-            const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
             const peopleWithStories = Object.keys(storiesCache).filter(u => u !== currentUser && storiesCache[u].length > 0);
 
             peopleWithStories.sort((a, b) => {
                 const aStories = storiesCache[a];
                 const bStories = storiesCache[b];
-                const aAllSeen = aStories.every(s => seen[s.id]);
-                const bAllSeen = bStories.every(s => seen[s.id]);
+                const aAllSeen = aStories.every(s => window.isStorySeen(s));
+                const bAllSeen = bStories.every(s => window.isStorySeen(s));
                 if (aAllSeen && !bAllSeen) return 1;
                 if (!aAllSeen && bAllSeen) return -1;
                 return 0;
@@ -5972,9 +6220,7 @@
             const pauseIcon = document.getElementById('story-pause-icon');
             if(pauseIcon) pauseIcon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
 
-            const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
-            seen[story.id] = true;
-            try { localStorage.setItem('talkpage_seen_stories', JSON.stringify(seen)); } catch(e) {}
+            window.markStorySeen(story);
 
             if (story.author !== currentUser) {
                 if (!story.views || !story.views.includes(currentUser)) {
@@ -6156,6 +6402,10 @@
             svEl.style.opacity = '0';
             setTimeout(() => { svEl.style.display = 'none'; }, 200);
             document.getElementById('story-views-modal').classList.remove('open');
+            // Rings turn off as soon as you've watched everything
+            renderStoriesBar();
+            const heroAv = document.querySelector('.pg-hero-avatar');
+            if (heroAv && activePageUser) heroAv.innerHTML = getAvatarHTML(activePageUser, usersCache[activePageUser] || {}, true);
         };
 
         window.pauseStoryTimer = function() {
@@ -7160,8 +7410,64 @@
             showStoryAt(storyViewerIdx);
         };
 
+        // Reposts show the ORIGINAL post's time. Older reposts didn't store it, so fetch it from the original post.
+        window._fixRepostTime = async function(post, elId, style) {
+            try {
+                if (!post || post.type !== 'repost' || post.originalCreatedAt || !post.originalAuthor || !post.repostOf) return;
+                const snap = await getDoc(doc(db, 'pages', post.originalAuthor, 'posts', post.repostOf));
+                if (!snap.exists()) return;
+                const c = snap.data().createdAt;
+                const ms = c && (c.toMillis ? c.toMillis() : c.seconds * 1000);
+                const el = document.getElementById(elId);
+                if (!ms || !el) return;
+                const d = new Date(ms);
+                if (style === 'page') {
+                    const h = d.getHours() % 12 || 12, m = d.getMinutes().toString().padStart(2,'0'), ap = d.getHours() >= 12 ? 'PM' : 'AM';
+                    el.textContent = `${d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})} at ${h}:${m} ${ap}`;
+                } else {
+                    const diff = Date.now() - ms;
+                    el.textContent = diff<60000?'Just now':diff<3600000?Math.floor(diff/60000)+'m ago':diff<86400000?Math.floor(diff/3600000)+'h ago':d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+                }
+            } catch (e) {}
+        };
+
         window.hasActiveStory = function(username) {
             return !!(storiesCache[username] && storiesCache[username].length > 0);
+        };
+
+        // "Seen" is tracked per account. The source of truth is the story document itself
+        // (views[] for other people's stories, ownerSeen for your own), so it follows you across
+        // refreshes and devices. localStorage (keyed by account) is only an instant fallback.
+        function _seenStoreKey() { return 'talkpage_seen_stories_' + (currentUser || ''); }
+        function _localSeenMap() {
+            try { return JSON.parse(localStorage.getItem(_seenStoreKey()) || '{}'); } catch (e) { return {}; }
+        }
+        window.isStorySeen = function(story) {
+            if (!story || !currentUser) return true;
+            if (story.author === currentUser) {
+                if (story.ownerSeen) return true;
+            } else if (Array.isArray(story.views) && story.views.includes(currentUser)) {
+                return true;
+            }
+            return !!_localSeenMap()[story.id];
+        };
+        window.markStorySeen = function(story) {
+            if (!story || !currentUser) return;
+            const map = _localSeenMap();
+            map[story.id] = true;
+            try { localStorage.setItem(_seenStoreKey(), JSON.stringify(map)); } catch (e) {}
+            if (story.author === currentUser) {
+                if (!story.ownerSeen) {
+                    story.ownerSeen = true;
+                    updateDoc(doc(db, "stories", story.id), { ownerSeen: true }).catch(e => e);
+                }
+            }
+            // (views[] for other people's stories is written in showStoryAt)
+        };
+        // True only when this account has at least one story from `username` it hasn't watched yet.
+        window.hasUnseenStory = function(username) {
+            const list = storiesCache[username] || [];
+            return list.some(st => !window.isStorySeen(st));
         };
 
         // END STORIES ENGINE
@@ -7174,9 +7480,17 @@
         //   Homepage, chats mode  → Pages icon (doc) → click → go to Pages
         //   Homepage, pages mode  → Chat bubble       → click → go to Chats
         //   In a chat or page     → House icon        → click → go home
+        const _isMobileUI = () => window.matchMedia('(max-width: 768px)').matches;
         window.updateHomeBtnIcon = function() {
             const icon = document.getElementById('home-btn-icon');
             if (!icon) return;
+            if (_isMobileUI()) {
+                // Mobile: this button is always "Pages" (the dedicated home button lives next to it)
+                icon.innerHTML = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>';
+                if (icon.parentElement) icon.parentElement.title = 'Pages';
+                return;
+            }
+            if (icon.parentElement) icon.parentElement.title = 'Home / Chat';
             const onHome = window.isViewingHome;
             const mode   = window.sidebarMode || 'chats';
             if (!onHome) {
@@ -7191,7 +7505,9 @@
             }
         };
 
+        window.matchMedia('(max-width: 768px)').addEventListener('change', () => window.updateHomeBtnIcon());
         window.smartHomeBtn = function() {
+            if (_isMobileUI()) { setSidebarMode('pages'); return; }
             const onHome = window.isViewingHome;
             const mode   = window.sidebarMode || 'chats';
             if (!onHome) {
@@ -7214,6 +7530,14 @@
         window.pcFmt = function(cmd) {
             document.getElementById('pc-unified-text')?.focus();
             document.execCommand(cmd, false, null);
+        };
+        window.pcColor = function(color) {
+            const el = document.getElementById('pc-unified-text');
+            if (!el) return;
+            el.focus();
+            if (color === 'reset') color = getComputedStyle(el).color;
+            document.execCommand('styleWithCSS', false, true);
+            document.execCommand('foreColor', false, color);
         };
         window.pcFmtColor = function(color) {
             document.getElementById('pc-unified-text')?.focus();
@@ -7499,7 +7823,8 @@
                 const prof = usersCache[u]||{};
                 const fname = prof.fname||u;
                 const accent = prof.pageAccent||'var(--accent)';
-                const ms = post.createdAt?.toMillis?post.createdAt.toMillis():(post.createdAt?.seconds*1000||0);
+                const _hTs = (post.type==='repost' && post.originalCreatedAt) ? post.originalCreatedAt : post.createdAt;
+                const ms = _hTs?.toMillis?_hTs.toMillis():(_hTs?.seconds*1000||0);
                 const diff = Date.now()-ms;
                 const ts = !ms?'':diff<60000?'Just now':diff<3600000?Math.floor(diff/60000)+'m ago':diff<86400000?Math.floor(diff/3600000)+'h ago':new Date(ms).toLocaleDateString(undefined,{month:'short',day:'numeric'});
                 
@@ -7562,13 +7887,14 @@
                 const homeDisplayProf = (homeIsRepostCard && homeOrigProf) ? homeOrigProf : prof;
                 const homeDisplayName = homeDisplayProf.fname || homeDisplayAuthor;
 
+                if (homeIsRepostCard && !post.originalCreatedAt) setTimeout(() => window._fixRepostTime(post, 'hts-' + post.id, 'home'), 400);
                 card.innerHTML=`
                 ${homeRepostBanner}
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
                     <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:15px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
                     <div>
                         <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span></div>
-                        <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
+                        <div id="hts-${post.id}" style="font-size:11px;color:var(--text-muted);">${ts}</div>
                     </div>
                 </div>
                 ${bodyHtml}
@@ -7587,12 +7913,12 @@
                     </button>
                 </div>
                 <div id="hcomments-${post.id}" data-page-owner="${u}" style="display:none;margin-top:10px;border-top:1px solid var(--border-light);padding-top:10px;">
-                    <div id="hcomment-list-${post.id}" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;max-height:200px;overflow-y:auto;"></div>
+                    <div id="hcomment-list-${post.id}" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;max-height:360px;overflow-y:auto;"></div>
                     <div style="display:flex;gap:8px;align-items:center;">
                         <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:10px;" id="hc-my-av-${post.id}"></div>
                         <input id="hcinput-${post.id}" placeholder="Write a comment…" style="flex:1;background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:20px;padding:7px 14px;font-size:13px;font-family:var(--font-main);color:var(--text-dark);outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-light)'" onkeypress="if(event.key==='Enter'){submitHomeComment('${u}','${post.id}');event.preventDefault();}">
-                        <button onclick="event.stopPropagation();submitHomeComment('${u}','${post.id}')" style="background:var(--accent);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        <button onclick="event.stopPropagation();submitHomeComment('${u}','${post.id}')" style="background:var(--accent);color:var(--on-accent);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                         </button>
                     </div>
                 </div>`;
@@ -7705,6 +8031,201 @@
             }
         };
 
+        // ══════════════════════════════════════════════════════════════
+        // THREADED COMMENTS — shared by the homepage feed and userpages.
+        // A comment doc keeps a `replies` array; every reply can hold its own `replies`,
+        // so people can reply to a reply forever. Older replies (no id / no nested
+        // replies) still work: their id is derived from author + timestamp.
+        // ══════════════════════════════════════════════════════════════
+        const _cmUnsubs = new Map();
+        const _CM_MAX_INDENT = 5;   // after this depth the thread stops indenting so it stays readable on phones
+
+        function _cmEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+        function _cmRid(r) { return r.id || (r.author + '_' + r.createdAt); }
+        function _cmNewId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+        function _cmSafeName(u) { return String(u == null ? '' : u).replace(/[^a-zA-Z0-9_.-]/g, ''); }
+        function _cmFormatText(t) {
+            return _cmEsc(t).replace(/@([a-zA-Z0-9_]+(?:[.-][a-zA-Z0-9_]+)*)/g,
+                '<span class="cm-mention" onclick="event.stopPropagation();viewProfile(\'$1\')">@$1</span>');
+        }
+        function _cmFind(list, rids) {
+            let arr = list, cur = null;
+            for (const rid of rids) {
+                cur = (arr || []).find(r => _cmRid(r) === rid);
+                if (!cur) return null;
+                arr = cur.replies;
+            }
+            return cur;
+        }
+        async function _cmMutate(owner, postId, cid, mutator) {
+            const ref = doc(db, 'pages', owner, 'posts', postId, 'comments', cid);
+            await runTransaction(db, async (tx) => {
+                const snap = await tx.get(ref);
+                if (!snap.exists()) return;
+                const update = mutator(snap.data());
+                if (update) tx.update(ref, update);
+            });
+        }
+
+        function _cmNodeHtml(node, depth, cid, rids, ctx) {
+            const author = node.author || '';
+            const p = usersCache[author] || {};
+            const name = _cmEsc(p.fname || author);
+            const likes = node.likes || {};
+            const likeCount = Object.keys(likes).length;
+            const liked = !!likes[currentUser];
+            const replies = Array.isArray(node.replies) ? node.replies : [];
+            const av = ctx.compact ? (rids.length ? 22 : 26) : (rids.length ? 26 : 32);
+            const heart = `<svg width="11" height="11" viewBox="0 0 24 24" fill="${liked ? '#EE352E' : 'none'}" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+            const kids = replies.map(r => _cmNodeHtml(r, depth + 1, cid, rids.concat(_cmRid(r)), ctx)).join('');
+            return `<div class="cm-node" data-cid="${_cmEsc(cid)}" data-rpath="${_cmEsc(rids.join('|'))}" data-author="${_cmEsc(author)}">
+                <div class="cm-row">
+                    <div class="cm-av" style="width:${av}px;height:${av}px;">${getAvatarHTML(author, p, false)}</div>
+                    <div class="cm-main">
+                        <div class="cm-bubble"><span class="cm-name" onclick="${ctx.nameClick(author)}">${name}</span><span class="cm-text">${_cmFormatText(node.text)}</span></div>
+                        <div class="cm-actions">
+                            <button class="cm-btn" onclick="cmStartReply(this)">Reply</button>
+                            <button class="cm-btn${liked ? ' liked' : ''}" onclick="cmToggleLike(this)">${heart}<span>${likeCount > 0 ? likeCount : 'Like'}</span></button>
+                        </div>
+                        <div class="cm-slot"></div>
+                    </div>
+                </div>
+                ${kids ? `<div class="cm-children${depth >= _CM_MAX_INDENT ? ' flat' : ''}">${kids}</div>` : ''}
+            </div>`;
+        }
+
+        function _cmOpenReplyRow(node, value, focus) {
+            const slot = node.querySelector('.cm-slot');
+            if (!slot) return;
+            const author = node.dataset.author;
+            const row = document.createElement('div');
+            row.className = 'cm-reply-row';
+            row.innerHTML = `
+                <div class="cm-av" style="width:22px;height:22px;margin-top:0;">${getAvatarHTML(currentUser, usersCache[currentUser] || {}, false)}</div>
+                <input class="cm-reply-input" autocomplete="off" maxlength="500" placeholder="Reply to @${_cmEsc(author)}…">
+                <button class="cm-send" title="Send"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+                <button class="cm-cancel" title="Cancel">✕</button>`;
+            slot.appendChild(row);
+            const inp = row.querySelector('input');
+            inp.value = value;
+            inp.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); cmSubmitReply(row); }
+                else if (e.key === 'Escape') { row.remove(); }
+            });
+            row.querySelector('.cm-send').addEventListener('click', (e) => { e.stopPropagation(); cmSubmitReply(row); });
+            row.querySelector('.cm-cancel').addEventListener('click', (e) => { e.stopPropagation(); row.remove(); });
+            if (focus) { inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
+        }
+
+        window.cmStartReply = function(btn) {
+            const node = btn.closest('.cm-node');
+            const listEl = btn.closest('.cm-list');
+            if (!node || !listEl) return;
+            listEl.querySelectorAll('.cm-reply-row').forEach(el => el.remove());
+            _cmOpenReplyRow(node, '@' + node.dataset.author + ' ', true);
+        };
+
+        window.cmSubmitReply = async function(row) {
+            if (!currentUser) return;
+            const node = row.closest('.cm-node');
+            const listEl = row.closest('.cm-list');
+            if (!node || !listEl) return;
+            const inp = row.querySelector('input');
+            const text = inp.value.trim();
+            if (!text || text === '@' + node.dataset.author) return;   // nothing but the @mention
+            const rids = node.dataset.rpath ? node.dataset.rpath.split('|') : [];
+            inp.disabled = true;
+            try {
+                await _cmMutate(listEl.dataset.owner, listEl.dataset.post, node.dataset.cid, (data) => {
+                    const replies = data.replies || [];
+                    const target = rids.length ? _cmFind(replies, rids) : null;
+                    if (rids.length && !target) return null;
+                    const bucket = rids.length ? (target.replies = target.replies || []) : replies;
+                    bucket.push({ id: _cmNewId(), author: currentUser, text, createdAt: Date.now() });
+                    return { replies };
+                });
+                row.remove();
+                if (window.sendMentionNotifications) window.sendMentionNotifications(text, 'comment');
+            } catch (e) {
+                console.error('comment reply failed', e);
+                inp.disabled = false;
+            }
+        };
+
+        window.cmToggleLike = async function(btn) {
+            if (!currentUser) return;
+            const node = btn.closest('.cm-node');
+            const listEl = btn.closest('.cm-list');
+            if (!node || !listEl) return;
+            const rids = node.dataset.rpath ? node.dataset.rpath.split('|') : [];
+            // instant feedback — the live listener re-renders with the real numbers a moment later
+            const wasLiked = btn.classList.contains('liked');
+            const span = btn.querySelector('span');
+            const svg = btn.querySelector('svg');
+            const prev = parseInt(span && span.textContent, 10) || 0;
+            btn.classList.toggle('liked', !wasLiked);
+            if (svg) svg.setAttribute('fill', wasLiked ? 'none' : '#EE352E');
+            const next = Math.max(0, prev + (wasLiked ? -1 : 1));
+            if (span) span.textContent = next > 0 ? next : 'Like';
+            try {
+                await _cmMutate(listEl.dataset.owner, listEl.dataset.post, node.dataset.cid, (data) => {
+                    const target = rids.length ? _cmFind(data.replies || [], rids) : data;
+                    if (!target) return null;
+                    const likes = { ...(target.likes || {}) };
+                    if (likes[currentUser]) delete likes[currentUser]; else likes[currentUser] = true;
+                    target.likes = likes;
+                    return rids.length ? { replies: data.replies } : { likes };
+                });
+            } catch (e) {
+                console.error('comment like failed', e);
+                btn.classList.toggle('liked', wasLiked);
+                if (svg) svg.setAttribute('fill', wasLiked ? '#EE352E' : 'none');
+                if (span) span.textContent = prev > 0 ? prev : 'Like';
+            }
+        };
+
+        function _cmUnsubAll(ns) {
+            Array.from(_cmUnsubs.keys()).forEach(k => {
+                if (k.startsWith(ns + ':')) { try { _cmUnsubs.get(k)(); } catch (e) {} _cmUnsubs.delete(k); }
+            });
+        }
+
+        function _cmSubscribe(ns, listId, pageOwner, postId) {
+            const key = ns + ':' + postId;
+            if (_cmUnsubs.has(key)) { try { _cmUnsubs.get(key)(); } catch (e) {} }
+            const ctx = {
+                compact: ns === 'h',
+                nameClick: ns === 'h'
+                    ? (a) => `setSidebarMode('pages');setTimeout(()=>openPage('${_cmSafeName(a)}'),50)`
+                    : (a) => `viewProfile('${_cmSafeName(a)}')`
+            };
+            const q = query(collection(db, 'pages', pageOwner, 'posts', postId, 'comments'), orderBy('createdAt', 'asc'));
+            const unsub = onSnapshot(q, (snap) => {
+                const listEl = document.getElementById(listId);
+                if (!listEl) return;
+                listEl.classList.add('cm-list');
+                listEl.classList.toggle('cm-compact', ctx.compact);
+                listEl.dataset.owner = pageOwner;
+                listEl.dataset.post = postId;
+                // If someone is mid-reply, put their half-typed reply back after the list refreshes
+                let keep = null;
+                const openRow = listEl.querySelector('.cm-reply-row');
+                if (openRow) {
+                    const n = openRow.closest('.cm-node');
+                    const i = openRow.querySelector('input');
+                    if (n && i) keep = { cid: n.dataset.cid, rpath: n.dataset.rpath, value: i.value, focus: document.activeElement === i };
+                }
+                let html = '';
+                snap.forEach(d => { html += _cmNodeHtml(d.data(), 0, d.id, [], ctx); });
+                listEl.innerHTML = html;
+                if (keep) {
+                    const n = Array.from(listEl.querySelectorAll('.cm-node')).find(x => x.dataset.cid === keep.cid && x.dataset.rpath === keep.rpath);
+                    if (n) _cmOpenReplyRow(n, keep.value, keep.focus);
+                }
+            }, (err) => console.error('comments listener', err));
+            _cmUnsubs.set(key, unsub);
+        }
+
         // --- HOME FEED COMMENTS ---
         window.toggleHomeComments = function(postId, pageOwner) {
             const area = document.getElementById('hcomments-' + postId);
@@ -7720,49 +8241,7 @@
         };
 
         window.loadHomeComments = function(pageOwner, postId) {
-            const listEl = document.getElementById('hcomment-list-' + postId);
-            if (!listEl || !pageOwner) return;
-            const commentsRef = collection(db, 'pages', pageOwner, 'posts', postId, 'comments');
-            const q = query(commentsRef, orderBy('createdAt', 'asc'));
-            onSnapshot(q, (snap) => {
-                if (snap.empty) { listEl.innerHTML = ''; return; }
-                let html = '';
-                snap.forEach(d => {
-                    const c = d.data();
-                    const commentId = d.id;
-                    const p = usersCache[c.author] || {};
-                    const fname = p.fname || c.author;
-                    let text = (c.text || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-                    text = text.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;">@$1</span>');
-                    // Render replies
-                    const replies = c.replies || [];
-                    let repliesHtml = '';
-                    if (replies.length > 0) {
-                        repliesHtml = `<div style="margin-top:6px;margin-left:4px;border-left:2px solid var(--border-light);padding-left:10px;display:flex;flex-direction:column;gap:6px;">`;
-                        replies.forEach(r => {
-                            const rp = usersCache[r.author] || {};
-                            const rname = rp.fname || r.author;
-                            let rtext = (r.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-                            rtext = rtext.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;">@$1</span>');
-                            repliesHtml += `<div style="display:flex;gap:6px;align-items:flex-start;">
-                                <div style="width:22px;height:22px;border-radius:50%;overflow:hidden;flex-shrink:0;">${getAvatarHTML(r.author,rp,false)}</div>
-                                <div><span style="font-size:11px;font-weight:800;color:var(--text-dark);">${rname}</span><span style="font-size:12px;color:var(--text-dark);margin-left:5px;">${rtext}</span></div>
-                            </div>`;
-                        });
-                        repliesHtml += `</div>`;
-                    }
-                    html += `<div style="display:flex;gap:8px;align-items:flex-start;">
-                        <div style="width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0;">${getAvatarHTML(c.author, p, false)}</div>
-                        <div style="flex:1;">
-                            <div><span style="font-size:12px;font-weight:800;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${c.author}'),50)">${fname}</span>
-                            <span style="font-size:13px;color:var(--text-dark);margin-left:6px;">${text}</span></div>
-                            <button style="font-size:11px;font-weight:700;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:2px 0;font-family:var(--font-main);transition:color 0.15s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'" onclick="hcReplyToComment('${postId}','${pageOwner}','${c.author}','${commentId}',this)">Reply</button>
-                            ${repliesHtml}
-                        </div>
-                    </div>`;
-                });
-                listEl.innerHTML = html;
-            });
+            _cmSubscribe('h', 'hcomment-list-' + postId, pageOwner, postId);
         };
 
         window.submitHomeComment = async function(pageOwner, postId) {
@@ -7791,40 +8270,6 @@
                 }
                 if (window.sendMentionNotifications) window.sendMentionNotifications(text, 'comment');
             } catch(e) { console.error('submitHomeComment', e); }
-        };
-
-        // --- HOME FEED REPOST ---
-        window.hcReplyToComment = function(postId, pageOwner, commentAuthor, commentId, replyBtn) {
-            // Remove any existing inline reply row in this post's comment list
-            const listEl = document.getElementById('hcomment-list-' + postId);
-            if (!listEl) return;
-            listEl.querySelectorAll('.hc-inline-reply').forEach(el => el.remove());
-            const replyRow = document.createElement('div');
-            replyRow.className = 'hc-inline-reply';
-            replyRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:4px;margin-left:34px;';
-            replyRow.innerHTML = `
-                <div style="width:22px;height:22px;border-radius:50%;overflow:hidden;flex-shrink:0;">${getAvatarHTML(currentUser, usersCache[currentUser]||{}, false)}</div>
-                <input id="hc-reply-inp-${postId}" placeholder="Reply to @${commentAuthor}…" value="@${commentAuthor} " style="flex:1;background:var(--bg-sidebar);border:1px solid var(--border-light);border-radius:16px;padding:5px 12px;font-size:12px;font-family:var(--font-main);color:var(--text-dark);outline:none;transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-light)'" onkeypress="if(event.key==='Enter'){event.preventDefault();submitHcCommentReply('${postId}','${pageOwner}','${commentId}');}">
-                <button onclick="submitHcCommentReply('${postId}','${pageOwner}','${commentId}')" style="background:var(--accent);border:none;border-radius:50%;width:26px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>`;
-            replyBtn.closest('div[style*="flex:1"]').appendChild(replyRow);
-            const inp = replyRow.querySelector('input');
-            inp.focus();
-            inp.setSelectionRange(inp.value.length, inp.value.length);
-        };
-
-        window.submitHcCommentReply = async function(postId, pageOwner, commentId) {
-            const inp = document.getElementById('hc-reply-inp-' + postId);
-            if (!inp) return;
-            const text = inp.value.trim();
-            if (!text) return;
-            const ref = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
-            const snap = await getDoc(ref).catch(()=>null);
-            if (!snap || !snap.exists()) return;
-            const existing = snap.data().replies || [];
-            await updateDoc(ref, { replies: [...existing, { author: currentUser, text, createdAt: Date.now() }] }).catch(()=>{});
-            inp.closest('.hc-inline-reply')?.remove();
         };
 
         // --- HOME FEED REPOST ---
@@ -7860,6 +8305,7 @@
                         repostOf: postId,
                         repostBy: currentUser,
                         originalAuthor: pageOwner,
+                        originalCreatedAt: postData.originalCreatedAt || postData.createdAt || null,
                         text: postData.text || null,
                         richText: postData.richText || null,
                         imageData: postData.imageData || null,
@@ -8121,7 +8567,7 @@
             if (profile.song) {
                 const trackId = extractSpotifyTrackId(profile.song);
                 if (trackId) {
-                    const isDark = ['dark','midnight','stranger','bisexual','byler','von-simon'].some(t => document.body.classList.contains('theme-' + t));
+                    const isDark = ['dark','midnight','stranger','bisexual','byler','von-simon'].some(t => document.body.classList.contains('theme-' + t)) || (document.body.classList.contains('theme-custom') && document.body.dataset.customDark === '1');
                     const embedUrl = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator${isDark ? '&theme=0' : ''}`;
                     songContent.innerHTML = `<iframe src="${embedUrl}" width="100%" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" style="border-radius:10px; display:block;"></iframe>`;
                 } else {
@@ -8483,13 +8929,8 @@
                 if (username === 'talkpage') {
                     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#F6A800';
                     const talkpageInner = `<div style="width:100%;height:100%;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="60%" height="60%" fill="${accentColor}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>`;
-                    if (showRing && window.hasActiveStory && window.hasActiveStory(username)) {
-                        const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
-                        const stories = storiesCache[username] || [];
-                        const allSeen = stories.length > 0 && stories.every(s => seen[s.id]);
-                        const ringBg = allSeen ? 'var(--border-light)' : 'conic-gradient(var(--accent), #ff6b9d, var(--accent))';
-                        const ringShadow = allSeen ? 'none' : '0 0 8px rgba(246,168,0,0.5)';
-                        return `<div style="width:100%;height:100%;border-radius:50%;padding:3px;background:${ringBg};box-shadow:${ringShadow};display:flex;align-items:center;justify-content:center;box-sizing:border-box;">${talkpageInner}</div>`;
+                    if (showRing && window.hasUnseenStory && window.hasUnseenStory(username)) {
+                        return `<div style="width:100%;height:100%;border-radius:50%;padding:3px;background:conic-gradient(var(--accent), #ff6b9d, var(--accent));box-shadow:0 0 8px rgba(246,168,0,0.5);display:flex;align-items:center;justify-content:center;box-sizing:border-box;">${talkpageInner}</div>`;
                     }
                     return talkpageInner;
                 }
@@ -8499,13 +8940,9 @@
                     inner = `<img src="${p.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">`;
                 }
 
-                if (showRing && window.hasActiveStory && window.hasActiveStory(username)) {
-                    const seen = JSON.parse(localStorage.getItem('talkpage_seen_stories') || '{}');
-                    const stories = storiesCache[username] || [];
-                    const allSeen = stories.length > 0 && stories.every(s => seen[s.id]);
-                    
-                    const ringBg = allSeen ? 'var(--border-light)' : 'conic-gradient(var(--accent), #ff6b9d, var(--accent))';
-                    const ringShadow = allSeen ? 'none' : '0 0 8px rgba(246,168,0,0.5)';
+                if (showRing && window.hasUnseenStory && window.hasUnseenStory(username)) {
+                    const ringBg = 'conic-gradient(var(--accent), #ff6b9d, var(--accent))';
+                    const ringShadow = '0 0 8px rgba(246,168,0,0.5)';
                     
                     return `
                     <div style="width:100%; height:100%; border-radius:50%; padding:3px; background:${ringBg}; box-shadow:${ringShadow}; display:flex; align-items:center; justify-content:center; box-sizing:border-box;">
@@ -8926,6 +9363,7 @@
             { id:'default',    name:'Light Mode',       bg:'#FFFFFF', sidebar:'#F2F2F2', accent:'#F6A800', sent:'#F6A800', recv:'#EEEEEE' },
             { id:'dark',       name:'Dark Mode',        bg:'#121212', sidebar:'#1E1E1E', accent:'#FFD700', sent:'#FFD700', recv:'#2C2C2C' },
             { id:'midnight',   name:'Midnight',         bg:'#000000', sidebar:'#090909', accent:'#FFFFFF', sent:'#FFFFFF', recv:'#151515' },
+            { id:'custom',     name:'Custom Colour',    bg:'#1F2A44', sidebar:'#26334F', accent:'#FFFFFF', sent:'#FFFFFF', recv:'#2C3A57' },
             { id:'stranger',   name:'Stranger Things',  bg:'#050000', sidebar:'#0A0000', accent:'#FF0000', sent:'#F6A800', recv:'#1A0000' },
             { id:'rainbow',    name:'Pastel Rainbow',   bg:'#ffecd2', sidebar:'rgba(255,255,255,0.6)', accent:'#F6A800', sent:'#F6A800', recv:'rgba(255,255,255,0.8)' },
             { id:'lesbian',    name:'Lesbian',          bg:'#D52D00', sidebar:'rgba(255,255,255,0.7)', accent:'#D162A4', sent:'#D162A4', recv:'rgba(255,255,255,0.9)' },
@@ -8939,7 +9377,7 @@
             const dropdown = document.getElementById('theme-dropdown');
             if (!dropdown) return;
             dropdown.innerHTML = THEMES.map(t => `
-                <div class="theme-option" data-theme="${t.id}" onclick="setTheme('${t.id}'); closeThemeDropdown();">
+                <div class="theme-option" data-theme="${t.id}" onclick="${t.id === 'custom' ? 'openCustomColourModal()' : `setTheme('${t.id}')`}; closeThemeDropdown();">
                     <span style="flex:1;">${t.name}</span>
                 </div>`).join('');
             window.updateThemePickerBtn();
@@ -8966,6 +9404,39 @@
             if (dd) dd.classList.remove('open');
         };
         document.addEventListener('click', () => window.closeThemeDropdown());
+
+        // ── CUSTOM COLOUR THEME: pick a colour, preview live, press Done ──
+        let _customPrev = null;
+        window.previewCustomColour = function(color) {
+            const hexEl = document.getElementById('custom-colour-hex');
+            if (hexEl) hexEl.textContent = color.toUpperCase();
+            Array.from(document.body.classList).forEach(c => { if (c.startsWith('theme-')) document.body.classList.remove(c); });
+            document.body.classList.add('theme-custom');
+            window.applyCustomThemeVars(true, color);
+            if (!localStorage.getItem('talkpage_custom_accent')) {
+                document.documentElement.style.setProperty('--accent', window.isCustomColorDark(color) ? '#FFFFFF' : '#F6A800');
+            }
+        };
+        window.openCustomColourModal = function() {
+            _customPrev = { theme: localStorage.getItem('talkpage_theme') || 'default' };
+            const start = localStorage.getItem(CUSTOM_THEME_KEY) || CUSTOM_THEME_DEFAULT;
+            const inp = document.getElementById('custom-colour-input');
+            if (inp) inp.value = start;
+            window.previewCustomColour(start);
+            window.toggleModal('custom-colour-modal', true);
+        };
+        window.confirmCustomColour = function() {
+            const inp = document.getElementById('custom-colour-input');
+            if (inp) localStorage.setItem(CUSTOM_THEME_KEY, inp.value);
+            window.setTheme('custom');
+            _customPrev = null;
+            window.toggleModal('custom-colour-modal', false);
+        };
+        window.cancelCustomColour = function() {
+            window.toggleModal('custom-colour-modal', false);
+            if (_customPrev) window.setTheme(_customPrev.theme);
+            _customPrev = null;
+        };
 
         // ── LOAD MORE MESSAGES ────────────────────────────────────
         window.loadMoreMessages = async function() {
@@ -9346,6 +9817,8 @@
 
         window.closePage = function() {
             if (unsubPagePosts) { unsubPagePosts(); unsubPagePosts = null; }
+            _cmUnsubAll('p');
+            _unmountInlineComposer();
             activePageUser = null;
             
             // CRITICAL FIX: Ironclad reset for leaving the page
@@ -9410,8 +9883,15 @@
             }).join('');
         };
 
+        function _cssAccentHex() {
+            const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            return /^#[0-9a-f]{6}$/i.test(v) ? v : '#F6A800';
+        }
+
         window.openPage = async function(username) {
             activePageUser = username;
+            _cmUnsubAll('p');
+            _unmountInlineComposer();
             const profile = usersCache[username] || {};
             const fname = profile.fname || username;
             const accentColor = profile.pageAccent || 'var(--accent)';
@@ -9428,7 +9908,7 @@
             if (profile.song) {
                 const isLink = profile.song.startsWith('http');
                 songHtml = `
-                <a id="profile-song-link" ${isLink ? `href="${profile.song}" target="_blank"` : ''} style="font-size:13px; color:${accentColor}; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; text-decoration:none; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                <a id="profile-song-link" ${isLink ? `href="${profile.song}" target="_blank"` : ''} style="font-size:13px; color:${profile.songColor || accentColor}; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:6px; margin-top:8px; text-decoration:none; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> 
                     <span id="page-song-text">${isLink ? 'Loading track...' : profile.song}</span>
                 </a>`;
@@ -9449,22 +9929,12 @@
             }
 
             document.getElementById('page-title').innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; margin-top:10px; margin-bottom:0; position:relative;">
-                    <div style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:16px; margin-bottom:10px;">
-                        <div ${storyClickAttr} title="${hasStory ? 'View Story' : ''}">
-                            <div style="width:90px; height:90px; border-radius:50%; overflow:hidden;">
-                                ${getAvatarHTML(username, profile, true)}
-                            </div>
-                        </div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
-                            <div style="font-size:32px; font-weight:800; color:var(--text-dark); display:flex; align-items:center; letter-spacing:-0.5px; line-height:1;">
-                                ${fname}<span id="page-accent-text" style="color:${accentColor};">page</span>
-                            </div>
-                            <div id="page-accent2-text" style="font-size:14px; color:${accentColor2}; font-weight:600; margin-top:6px;">
-                                @${username}${pronounsText}
-                            </div>
-                        </div>
+                <div class="pg-hero">
+                    <div class="pg-hero-avatar" ${storyClickAttr} title="${hasStory ? 'View Story' : ''}">
+                        ${getAvatarHTML(username, profile, true)}
                     </div>
+                    <div class="pg-hero-name">${fname}<span id="page-accent-text" style="color:${accentColor};">page</span></div>
+                    <div class="pg-hero-handle" id="page-accent2-text" style="color:${accentColor2};">@${username}${pronounsText}</div>
                     <div class="page-stats-row" id="page-stats-row" style="display:none;">
                         <div class="page-stat-item"><span class="page-stat-num" id="pstat-posts">–</span><span class="page-stat-label">Posts</span></div>
                         <div class="page-stat-item"><span class="page-stat-num" id="pstat-friends">–</span><span class="page-stat-label">Friends</span></div>
@@ -9474,9 +9944,6 @@
                     ${songHtml}
                 </div>
             `;
-
-            const editBtn = document.getElementById('page-edit-btn');
-            if (editBtn) editBtn.style.display = username === currentUser ? 'flex' : 'none';
 
             const bgBtn = document.getElementById('page-bg-btn');
             if (bgBtn) bgBtn.style.display = username === currentUser ? 'flex' : 'none';
@@ -9491,9 +9958,18 @@
                     accentContainer.style.cssText = "display:flex; flex-direction:column; gap:12px; margin-top:15px; padding-top:15px; border-top:1px solid var(--border-light);";
                     accentContainer.innerHTML = `
                         <div style="display:flex; align-items:center; justify-content:space-between;">
-                            <label style="font-size:14px; color:var(--text-dark); font-weight:bold;">Accent 1 (Page & Song):</label>
+                            <label style="font-size:14px; color:var(--text-dark); font-weight:bold;">Accent 1 (Page):</label>
                             <div style="position:relative; width:36px; height:36px; border-radius:50%; overflow:hidden; border:2px solid var(--border-light); cursor:pointer;">
                                 <input type="color" id="page-accent-picker" title="Accent 1" style="position:absolute; top:-10px; left:-10px; width:60px; height:60px; border:none; cursor:pointer; padding:0; background:none;">
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <label style="font-size:14px; color:var(--text-dark); font-weight:bold;">Song Link:</label>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <button type="button" id="page-song-reset" class="pbg-mini-btn" title="Use Accent 1 again">Default</button>
+                                <div style="position:relative; width:36px; height:36px; border-radius:50%; overflow:hidden; border:2px solid var(--border-light); cursor:pointer;">
+                                    <input type="color" id="page-song-picker" title="Song link color" style="position:absolute; top:-10px; left:-10px; width:60px; height:60px; border:none; cursor:pointer; padding:0; background:none;">
+                                </div>
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -9512,7 +9988,23 @@
                         const txt = document.getElementById('page-accent-text');
                         if(txt) txt.style.color = newColor;
                         const songLnk = document.getElementById('profile-song-link');
+                        // the song link only follows Accent 1 until the user gives it its own colour
+                        if (songLnk && !(usersCache[currentUser] || {}).songColor) songLnk.style.color = newColor;
+                    });
+
+                    document.getElementById('page-song-picker').addEventListener('change', async (e) => {
+                        const newColor = e.target.value;
+                        await _saveUserPageField('songColor', newColor);
+                        const songLnk = document.getElementById('profile-song-link');
                         if (songLnk) songLnk.style.color = newColor;
+                    });
+                    document.getElementById('page-song-reset').addEventListener('click', async () => {
+                        await _saveUserPageField('songColor', null);
+                        const prof = usersCache[currentUser] || {};
+                        const songLnk = document.getElementById('profile-song-link');
+                        if (songLnk) songLnk.style.color = prof.pageAccent || 'var(--accent)';
+                        const sp = document.getElementById('page-song-picker');
+                        if (sp) sp.value = prof.pageAccent || _cssAccentHex();
                     });
 
                     document.getElementById('page-accent2-picker').addEventListener('change', async (e) => {
@@ -9525,13 +10017,17 @@
                 }
                 document.getElementById('page-accent-picker').value = accentColor;
                 document.getElementById('page-accent2-picker').value = accentColor2;
+                document.getElementById('page-song-picker').value = profile.songColor || (profile.pageAccent || _cssAccentHex());
                 accentContainer.style.display = 'flex';
             } else if (picker) {
                 const accentContainer = document.getElementById('accent-picker-container');
                 if (accentContainer) accentContainer.style.display = 'none';
             }
 
+            applyPageThemeFromProfile(profile);        // theme first: the overlay tint depends on it
+            applyPagePostColorFromProfile(profile);
             applyPageBgFromProfile(profile);
+            applyPageFontFromProfile(profile);
 
             // page-screen is a sibling of chat-area — hide chat-area, show page-screen
             const chatAreaEl = document.getElementById('chat-area');
@@ -9556,9 +10052,11 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                     </button>
                 </div>
+                <div id="page-inline-composer"></div>
                 <div id="page-posts-list"><div class="page-empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Loading...</div></div>
                 <div id="page-grid-view"></div>
             `;
+            _mountInlineComposer();
             window._pageViewMode = 'list';
             window.setPageView = function(mode) {
                 window._pageViewMode = mode;
@@ -9589,6 +10087,7 @@
                 renderPagePosts(posts, username, profile);
             }, (err) => {
                 console.error("Error loading posts:", err);
+                _unmountInlineComposer();
                 bodyEl.innerHTML = `<div class="page-empty">Failed to load posts.</div>`;
             });
         };
@@ -9619,6 +10118,12 @@
                 return;
             }
             
+            // Live updates rebuild the cards — remember which comment boxes were open and any half-typed comment
+            const _openAreas = new Set(Array.from(bodyEl.querySelectorAll('.page-comments-area.open')).map(a => a.id));
+            const _drafts = {};
+            bodyEl.querySelectorAll('.page-comment-input').forEach(i => { if (i.value) _drafts[i.id] = i.value; });
+            const _hadFocus = document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('page-comment-input') ? document.activeElement.id : null;
+
             if (listEl) listEl.innerHTML = '';
             if (gridEl) gridEl.innerHTML = '';
             
@@ -9629,9 +10134,10 @@
                 card.id = `page-post-${post.id}`;
                 
                 let ts = 'Just now';
-                if (post.createdAt) {
+                const _tsSrc = (post.type === 'repost' && post.originalCreatedAt) ? post.originalCreatedAt : post.createdAt;
+                if (_tsSrc) {
                     try {
-                        const ms = typeof post.createdAt.toMillis === 'function' ? post.createdAt.toMillis() : post.createdAt.seconds * 1000;
+                        const ms = typeof _tsSrc.toMillis === 'function' ? _tsSrc.toMillis() : _tsSrc.seconds * 1000;
                         const d = new Date(ms);
                         const h = d.getHours() % 12 || 12, m = d.getMinutes().toString().padStart(2,'0'), ap = d.getHours() >= 12 ? 'PM' : 'AM';
                         ts = `${d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})} at ${h}:${m} ${ap}`;
@@ -9700,23 +10206,25 @@
                 card.innerHTML = `
                     ${repostBannerHtml}
                     <div class="page-post-header">
-                        <div class="page-post-av">${getAvatarHTML(displayAuthor, displayProf, false)}</div>
+                        <div class="page-post-av" style="cursor:pointer;" onclick="openPage('${displayAuthor}')">${getAvatarHTML(displayAuthor, displayProf, false)}</div>
                         <div class="page-post-meta">
-                            <div class="page-post-name">${getFullName(displayAuthor)}</div>
-                            <div class="page-post-time">${ts}</div>
+                            <div class="page-post-name" style="cursor:pointer;" onclick="openPage('${displayAuthor}')">${getFullName(displayAuthor)}</div>
+                            <div class="page-post-time" id="pts-${post.id}">${ts}</div>
                         </div>
                         ${isOwn ? `<button onclick="deletePagePost('${post.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;margin-left:auto;transition:color 0.15s;" title="Delete post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : ''}
                     </div>
                     ${contentHtml}
                     <div class="page-post-actions">
-                        <button class="page-action-btn action-like ${isLiked ? 'liked' : ''}" onclick="togglePageLike('${username}', '${post.id}', this)">
-                            ${heartSVG}
+                        <div class="page-like-group">
+                            <button class="page-action-btn action-like ${isLiked ? 'liked' : ''}" id="plbtn-${post.id}" title="Like" onclick="togglePageLike('${username}', '${post.id}', this)">
+                                ${heartSVG}
+                            </button>
+                            <button class="page-like-count" id="plcnt-${post.id}" title="See who liked this" onclick="openLikesModal('${username}','${post.id}',event)">${likeCount > 0 ? likeCount : ''}</button>
+                        </div>
+                        <button class="page-action-btn action-comment" title="Comments" onclick="togglePageComments('${post.id}')">
+                            ${commentSVG} <span>${commentCount}</span>
                         </button>
-                        ${likeCount > 0 ? `<button class="page-action-btn" style="color:var(--text-muted);font-size:13px;font-weight:600;" onclick="openLikesModal('${username}','${post.id}',event)">${likeCount} ${likeCount===1?'like':'likes'}</button>` : ''}
-                        <button class="page-action-btn action-comment" onclick="togglePageComments('${post.id}')">
-                            ${commentSVG} <span>${commentCount > 0 ? commentCount + ' Comment' + (commentCount !== 1 ? 's' : '') : 'Comments'}</span>
-                        </button>
-                        <button class="page-action-btn action-repost ${isReposted ? 'reposted' : ''}" id="prbtn-${post.id}" onclick="pageRepost('${username}','${post.id}',this)">
+                        <button class="page-action-btn action-repost ${isReposted ? 'reposted' : ''}" title="Repost" id="prbtn-${post.id}" onclick="pageRepost('${username}','${post.id}',this)">
                             ${repostSVG} <span id="prcnt-${post.id}">${repostCount > 0 ? repostCount : ''}</span>
                         </button>
                     </div>
@@ -9734,6 +10242,11 @@
                     </div>
                 `;
                 if (listEl) listEl.appendChild(card);
+                if (isRepostCard && !post.originalCreatedAt) window._fixRepostTime(post, 'pts-' + post.id, 'page');
+                if (_openAreas.has('comments-' + post.id)) card.querySelector('.page-comments-area')?.classList.add('open');
+                const _ci = card.querySelector('.page-comment-input');
+                if (_ci && _drafts[_ci.id]) _ci.value = _drafts[_ci.id];
+                if (_ci && _hadFocus === _ci.id) _ci.focus();
                 loadPageComments(username, post.id);
 
                 // ── GRID VIEW THUMB (only posts with images) ─────
@@ -10097,6 +10610,7 @@
                     reposts[currentUser] = true;
                     await updateDoc(ref, { reposts });
                     const repostDoc = { type:'repost', repostOf:postId, repostBy:currentUser, originalAuthor:pageOwner,
+                        originalCreatedAt: postData.originalCreatedAt || postData.createdAt || null,
                         text:postData.text||null, richText:postData.richText||null, imageData:postData.imageData||null, images:postData.images||null,
                         song:postData.song||null, createdAt:serverTimestamp() };
                     Object.keys(repostDoc).forEach(k => repostDoc[k]===null && delete repostDoc[k]);
@@ -10130,7 +10644,9 @@
             btn.classList.toggle('liked', newLiked);
             const heartFill = newLiked ? '#EE352E' : 'none';
             const heartStroke = newLiked ? '#EE352E' : 'currentColor';
-            btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartStroke}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span>${count > 0 ? count : ''}</span>`;
+            btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="${heartFill}" stroke="${heartStroke}" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
+            const likeCntEl = document.getElementById('plcnt-' + postId);
+            if (likeCntEl) likeCntEl.textContent = count > 0 ? count : '';
             // Send notification only when liking (not unliking)
             if (newLiked && pageOwner !== currentUser) {
                 addDoc(collection(db, 'notifications'), {
@@ -10153,205 +10669,8 @@
             }
         };
 
-        window.replyToPageComment = function(postId, commentAuthor) {
-            // Remove any existing inline reply inputs
-            document.querySelectorAll('.inline-comment-reply').forEach(el => el.remove());
-
-            // Find the comment item for this author in this post
-            const list = document.getElementById(`comment-list-${postId}`);
-            if (!list) return;
-            const items = list.querySelectorAll('.page-comment-item');
-            let targetItem = null;
-            for (const item of items) {
-                const replyBtn = item.querySelector(`.page-comment-reply-btn[onclick*="'${commentAuthor}'"]`);
-                if (replyBtn) { targetItem = item; break; }
-            }
-            if (!targetItem) return;
-
-            const replyRow = document.createElement('div');
-            replyRow.className = 'inline-comment-reply';
-            replyRow.style.cssText = 'display:flex; align-items:center; gap:8px; margin-top:8px; margin-left:40px;';
-            replyRow.innerHTML = `
-                <div style="width:24px;height:24px;border-radius:50%;overflow:hidden;flex-shrink:0;">${getAvatarHTML(currentUser, usersCache[currentUser]||{}, false)}</div>
-                <input class="page-comment-input" placeholder="Reply to @${commentAuthor}..." style="flex:1;font-size:13px;" id="inline-reply-input-${postId}-${commentAuthor}" value="@${commentAuthor} ">
-                <button class="page-comment-send" onclick="submitInlineReply('${postId}', '${commentAuthor}')">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
-            `;
-            targetItem.appendChild(replyRow);
-            const inp = replyRow.querySelector('input');
-            inp.focus();
-            inp.setSelectionRange(inp.value.length, inp.value.length);
-            inp.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') { e.preventDefault(); window.submitInlineReply(postId, commentAuthor); }
-            });
-        };
-
-        window.submitInlineReply = async function(postId, commentAuthor) {
-            const inp = document.getElementById(`inline-reply-input-${postId}-${commentAuthor}`);
-            if (!inp) return;
-            const text = inp.value.trim();
-            if (!text) return;
-
-            // Derive pageOwner from comments-area data attribute
-            const commentsArea = document.getElementById(`comments-${postId}`);
-            const pageOwner = commentsArea?.dataset?.pageOwner || currentUser;
-
-            const commentsRef = collection(db, 'pages', pageOwner, 'posts', postId, 'comments');
-            const q = query(commentsRef, where('author', '==', commentAuthor), orderBy('createdAt', 'asc'), limit(1));
-            const snap = await getDocs(q).catch(()=>null);
-            if (!snap || snap.empty) { inp.closest('.inline-comment-reply')?.remove(); return; }
-
-            const commentDoc = snap.docs[0];
-            const existing = commentDoc.data().replies || [];
-            await updateDoc(doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentDoc.id), {
-                replies: [...existing, { author: currentUser, text, createdAt: Date.now() }]
-            }).catch(()=>{});
-
-            window.sendMentionNotifications(text, 'comment');
-            inp.closest('.inline-comment-reply')?.remove();
-        };
-
-        // NEW: Handles liking individual comments
-        window.togglePageCommentLike = async function(pageOwner, postId, commentId) {
-            if (!currentUser) return;
-            const commentRef = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
-            try {
-                const docSnap = await getDoc(commentRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    let likes = data.likes || {};
-                    if (likes[currentUser]) {
-                        delete likes[currentUser];
-                    } else {
-                        likes[currentUser] = true;
-                    }
-                    await updateDoc(commentRef, { likes });
-                }
-            } catch(e) {
-                console.error("Error liking comment:", e);
-            }
-        };
-
         window.loadPageComments = function(pageOwner, postId) {
-            const commentsRef = collection(db, 'pages', pageOwner, 'posts', postId, 'comments');
-            const q = query(commentsRef, orderBy('createdAt', 'asc'));
-            
-            onSnapshot(q, (snap) => {
-                const listEl = document.getElementById(`comment-list-${postId}`);
-                if (!listEl) return;
-                
-                if (snap.empty) {
-                    listEl.innerHTML = '';
-                    return;
-                }
-                
-                let html = '';
-                snap.forEach(d => {
-                    const c = d.data();
-                    const commentId = d.id;
-                    const p = usersCache[c.author] || {};
-                    const fname = p.fname || c.author;
-                    let text = c.text || '';
-                    
-                    text = text.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
-
-                    const likes = c.likes || {};
-                    const isLiked = likes[currentUser] === true;
-                    const likeCount = Object.keys(likes).length;
-                    const heartColor = isLiked ? '#EE352E' : 'var(--text-muted)';
-                    const heartFill = isLiked ? '#EE352E' : 'none';
-
-                    // Render nested replies
-                    const replies = c.replies || [];
-                    let repliesHtml = '';
-                    if (replies.length > 0) {
-                        repliesHtml = `<div style="margin-top:8px; margin-left:4px; border-left: 2px solid var(--border-light); padding-left:12px; display:flex; flex-direction:column; gap:8px;">`;
-                        replies.forEach(r => {
-                            const rp = usersCache[r.author] || {};
-                            const rname = rp.fname || r.author;
-                            let rtext = (r.text || '').replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
-                            repliesHtml += `
-                                <div style="display:flex; gap:8px; align-items:flex-start;">
-                                    <div style="width:24px; height:24px; border-radius:50%; overflow:hidden; flex-shrink:0; margin-top:2px;">${getAvatarHTML(r.author, rp, false)}</div>
-                                    <div>
-                                        <span style="font-size:12px; font-weight:800; color:var(--text-dark); cursor:pointer;" onclick="viewProfile('${r.author}')">${rname}</span>
-                                        <span style="font-size:13px; color:var(--text-dark); margin-left:6px;">${rtext}</span>
-                                    </div>
-                                </div>`;
-                        });
-                        repliesHtml += `</div>`;
-                    }
-
-                    html += `
-                        <div class="page-comment-item">
-                            <div style="width:32px; height:32px; border-radius:50%; overflow:hidden; flex-shrink:0;">
-                                ${getAvatarHTML(c.author, p, false)}
-                            </div>
-                            <div style="flex:1; display:flex; flex-direction:column; padding-top:2px;">
-                                <div style="font-size:14px; color:var(--text-dark);">
-                                    <div style="font-weight:800; cursor:pointer; margin-bottom:2px;" onclick="viewProfile('${c.author}')">${fname}</div>
-                                    <div style="line-height:1.4;">${text}</div>
-                                </div>
-                                <div style="display:flex; align-items:center; gap:12px; margin-top:4px;">
-                                    <button class="page-comment-reply-btn" onclick="replyToPageComment('${postId}', '${c.author}')">Reply</button>
-                                    <button class="page-comment-reply-btn" style="display:flex; align-items:center; gap:4px; color:${heartColor};" onclick="togglePageCommentLike('${pageOwner}', '${postId}', '${commentId}')">
-                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="${heartFill}" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                                        ${likeCount > 0 ? likeCount : 'Like'}
-                                    </button>
-                                </div>
-                                ${repliesHtml}
-                            </div>
-                        </div>
-                    `;
-                });
-                listEl.innerHTML = html;
-            });
-        };
-
-        window.toggleCommentLike = async function(pageOwner, postId, commentId, btn) {
-            if (!currentUser) return;
-            const ref = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
-            const snap = await getDoc(ref).catch(()=>null);
-            if (!snap || !snap.exists()) return;
-            const likes = snap.data().likes || {};
-            const isLiked = likes[currentUser] === true;
-            await updateDoc(ref, isLiked ? { [`likes.${currentUser}`]: deleteField() } : { [`likes.${currentUser}`]: true }).catch(()=>{});
-            const newLiked = !isLiked;
-            const newCount = Object.keys(likes).length + (newLiked ? 1 : -1);
-            btn.classList.toggle('liked', newLiked);
-            const fill = newLiked ? '#EE352E' : 'none';
-            const stroke = newLiked ? '#EE352E' : 'currentColor';
-            btn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="${fill}" stroke="${stroke}" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> ${newCount > 0 ? newCount : 'Like'}`;
-        };
-
-        window.toggleCommentReplies = function(postId, commentId) {
-            const el = document.getElementById(`replies-${postId}-${commentId}`);
-            if (el) {
-                el.classList.toggle('open');
-                if (el.classList.contains('open')) {
-                    const inp = document.getElementById(`reply-input-${postId}-${commentId}`);
-                    if (inp) inp.focus();
-                }
-            }
-        };
-
-        window.submitCommentReply = async function(pageOwner, postId, commentId) {
-            if (!currentUser) return;
-            const inp = document.getElementById(`reply-input-${postId}-${commentId}`);
-            if (!inp) return;
-            const text = inp.value.trim();
-            if (!text) return;
-            inp.value = '';
-            const ref = doc(db, 'pages', pageOwner, 'posts', postId, 'comments', commentId);
-            const snap = await getDoc(ref).catch(()=>null);
-            if (!snap) return;
-            const existing = snap.data().replies || [];
-            await updateDoc(ref, {
-                replies: [...existing, { author: currentUser, text, createdAt: Date.now() }]
-            }).catch(()=>{});
-            // Send mention notifications for reply
-            window.sendMentionNotifications(text, 'comment');
+            _cmSubscribe('p', 'comment-list-' + postId, pageOwner, postId);
         };
 
         window.submitPageComment = async function(pageOwner, postId) {
@@ -10378,18 +10697,118 @@
             window.sendMentionNotifications(text, 'comment');
         };
 
+        // ── PAGE FONTS ────────────────────────────────────────
+        // Each owner can pick a font for their userpage; everyone who visits sees it.
+        const PAGE_FONTS = [
+            { id: 'default',   label: 'Default',            stack: null },
+            { id: 'inter',     label: 'Inter',              stack: "'Inter', sans-serif",              gf: 'Inter:wght@400;700' },
+            { id: 'poppins',   label: 'Poppins',            stack: "'Poppins', sans-serif",            gf: 'Poppins:wght@400;700' },
+            { id: 'montserrat',label: 'Montserrat',         stack: "'Montserrat', sans-serif",         gf: 'Montserrat:wght@400;700' },
+            { id: 'nunito',    label: 'Nunito',             stack: "'Nunito', sans-serif",             gf: 'Nunito:wght@400;700' },
+            { id: 'quicksand', label: 'Quicksand',          stack: "'Quicksand', sans-serif",          gf: 'Quicksand:wght@400;700' },
+            { id: 'raleway',   label: 'Raleway',            stack: "'Raleway', sans-serif",            gf: 'Raleway:wght@400;700' },
+            { id: 'dmsans',    label: 'DM Sans',            stack: "'DM Sans', sans-serif",            gf: 'DM+Sans:wght@400;700' },
+            { id: 'comicneue', label: 'Comic Neue',         stack: "'Comic Neue', cursive",            gf: 'Comic+Neue:wght@400;700' },
+            { id: 'playfair',  label: 'Playfair Display',   stack: "'Playfair Display', serif",        gf: 'Playfair+Display:wght@400;700' },
+            { id: 'merriweather', label: 'Merriweather',    stack: "'Merriweather', serif",            gf: 'Merriweather:wght@400;700' },
+            { id: 'lora',      label: 'Lora',               stack: "'Lora', serif",                    gf: 'Lora:wght@400;700' },
+            { id: 'cormorant', label: 'Cormorant Garamond', stack: "'Cormorant Garamond', serif",      gf: 'Cormorant+Garamond:wght@400;700' },
+            { id: 'georgia',   label: 'Classic Serif',      stack: "Georgia, 'Times New Roman', serif" },
+            { id: 'pacifico',  label: 'Pacifico',           stack: "'Pacifico', cursive",              gf: 'Pacifico' },
+            { id: 'dancing',   label: 'Dancing Script',     stack: "'Dancing Script', cursive",        gf: 'Dancing+Script:wght@400;700' },
+            { id: 'caveat',    label: 'Caveat',             stack: "'Caveat', cursive",                gf: 'Caveat:wght@400;700' },
+            { id: 'shadows',   label: 'Shadows Into Light', stack: "'Shadows Into Light', cursive",    gf: 'Shadows+Into+Light' },
+            { id: 'marker',    label: 'Permanent Marker',   stack: "'Permanent Marker', cursive",      gf: 'Permanent+Marker' },
+            { id: 'lobster',   label: 'Lobster',            stack: "'Lobster', cursive",               gf: 'Lobster' },
+            { id: 'bebas',     label: 'Bebas Neue',         stack: "'Bebas Neue', sans-serif",         gf: 'Bebas+Neue' },
+            { id: 'oswald',    label: 'Oswald',             stack: "'Oswald', sans-serif",             gf: 'Oswald:wght@400;700' },
+            { id: 'righteous', label: 'Righteous',          stack: "'Righteous', sans-serif",          gf: 'Righteous' },
+            { id: 'abril',     label: 'Abril Fatface',      stack: "'Abril Fatface', serif",           gf: 'Abril+Fatface' },
+            { id: 'spacemono', label: 'Space Mono',         stack: "'Space Mono', monospace",          gf: 'Space+Mono:wght@400;700' },
+            { id: 'elite',     label: 'Special Elite',      stack: "'Special Elite', monospace",       gf: 'Special+Elite' },
+            { id: 'courier',   label: 'Typewriter',         stack: "'Courier New', Courier, monospace" },
+            { id: 'pressstart',label: 'Press Start 2P',     stack: "'Press Start 2P', monospace",      gf: 'Press+Start+2P' }
+        ];
+
+        // Fonts are fetched on demand, so nobody pays for them unless a page actually uses one.
+        function _loadPageFont(f) {
+            if (!f || !f.gf) return;
+            const id = 'gf-' + f.id;
+            if (document.getElementById(id)) return;
+            const link = document.createElement('link');
+            link.id = id;
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=' + f.gf + '&display=swap';
+            document.head.appendChild(link);
+        }
+
+        function applyPageFontFromProfile(profile) {
+            // The font only styles the profile header (name, handle, bio, song) — never the posts below it.
+            const screen = document.getElementById('page-screen');
+            if (screen) { screen.style.removeProperty('--font-main'); screen.style.removeProperty('font-family'); }
+            const head = document.getElementById('page-title');
+            if (!head) return;
+            const f = PAGE_FONTS.find(x => x.id === (profile && profile.pageFont));
+            if (f && f.stack) {
+                _loadPageFont(f);
+                head.style.setProperty('--font-main', f.stack);
+                head.style.fontFamily = f.stack;
+            } else {
+                head.style.removeProperty('--font-main');
+                head.style.removeProperty('font-family');
+            }
+        }
+
+        window.renderPageFontPicker = function() {
+            const box = document.getElementById('page-font-list');
+            if (!box) return;
+            const cur = (usersCache[currentUser] && usersCache[currentUser].pageFont) || 'default';
+            PAGE_FONTS.forEach(_loadPageFont);   // so each option previews in its own typeface
+            box.innerHTML = PAGE_FONTS.map(f =>
+                `<button type="button" class="pfont-opt${f.id === cur ? ' active' : ''}" data-font="${f.id}" onclick="setPageFont('${f.id}')" style="font-family:${f.stack || 'var(--font-main)'};">${f.label}</button>`
+            ).join('');
+        };
+
+        window.setPageFont = async function(id) {
+            const f = PAGE_FONTS.find(x => x.id === id);
+            if (!f || !currentUser) return;
+            document.querySelectorAll('#page-font-list .pfont-opt').forEach(b => b.classList.toggle('active', b.dataset.font === id));
+            if (usersCache[currentUser]) usersCache[currentUser].pageFont = id === 'default' ? null : id;
+            if (activePageUser === currentUser) applyPageFontFromProfile(usersCache[currentUser] || {});
+            await updateDoc(doc(db, 'users', currentUser), { pageFont: id === 'default' ? deleteField() : id }).catch(() => {});
+        };
+
+        // ── INLINE POST BOX ───────────────────────────────────
+        // The post composer lives in a hidden overlay; on your own page we move it into the page, above your posts.
+        function _unmountInlineComposer() {
+            const modal = document.getElementById('page-composer-modal');
+            const overlay = document.getElementById('page-composer-overlay');
+            if (modal && overlay && modal.parentElement !== overlay) overlay.appendChild(modal);
+        }
+        function _mountInlineComposer() {
+            const host = document.getElementById('page-inline-composer');
+            const modal = document.getElementById('page-composer-modal');
+            if (!host || !modal) return;
+            if (activePageUser !== currentUser) { host.style.display = 'none'; return; }
+            host.appendChild(modal);
+            host.style.display = 'block';
+            const av = document.getElementById('pc-unified-avatar');
+            if (av) av.innerHTML = getAvatarHTML(currentUser, usersCache[currentUser] || {}, false);
+        }
+
         // ── PAGE BACKGROUND ───────────────────────────────────
+        // Same rainbow set as the chat background picker
         const PAGE_BG_PRESETS = [
-            { color: '#ffffff', label: 'White' },
-            { color: '#f8f4ef', label: 'Warm' },
-            { color: '#f0f4ff', label: 'Cool Blue' },
-            { color: '#f4f0ff', label: 'Lavender' },
-            { color: '#f0fff4', label: 'Mint' },
-            { color: '#fff4f0', label: 'Peach' },
-            { color: '#0a0a0a', label: 'Black' },
-            { color: '#0B192C', label: 'Navy' },
-            { color: '#1a1a2e', label: 'Midnight' },
-            { color: '#1e0000', label: 'Dark Red' },
+            { color: '#FF4444', label: 'Red' },
+            { color: '#FF7700', label: 'Orange' },
+            { color: '#FFCC00', label: 'Yellow' },
+            { color: '#88CC00', label: 'Yellow-Green' },
+            { color: '#00BB44', label: 'Green' },
+            { color: '#00BBBB', label: 'Teal' },
+            { color: '#0088FF', label: 'Blue' },
+            { color: '#4455FF', label: 'Indigo' },
+            { color: '#8833FF', label: 'Violet' },
+            { color: '#FF33AA', label: 'Pink' },
         ];
 
         // Build swatch buttons
@@ -10401,15 +10820,39 @@
                 btn.className = 'pbg-swatch';
                 btn.style.background = p.color;
                 btn.title = p.label;
+                btn.dataset.color = p.color.toLowerCase();
                 btn.onclick = () => applyPageBg('color', p.color);
                 sw.appendChild(btn);
             });
+            // Post colour swatches: the rainbow set plus white / black
+            const pw = document.getElementById('ppc-swatches');
+            if (pw) {
+                [...PAGE_BG_PRESETS, { color: '#FFFFFF', label: 'White' }, { color: '#111111', label: 'Black' }].forEach(p => {
+                    const btn = document.createElement('div');
+                    btn.className = 'pbg-swatch';
+                    btn.style.background = p.color;
+                    btn.title = p.label;
+                    btn.dataset.color = p.color.toLowerCase();
+                    btn.onclick = () => setPagePostColor(p.color);
+                    pw.appendChild(btn);
+                });
+            }
         })();
 
         window.togglePageBgPicker = function(e) {
             e.stopPropagation();
             const picker = document.getElementById('page-bg-picker');
             picker.style.display = picker.style.display === 'block' ? 'none' : 'block';
+            if (picker.style.display === 'block') {
+                renderPageFontPicker();
+                renderPageThemePicker();
+                const prof = usersCache[currentUser] || {};
+                const o = Math.round(((prof.pageBg && prof.pageBg.overlay) || 0) * 100);
+                const sl = document.getElementById('page-overlay-slider'); if (sl) sl.value = o;
+                const pc = document.getElementById('page-overlay-pct'); if (pc) pc.textContent = o + '%';
+                const cc = document.getElementById('ppc-custom'); if (cc) cc.value = prof.pagePostColor || '#ffffff';
+                _markActiveSwatches();
+            }
         };
 
         document.addEventListener('click', (e) => {
@@ -10419,32 +10862,78 @@
             }
         });
 
+        // Overlay tint follows the theme the page is actually shown in (forced page theme, else the viewer's own)
+        const _PAGE_TINTS = { 'dark':'18,18,18', 'midnight':'0,0,0', 'stranger':'5,0,0', 'byler':'11,25,44', 'von-simon':'17,0,0', 'bisexual':'10,10,15' };
+        function _pageOverlayTint() {
+            const screen = document.getElementById('page-screen');
+            const forced = screen && screen.dataset.ptheme;
+            if (forced) return _PAGE_TINTS[forced] || '255,255,255';
+            return window.getOverlayTint();
+        }
+
+        // One layered background so the tint never touches the posts themselves (same trick as chats)
+        function _setPageBgStyle(screen, bg) {
+            if (!bg) { screen.style.background = ''; return; }
+            if (bg.type === 'color' && bg.value) {
+                screen.style.background = bg.value;
+            } else if (bg.type === 'image' && bg.value) {
+                const o = bg.overlay || 0;
+                const t = _pageOverlayTint();
+                screen.style.background = o > 0
+                    ? `linear-gradient(rgba(${t},${o}),rgba(${t},${o})), url('${bg.value}') center center / cover no-repeat`
+                    : `url('${bg.value}') center center / cover no-repeat`;
+            } else {
+                screen.style.background = '';
+            }
+        }
+
+        function _markActiveSwatches() {
+            const prof = usersCache[currentUser] || {};
+            const bgc = (prof.pageBg && prof.pageBg.type === 'color' && prof.pageBg.value || '').toLowerCase();
+            document.querySelectorAll('#pbg-swatches .pbg-swatch').forEach(el => el.classList.toggle('active', !!bgc && el.dataset.color === bgc));
+            const pc = (prof.pagePostColor || '').toLowerCase();
+            document.querySelectorAll('#ppc-swatches .pbg-swatch').forEach(el => el.classList.toggle('active', !!pc && el.dataset.color === pc));
+        }
+
         window.applyPageBg = async function(type, value) {
             const screen = document.getElementById('page-screen');
+            const prof = (currentUser && usersCache[currentUser]) || {};
+            const overlay = (prof.pageBg && prof.pageBg.overlay) || 0;
             let bgData = null;
 
             if (type === 'color' && value) {
-                screen.style.background = value;
-                bgData = { type: 'color', value };
-                // Update active swatch
-                document.querySelectorAll('.pbg-swatch').forEach(s => s.classList.toggle('active', s.style.background === value || s.style.backgroundColor === value));
+                bgData = { type: 'color', value, overlay };
             } else if (type === 'image' && value) {
-                screen.style.background = `url('${value}') center center / cover no-repeat`;
-                bgData = { type: 'image', value };
+                bgData = { type: 'image', value, overlay };
             } else if (type === 'reset') {
-                screen.style.background = '';
                 bgData = null;
-                document.querySelectorAll('.pbg-swatch').forEach(s => s.classList.remove('active'));
+                const sl = document.getElementById('page-overlay-slider'); if (sl) sl.value = 0;
+                const pc = document.getElementById('page-overlay-pct'); if (pc) pc.textContent = '0%';
             }
+            _setPageBgStyle(screen, bgData);
+            if (usersCache[currentUser]) usersCache[currentUser].pageBg = bgData;
+            _markActiveSwatches();
 
             // Save to user profile
             if (currentUser) {
                 await updateDoc(doc(db, 'users', currentUser), { pageBg: bgData || deleteField() }).catch(()=>{});
-                if (usersCache[currentUser]) usersCache[currentUser].pageBg = bgData;
             }
 
             const picker = document.getElementById('page-bg-picker');
             if (type === 'reset' && picker) picker.style.display = 'none';
+        };
+
+        window.applyPageOverlay = async function(val, save) {
+            const opacity = parseInt(val) / 100;
+            const pct = document.getElementById('page-overlay-pct');
+            if (pct) pct.textContent = val + '%';
+            const prof = usersCache[currentUser];
+            if (!prof || !prof.pageBg) return;            // overlay only makes sense on top of a background
+            const newBg = { ...prof.pageBg, overlay: opacity };
+            prof.pageBg = newBg;
+            const screen = document.getElementById('page-screen');
+            if (screen && activePageUser === currentUser) _setPageBgStyle(screen, newBg);
+            if (save) await updateDoc(doc(db, 'users', currentUser), { pageBg: newBg }).catch(()=>{});
         };
 
         window.handlePageBgImage = function(e) {
@@ -10466,12 +10955,138 @@
 
         function applyPageBgFromProfile(profile) {
             const screen = document.getElementById('page-screen');
-            const bg = profile.pageBg;
-            screen.style.background = '';
-            if (!bg) return;
-            if (bg.type === 'color' && bg.value) screen.style.background = bg.value;
-            else if (bg.type === 'image' && bg.value) screen.style.background = `url('${bg.value}') center center / cover no-repeat`;
+            _setPageBgStyle(screen, profile.pageBg || null);
         }
+
+        // Re-tint an image overlay if the viewer switches their own theme while a page is open
+        new MutationObserver(() => {
+            if (!activePageUser) return;
+            const screen = document.getElementById('page-screen');
+            if (!screen || screen.dataset.ptheme) return;
+            const prof = usersCache[activePageUser] || {};
+            if (prof.pageBg && prof.pageBg.type === 'image' && prof.pageBg.overlay > 0) _setPageBgStyle(screen, prof.pageBg);
+        }).observe(document.body, { attributes: true, attributeFilter: ['class', 'data-custom-color'] });
+
+        // ── FORCED PAGE THEME ─────────────────────────────────
+        const _PAGE_THEME_ACCENTS = { default:'#F6A800', dark:'#FFD700', midnight:'#FFFFFF', stranger:'#FF0000', rainbow:'#ff9a9e', lesbian:'#D52D00', bisexual:'#D60270', trans:'#5BCEFA', byler:'#FFD700', 'von-simon':'#CC0000' };
+
+        // Builds "#page-screen[data-ptheme=X] { ...same variables as body.theme-X }" from the real theme rules,
+        // so every theme (and any added later) works on a single page without touching the rest of the app.
+        function _ensurePageThemeCSS() {
+            if (document.getElementById('page-theme-css')) return;
+            const ids = THEMES.map(t => t.id).filter(id => id !== 'custom' && id !== 'default');
+            const keepVar = (name) => name.startsWith('--') && !['--accent', '--on-accent', '--font-main'].includes(name);
+            let rootVars = '';
+            const themeBlocks = {};
+            for (const sheet of Array.from(document.styleSheets)) {
+                let rules; try { rules = sheet.cssRules; } catch (e) { continue; }
+                if (!rules) continue;
+                for (const r of Array.from(rules)) {
+                    if (r.type !== 1) continue;
+                    const sel = (r.selectorText || '').trim();
+                    if (sel === ':root') {
+                        for (let i = 0; i < r.style.length; i++) {
+                            const n = r.style[i];
+                            if (keepVar(n)) rootVars += `${n}:${r.style.getPropertyValue(n)};`;
+                        }
+                    } else {
+                        const m = sel.match(/^body\.theme-([\w-]+)$/);
+                        if (m && ids.includes(m[1])) themeBlocks[m[1]] = (themeBlocks[m[1]] || '') + r.style.cssText;
+                    }
+                }
+            }
+            // light mode = the :root defaults; every other theme layers its own rule over those defaults
+            let css = `#page-screen[data-ptheme="default"]{${rootVars}}`;
+            ids.forEach(id => { css += `#page-screen[data-ptheme="${id}"]{${rootVars}${themeBlocks[id] || ''}}`; });
+            const el = document.createElement('style');
+            el.id = 'page-theme-css';
+            el.textContent = css;
+            document.head.appendChild(el);
+        }
+
+        function _onAccentFor(hex) {
+            const L = _relLum(_hexToRgb(hex));
+            return ((1.05) / (L + 0.05)) > ((L + 0.05) / 0.05) ? '#FFFFFF' : '#000000';
+        }
+
+        function applyPageThemeFromProfile(profile) {
+            const screen = document.getElementById('page-screen');
+            if (!screen) return;
+            const id = profile && profile.pageTheme;
+            const known = id && (id === 'default' || THEMES.some(t => t.id === id && t.id !== 'custom'));
+            if (!known) {
+                screen.removeAttribute('data-ptheme');
+                screen.style.removeProperty('--accent');
+                screen.style.removeProperty('--on-accent');
+                return;
+            }
+            _ensurePageThemeCSS();
+            screen.setAttribute('data-ptheme', id);
+            const acc = _PAGE_THEME_ACCENTS[id] || '#F6A800';
+            screen.style.setProperty('--accent', acc);
+            screen.style.setProperty('--on-accent', _onAccentFor(acc));
+        }
+
+        async function _saveUserPageField(field, value) {
+            if (!currentUser) return;
+            if (usersCache[currentUser]) {
+                if (value == null) delete usersCache[currentUser][field]; else usersCache[currentUser][field] = value;
+            }
+            await updateDoc(doc(db, 'users', currentUser), { [field]: value == null ? deleteField() : value }).catch(() => {});
+        }
+
+        window.renderPageThemePicker = function() {
+            const box = document.getElementById('page-theme-list');
+            if (!box) return;
+            const cur = (usersCache[currentUser] && usersCache[currentUser].pageTheme) || 'none';
+            const opts = [{ id: 'none', name: "Viewer's own theme", bg: 'linear-gradient(135deg,#FFFFFF 50%,#121212 50%)' }]
+                .concat(THEMES.filter(t => t.id !== 'custom').map(t => ({ id: t.id, name: t.name, bg: t.bg })));
+            box.innerHTML = opts.map(o =>
+                `<button type="button" class="ptheme-opt${o.id === cur ? ' active' : ''}" data-theme="${o.id}" onclick="setPageTheme('${o.id}')">${o.name}</button>`
+            ).join('');
+        };
+
+        window.setPageTheme = async function(id) {
+            if (!currentUser) return;
+            const val = id === 'none' ? null : id;
+            await _saveUserPageField('pageTheme', val);
+            document.querySelectorAll('#page-theme-list .ptheme-opt').forEach(b => b.classList.toggle('active', b.dataset.theme === id));
+            if (activePageUser === currentUser) {
+                const prof = usersCache[currentUser] || {};
+                applyPageThemeFromProfile(prof);
+                applyPageBgFromProfile(prof);   // overlay tint depends on the theme
+            }
+        };
+
+        // ── POST COLOUR ───────────────────────────────────────
+        function applyPagePostColorFromProfile(profile) {
+            const screen = document.getElementById('page-screen');
+            if (!screen) return;
+            const c = profile && profile.pagePostColor;
+            ['--pp-bg','--pp-side','--pp-text','--pp-muted','--pp-border'].forEach(v => screen.style.removeProperty(v));
+            if (!c) { screen.removeAttribute('data-pcolor'); return; }
+            const rgb = _hexToRgb(c);
+            const L = _relLum(rgb);
+            const lightText = ((1.05) / (L + 0.05)) > ((L + 0.05) / 0.05);   // white text if it contrasts better
+            const toward = lightText ? [255,255,255] : [0,0,0];
+            screen.setAttribute('data-pcolor', '1');
+            screen.style.setProperty('--pp-bg', c);
+            screen.style.setProperty('--pp-side', _rgbCss(_mixRgb(rgb, toward, 0.1)));
+            screen.style.setProperty('--pp-text', lightText ? '#F2F2F2' : '#111111');
+            screen.style.setProperty('--pp-muted', _rgbCss(_mixRgb(rgb, toward, 0.6)));
+            screen.style.setProperty('--pp-border', _rgbCss(_mixRgb(rgb, toward, 0.2)));
+        }
+
+        window.previewPagePostColor = function(color) {
+            if (activePageUser === currentUser) applyPagePostColorFromProfile({ pagePostColor: color });
+        };
+
+        window.setPagePostColor = async function(color) {
+            await _saveUserPageField('pagePostColor', color || null);
+            if (activePageUser === currentUser) applyPagePostColorFromProfile(usersCache[currentUser] || {});
+            const cc = document.getElementById('ppc-custom'); if (cc && color) cc.value = color;
+            _markActiveSwatches();
+        };
 
         // ── REPORT MESSAGE ────────────────────────────────────────
         let _reportMsgId = null, _reportMsgText = null, _reportSender = null;
@@ -11050,7 +11665,7 @@
             localStorage.setItem('talkpage_sidebar_collapsed', sb.classList.contains('collapsed') ? '1' : '0');
         };
         // Restore sidebar collapse state on load
-        if (localStorage.getItem('talkpage_sidebar_collapsed') === '1') {
+        if (localStorage.getItem('talkpage_sidebar_collapsed') === '1' && !window.matchMedia('(max-width: 768px)').matches) {
             document.getElementById('sidebar')?.classList.add('collapsed');
         }
 
@@ -11086,7 +11701,7 @@
                 const o = bg.overlay || 0;
                 if (o > 0) {
                     // Layer: dark gradient on top, image underneath — all in one background property
-                    screen.style.background = `linear-gradient(rgba(0,0,0,${o}),rgba(0,0,0,${o})), url('${bg.value}') center/cover no-repeat`;
+                    screen.style.background = `linear-gradient(rgba(${window.getOverlayTint()},${o}),rgba(${window.getOverlayTint()},${o})), url('${bg.value}') center/cover no-repeat`;
                 } else {
                     screen.style.background = `url('${bg.value}') center/cover no-repeat`;
                 }
@@ -11158,6 +11773,23 @@
             const chatObj = chatsCache.find(c => c.id === chatId);
             _setChatBgStyle(screen, chatObj && chatObj.background ? chatObj.background : null);
         }
+
+        // Re-tint overlays when the theme (or custom colour) changes
+        window.refreshOverlayTints = function() {
+            const tint = window.getOverlayTint();
+            const home = document.getElementById('no-chat-screen');
+            const layer = document.getElementById('home-overlay-layer');
+            if (home && layer) {
+                const o = parseFloat(home.dataset.overlayOpacity || '0') || 0;
+                layer.style.background = `rgba(${tint},${o})`;
+            }
+            if (activeChatId) {
+                const chatObj = chatsCache.find(c => c.id === activeChatId);
+                if (chatObj && chatObj.background && chatObj.background.type === 'image' && chatObj.background.overlay > 0) _applySavedChatBg(activeChatId);
+            }
+        };
+        new MutationObserver(() => window.refreshOverlayTints())
+            .observe(document.body, { attributes: true, attributeFilter: ['class', 'data-custom-color'] });
 
         window.loadRecentPagePosts = async function() {
             // Support both possible container IDs
@@ -11770,13 +12402,13 @@
                 </label>
 
                 <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:6px;">
-                    Dark Overlay Opacity
+                    Overlay Opacity
                     <span id="home-overlay-pct" style="font-weight:700;color:var(--accent);float:right;">0%</span>
                 </span>
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
                     <span style="font-size:11px;color:var(--text-muted);">None</span>
                     <input type="range" id="home-overlay-slider" min="0" max="80" value="0" style="flex:1;accent-color:var(--accent);" oninput="applyHomeOverlay(this.value)">
-                    <span style="font-size:11px;color:var(--text-muted);">Dark</span>
+                    <span style="font-size:11px;color:var(--text-muted);">Max</span>
                 </div>
 
                 <div style="display:flex;gap:8px;">
@@ -11793,7 +12425,7 @@
             const pct = document.getElementById('home-overlay-pct');
             if (pct) pct.textContent = val + '%';
             const opacity = (parseInt(val) / 100).toFixed(2);
-            if (overlayEl) overlayEl.style.background = `rgba(0,0,0,${opacity})`;
+            if (overlayEl) overlayEl.style.background = `rgba(${window.getOverlayTint()},${opacity})`;
             // Also keep CSS var in sync for legacy references
             const screen = document.getElementById('no-chat-screen');
             if (screen) { screen.dataset.overlayOpacity = opacity; screen.style.setProperty('--home-overlay-opacity', opacity); }
@@ -11861,7 +12493,7 @@
                 screen.style.setProperty('--home-overlay-opacity', String(bg.overlay));
                 screen.dataset.overlayOpacity = String(bg.overlay);
                 const overlayEl = document.getElementById('home-overlay-layer');
-                if (overlayEl) overlayEl.style.background = `rgba(0,0,0,${bg.overlay})`;
+                if (overlayEl) overlayEl.style.background = `rgba(${window.getOverlayTint()},${bg.overlay})`;
                 // Sync slider if picker is open
                 const slider = document.getElementById('home-overlay-slider');
                 const pct = document.getElementById('home-overlay-pct');

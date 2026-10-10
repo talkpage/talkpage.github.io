@@ -1448,6 +1448,43 @@
             /* background customizer sits just below the bar */
             body.mobile-home-bar #home-bg-btn { top: calc(var(--home-bar-h, 90px) + 8px) !important; }
         }
+
+        /* ── PATCH: edit posts / delete comments ── */
+        .post-edited-tag { color: var(--text-muted); font-weight: 600; }
+        .post-edit-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; transition: color 0.15s; display: inline-flex; align-items: center; }
+        .post-edit-btn:hover { color: var(--accent); }
+        .cm-btn.cm-del:hover { color: #EE352E; }
+        .cm-bubble.cm-deleted { color: var(--text-muted); font-style: italic; font-size: 13px; }
+        #edit-post-overlay { position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+            padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+        #edit-post-card { background: var(--bg-main); color: var(--text-dark); border: 1px solid var(--border-light); border-radius: 18px; width: 100%; max-width: 520px; max-height: 100%; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--font-main); overflow: hidden; }
+        #edit-post-card .ep-head { padding: 16px 18px 8px; font-size: 16px; font-weight: 800; }
+        #edit-post-editor { margin: 4px 18px 0; padding: 12px 14px; min-height: 120px; max-height: 50vh; overflow-y: auto; border: 1px solid var(--border-light); border-radius: 12px; background: var(--bg-sidebar); font-size: 16px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; outline: none; }
+        #edit-post-editor:focus { border-color: var(--accent); }
+        #edit-post-card .ep-note { padding: 6px 18px 0; font-size: 11px; color: var(--text-muted); }
+        #edit-post-card .ep-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 18px 16px; }
+        #edit-post-card .ep-actions button { border: none; border-radius: 20px; padding: 9px 20px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font-main); }
+        #edit-post-card .ep-cancel { background: var(--bg-sidebar); color: var(--text-dark); }
+        #edit-post-card .ep-save { background: var(--accent); color: #000; }
+        #edit-post-card .ep-save:disabled { opacity: 0.5; cursor: default; }
+
+        /* ── PATCH: report posts / comments ── */
+        .rc-overlay { position: fixed; inset: 0; z-index: 100000; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+            padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+        .rc-card { background: var(--bg-main); color: var(--text-dark); border: 1px solid var(--border-light); border-radius: 18px; width: 100%; max-width: 420px; max-height: 100%; overflow-y: auto; padding: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--font-main); }
+        .rc-head { font-size: 16px; font-weight: 800; }
+        .rc-sub { font-size: 13px; color: var(--text-muted); margin: 4px 0 12px; }
+        .rc-opts { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+        .rc-opt { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; cursor: pointer; font-size: 14px; }
+        .rc-opt:hover { background: var(--bg-sidebar); }
+        .rc-opt input { accent-color: #EE352E; width: 16px; height: 16px; margin: 0; }
+        .rc-details { width: 100%; box-sizing: border-box; border: 1.5px solid var(--border-light); border-radius: 10px; padding: 10px 12px; font-size: 16px; font-family: var(--font-main); background: var(--bg-sidebar); color: var(--text-dark); resize: vertical; outline: none; }
+        .rc-details:focus { border-color: var(--accent); }
+        .rc-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+        .rc-actions button { border: none; border-radius: 20px; padding: 9px 20px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: var(--font-main); }
+        .rc-cancel { background: var(--bg-sidebar); color: var(--text-dark); }
+        .rc-send { background: #EE352E; color: #fff; }
+        .rc-send:disabled { opacity: 0.45; cursor: default; }
 </style>
 </head>
 <body>
@@ -8013,11 +8050,13 @@
                 if (homeIsRepostCard && !post.originalCreatedAt) setTimeout(() => window._fixRepostTime(post, 'hts-' + post.id, 'home'), 400);
                 card.innerHTML=`
                 ${homeRepostBanner}
+                ${(currentUser && (homeIsRepostCard && homeOrigAuthor ? homeOrigAuthor : u) !== currentUser) ? `<button class="post-edit-btn" style="position:absolute;top:10px;right:10px;z-index:2;" onclick="event.stopPropagation();reportPost('${homeIsRepostCard && homeOrigAuthor ? homeOrigAuthor : u}','${homeIsRepostCard ? (post.repostOf || post.id) : post.id}')" title="Report post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button>` : ''}
+                ${(u === currentUser && !homeIsRepostCard) ? `<button class="post-edit-btn" style="position:absolute;top:10px;right:10px;z-index:2;" onclick="event.stopPropagation();editPost('${u}','${post.id}')" title="Edit post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>` : ''}
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
                     <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:15px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
                     <div>
                         <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span></div>
-                        <div id="hts-${post.id}" style="font-size:11px;color:var(--text-muted);">${ts}</div>
+                        <div id="hts-${post.id}" style="font-size:11px;color:var(--text-muted);">${ts}${post.edited && !homeIsRepostCard ? ' · edited' : ''}</div>
                     </div>
                 </div>
                 ${bodyHtml}
@@ -8059,7 +8098,7 @@
         // Signature of everything that requires a card rebuild (likes / comments / reposts are updated in place)
         function _hfSig(p) {
             const im = getPostImages(p);
-            return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song,
+            return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song, p.edited ? 1 : 0,
                     im.length, im.map(x => x.length + ':' + x.slice(-24)).join(',')].join('|');
         }
         function _hfPlace(feed, el, idx) {
@@ -8201,15 +8240,24 @@
             const av = ctx.compact ? (rids.length ? 22 : 26) : (rids.length ? 26 : 32);
             const heart = `<svg width="11" height="11" viewBox="0 0 24 24" fill="${liked ? '#EE352E' : 'none'}" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
             const kids = replies.map(r => _cmNodeHtml(r, depth + 1, cid, rids.concat(_cmRid(r)), ctx)).join('');
+            const isDeleted = !!node.deleted;
+            const canDelete = !isDeleted && !!currentUser && author === currentUser;
+            const canReport = !isDeleted && !!currentUser && author !== currentUser;
+            const bubbleHtml = isDeleted
+                ? `<div class="cm-bubble cm-deleted">Comment deleted</div>`
+                : `<div class="cm-bubble"><span class="cm-name" onclick="${ctx.nameClick(author)}">${name}</span><span class="cm-text">${_cmFormatText(node.text)}</span></div>`;
+            const actionsHtml = isDeleted ? '' : `<div class="cm-actions">
+                            <button class="cm-btn" onclick="cmStartReply(this)">Reply</button>
+                            <button class="cm-btn${liked ? ' liked' : ''}" onclick="cmToggleLike(this)">${heart}<span>${likeCount > 0 ? likeCount : 'Like'}</span></button>
+                            ${canDelete ? `<button class="cm-btn cm-del" onclick="cmDelete(this)">Delete</button>` : ''}
+                            ${canReport ? `<button class="cm-btn cm-del" onclick="cmReport(this)">Report</button>` : ''}
+                        </div>`;
             return `<div class="cm-node" data-cid="${_cmEsc(cid)}" data-rpath="${_cmEsc(rids.join('|'))}" data-author="${_cmEsc(author)}">
                 <div class="cm-row">
                     <div class="cm-av" style="width:${av}px;height:${av}px;">${getAvatarHTML(author, p, false)}</div>
                     <div class="cm-main">
-                        <div class="cm-bubble"><span class="cm-name" onclick="${ctx.nameClick(author)}">${name}</span><span class="cm-text">${_cmFormatText(node.text)}</span></div>
-                        <div class="cm-actions">
-                            <button class="cm-btn" onclick="cmStartReply(this)">Reply</button>
-                            <button class="cm-btn${liked ? ' liked' : ''}" onclick="cmToggleLike(this)">${heart}<span>${likeCount > 0 ? likeCount : 'Like'}</span></button>
-                        </div>
+                        ${bubbleHtml}
+                        ${actionsHtml}
                         <div class="cm-slot"></div>
                     </div>
                 </div>
@@ -8245,7 +8293,7 @@
             const listEl = btn.closest('.cm-list');
             if (!node || !listEl) return;
             listEl.querySelectorAll('.cm-reply-row').forEach(el => el.remove());
-            _cmOpenReplyRow(node, '@' + node.dataset.author + ' ', true);
+            _cmOpenReplyRow(node, '', true);
         };
 
         window.cmSubmitReply = async function(row) {
@@ -8255,7 +8303,7 @@
             if (!node || !listEl) return;
             const inp = row.querySelector('input');
             const text = inp.value.trim();
-            if (!text || text === '@' + node.dataset.author) return;   // nothing but the @mention
+            if (!text) return;
             const rids = node.dataset.rpath ? node.dataset.rpath.split('|') : [];
             inp.disabled = true;
             try {
@@ -8268,7 +8316,16 @@
                     return { replies };
                 });
                 row.remove();
-                if (window.sendMentionNotifications) window.sendMentionNotifications(text, 'comment');
+                const replyTo = node.dataset.author;
+                if (replyTo && replyTo !== currentUser) {
+                    addDoc(collection(db, 'notifications'), {
+                        recipient: replyTo, from: currentUser, type: 'reply_comment',
+                        postId: listEl.dataset.post, pageOwner: listEl.dataset.owner,
+                        replyText: text.slice(0, 200), read: false, createdAt: serverTimestamp()
+                    }).catch(() => {});
+                }
+                // the replied-to person already gets a "replied to your comment" notification, so don't also send them an @mention one
+                if (window.sendMentionNotifications) window.sendMentionNotifications(text, 'comment', [replyTo]);
             } catch (e) {
                 console.error('comment reply failed', e);
                 inp.disabled = false;
@@ -8290,20 +8347,85 @@
             if (svg) svg.setAttribute('fill', wasLiked ? 'none' : '#EE352E');
             const next = Math.max(0, prev + (wasLiked ? -1 : 1));
             if (span) span.textContent = next > 0 ? next : 'Like';
+            const likedAuthor = node.dataset.author;
+            const likedSnippet = ((node.querySelector('.cm-text') || {}).textContent || '').slice(0, 120);
+            let nowLiked = null;
             try {
                 await _cmMutate(listEl.dataset.owner, listEl.dataset.post, node.dataset.cid, (data) => {
                     const target = rids.length ? _cmFind(data.replies || [], rids) : data;
                     if (!target) return null;
                     const likes = { ...(target.likes || {}) };
-                    if (likes[currentUser]) delete likes[currentUser]; else likes[currentUser] = true;
+                    if (likes[currentUser]) { delete likes[currentUser]; nowLiked = false; } else { likes[currentUser] = true; nowLiked = true; }
                     target.likes = likes;
                     return rids.length ? { replies: data.replies } : { likes };
                 });
+                // Tell the comment's author who liked it (one notification per person per comment)
+                if (nowLiked !== null && likedAuthor && likedAuthor !== currentUser) {
+                    const nid = ('lc_' + listEl.dataset.post + '_' + node.dataset.cid + '_' + (node.dataset.rpath || 'top') + '_' + currentUser).replace(/[^a-zA-Z0-9_-]/g, '_');
+                    if (nowLiked) {
+                        setDoc(doc(db, 'notifications', nid), {
+                            recipient: likedAuthor, from: currentUser, type: 'like_comment',
+                            postId: listEl.dataset.post, pageOwner: listEl.dataset.owner,
+                            commentText: likedSnippet, read: false, createdAt: serverTimestamp()
+                        }).catch(() => {});
+                    } else {
+                        deleteDoc(doc(db, 'notifications', nid)).catch(() => {});
+                    }
+                }
             } catch (e) {
                 console.error('comment like failed', e);
                 btn.classList.toggle('liked', wasLiked);
                 if (svg) svg.setAttribute('fill', wasLiked ? '#EE352E' : 'none');
                 if (span) span.textContent = prev > 0 ? prev : 'Like';
+            }
+        };
+
+        window.cmDelete = async function(btn) {
+            if (!currentUser) return;
+            const node = btn.closest('.cm-node');
+            const listEl = btn.closest('.cm-list');
+            if (!node || !listEl || node.dataset.author !== currentUser) return;
+            if (!confirm('Delete this comment?')) return;
+            const owner = listEl.dataset.owner, postId = listEl.dataset.post, cid = node.dataset.cid;
+            const rids = node.dataset.rpath ? node.dataset.rpath.split('|') : [];
+            btn.disabled = true;
+            try {
+                if (!rids.length) {
+                    const ref = doc(db, 'pages', owner, 'posts', postId, 'comments', cid);
+                    const snap = await getDoc(ref);
+                    if (!snap.exists()) return;
+                    const data = snap.data();
+                    if (data.author !== currentUser) return;
+                    if (Array.isArray(data.replies) && data.replies.length) {
+                        // keep the thread: other people's replies stay, this comment becomes a "deleted" placeholder
+                        await updateDoc(ref, { deleted: true, text: '', likes: {} });
+                    } else {
+                        await deleteDoc(ref);
+                        updateDoc(doc(db, 'pages', owner, 'posts', postId), { commentCount: increment(-1) }).catch(() => {});
+                        const hc = document.getElementById('hccnt-' + postId);
+                        if (hc) hc.textContent = Math.max(0, (parseInt(hc.textContent, 10) || 0) - 1);
+                        const pc = document.querySelector('#page-post-' + postId + ' .action-comment span');
+                        if (pc) pc.textContent = Math.max(0, (parseInt(pc.textContent, 10) || 0) - 1);
+                    }
+                } else {
+                    await _cmMutate(owner, postId, cid, (data) => {
+                        const replies = data.replies || [];
+                        const target = _cmFind(replies, rids);
+                        if (!target || target.author !== currentUser) return null;
+                        if (Array.isArray(target.replies) && target.replies.length) {
+                            target.deleted = true; target.text = ''; target.likes = {};
+                        } else {
+                            const parent = rids.length > 1 ? _cmFind(replies, rids.slice(0, -1)) : null;
+                            const bucket = parent ? parent.replies : replies;
+                            const i = bucket.indexOf(target);
+                            if (i > -1) bucket.splice(i, 1);
+                        }
+                        return { replies };
+                    });
+                }
+            } catch (e) {
+                console.error('comment delete failed', e);
+                btn.disabled = false;
             }
         };
 
@@ -10333,15 +10455,18 @@
                 const isReposted = !!(post.reposts && post.reposts[currentUser]);
                 const repostSVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`;
 
+                const _reportAuthor = isRepostCard ? post.originalAuthor : username;
+                const _reportPostId = isRepostCard ? (post.repostOf || post.id) : post.id;
+                const showReport = !!currentUser && !!_reportAuthor && _reportAuthor !== currentUser;
                 card.innerHTML = `
                     ${repostBannerHtml}
                     <div class="page-post-header">
                         <div class="page-post-av" style="cursor:pointer;" onclick="openPage('${displayAuthor}')">${getAvatarHTML(displayAuthor, displayProf, false)}</div>
                         <div class="page-post-meta">
                             <div class="page-post-name" style="cursor:pointer;" onclick="openPage('${displayAuthor}')">${getFullName(displayAuthor)}</div>
-                            <div class="page-post-time" id="pts-${post.id}">${ts}</div>
+                            <div class="page-post-time" id="pts-${post.id}">${ts}${post.edited && !isRepostCard ? ' <span class="post-edited-tag">· edited</span>' : ''}</div>
                         </div>
-                        ${isOwn ? `<button onclick="deletePagePost('${post.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;margin-left:auto;transition:color 0.15s;" title="Delete post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : ''}
+                        ${showReport ? `<button class="post-edit-btn" style="margin-left:auto;" onclick="reportPost('${_reportAuthor}','${_reportPostId}')" title="Report post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button>` : ''}${isOwn && !isRepostCard ? `<button class="post-edit-btn" style="margin-left:auto;" onclick="editPost('${username}','${post.id}')" title="Edit post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>` : ''}${isOwn ? `<button onclick="deletePagePost('${post.id}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:4px;margin-left:${((isOwn && !isRepostCard) || showReport) ? '0' : 'auto'};transition:color 0.15s;" title="Delete post"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>` : ''}
                     </div>
                     ${contentHtml}
                     <div class="page-post-actions">
@@ -10714,6 +10839,171 @@
             if (color === 'reset') color = getComputedStyle(el).color;
             document.execCommand('styleWithCSS', false, true);
             document.execCommand('foreColor', false, color);
+        };
+
+        // ── REPORT POSTS & COMMENTS ────────────────────────────
+        // Goes into the same `reports` collection as reported messages, so it shows up in the admin Reports tab.
+        const _REPORT_REASONS = ['Spam or scam', 'Harassment or bullying', 'Hate speech', 'Nudity or sexual content', 'Violence or self-harm', 'False information', 'Something else'];
+
+        function _reportToast(msg) {
+            const t = document.createElement('div');
+            t.style.cssText = 'position:fixed;bottom:calc(30px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;z-index:100001;box-shadow:0 4px 20px rgba(0,0,0,0.3);max-width:90vw;text-align:center;';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        window.closeReportContent = function() {
+            const ov = document.getElementById('report-content-overlay');
+            if (ov) ov.remove();
+        };
+
+        window.reportContent = function(o) {
+            if (!currentUser || !o || o.author === currentUser) return;
+            closeReportContent();
+            const label = o.type === 'comment' ? 'comment' : 'post';
+            const ov = document.createElement('div');
+            ov.id = 'report-content-overlay';
+            ov.className = 'rc-overlay';
+            ov.innerHTML = `<div class="rc-card" role="dialog" aria-label="Report ${label}">
+                <div class="rc-head">Report ${label}</div>
+                <div class="rc-sub">Why are you reporting this ${label}? Our admins will review it.</div>
+                <div class="rc-opts">${_REPORT_REASONS.map((r, i) => `<label class="rc-opt"><input type="radio" name="rc-reason" value="${r}"><span>${r}</span></label>`).join('')}</div>
+                <textarea class="rc-details" maxlength="500" rows="3" placeholder="Anything else we should know? (optional)"></textarea>
+                <div class="rc-actions"><button class="rc-cancel" type="button">Cancel</button><button class="rc-send" type="button" disabled>Report</button></div>
+            </div>`;
+            document.body.appendChild(ov);
+            const send = ov.querySelector('.rc-send');
+            ov.addEventListener('change', () => { send.disabled = !ov.querySelector('input[name="rc-reason"]:checked'); });
+            ov.addEventListener('mousedown', (e) => { if (e.target === ov) closeReportContent(); });
+            ov.querySelector('.rc-cancel').addEventListener('click', closeReportContent);
+            send.addEventListener('click', async () => {
+                const picked = ov.querySelector('input[name="rc-reason"]:checked');
+                if (!picked) return;
+                const details = ov.querySelector('.rc-details').value.trim();
+                send.disabled = true;
+                const rid = ('rc_' + currentUser + '_' + o.type + '_' + o.pageOwner + '_' + o.postId + '_' + (o.cid || '') + '_' + (o.rpath || '')).replace(/[^a-zA-Z0-9_-]/g, '_');
+                try {
+                    const ref = doc(db, 'reports', rid);
+                    let already = false;
+                    try { already = (await getDoc(ref)).exists(); } catch (e) {}
+                    if (already) { closeReportContent(); _reportToast("You've already reported this " + label + '.'); return; }
+                    const au = usersCache[o.author] || {}, me = usersCache[currentUser] || {};
+                    await setDoc(ref, {
+                        reportType: o.type, postId: o.postId, pageOwner: o.pageOwner,
+                        commentId: o.cid || '', commentPath: o.rpath || '',
+                        msgId: '', msgText: (o.text || '').slice(0, 600), sender: o.author || '',
+                        senderPic: au.pic || null, senderFname: au.fname || o.author || '',
+                        sentTo: '', chatId: '',
+                        reportedBy: currentUser, reportedByPic: me.pic || null, reportedByFname: me.fname || currentUser,
+                        reason: picked.value + (details ? ': ' + details : ''),
+                        createdAt: serverTimestamp(), read: false
+                    });
+                    closeReportContent();
+                    _reportToast('✓ ' + (label === 'comment' ? 'Comment' : 'Post') + ' reported. Thank you.');
+                } catch (e) {
+                    console.error('reportContent', e);
+                    send.disabled = false;
+                    _reportToast("Couldn't send your report. Please try again.");
+                }
+            });
+        };
+
+        window.reportPost = async function(owner, postId) {
+            if (!currentUser || !owner || owner === currentUser) return;
+            let text = '';
+            try {
+                const snap = await getDoc(doc(db, 'pages', owner, 'posts', postId));
+                if (!snap.exists()) { _reportToast('That post is no longer available.'); return; }
+                const d = snap.data();
+                text = (d.richText ? d.richText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : '') || d.text || d.caption || d.note || '';
+                if (!text && (d.imageData || (d.images && d.images.length))) text = '(photo post)';
+            } catch (e) {}
+            reportContent({ type: 'post', pageOwner: owner, postId, author: owner, text });
+        };
+
+        window.cmReport = function(btn) {
+            const node = btn.closest('.cm-node');
+            const listEl = btn.closest('.cm-list');
+            if (!node || !listEl) return;
+            reportContent({
+                type: 'comment', pageOwner: listEl.dataset.owner, postId: listEl.dataset.post,
+                cid: node.dataset.cid, rpath: node.dataset.rpath || '', author: node.dataset.author,
+                text: ((node.querySelector('.cm-text') || {}).textContent || '')
+            });
+        };
+
+        // ── EDIT POSTS ─────────────────────────────────────────
+        function _epSanitizeRich(html) {
+            const d = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
+            const root = d.body.firstChild;
+            root.querySelectorAll('script,style,iframe,object,embed,link,meta,form').forEach(n => n.remove());
+            root.querySelectorAll('*').forEach(el => {
+                Array.from(el.attributes).forEach(a => {
+                    if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name);
+                });
+            });
+            return root.innerHTML;
+        }
+
+        window.closeEditPost = function() {
+            const ov = document.getElementById('edit-post-overlay');
+            if (ov) ov.remove();
+        };
+
+        window.editPost = async function(owner, postId) {
+            if (!currentUser || owner !== currentUser) return;
+            const ref = doc(db, 'pages', currentUser, 'posts', postId);
+            let snap;
+            try { snap = await getDoc(ref); } catch (e) { return; }
+            if (!snap || !snap.exists()) return;
+            const post = snap.data();
+            if (post.type === 'repost') return;
+            closeEditPost();
+            const isRich = !!post.richText;
+            const textField = post.text ? 'text' : post.caption ? 'caption' : post.note ? 'note' : 'text';
+            const ov = document.createElement('div');
+            ov.id = 'edit-post-overlay';
+            ov.innerHTML = `<div id="edit-post-card" role="dialog" aria-label="Edit post">
+                <div class="ep-head">Edit post</div>
+                <div id="edit-post-editor" contenteditable="true" spellcheck="true"></div>
+                <div class="ep-note">Photos and music on this post stay as they are.</div>
+                <div class="ep-actions"><button class="ep-cancel" type="button">Cancel</button><button class="ep-save" type="button">Save</button></div>
+            </div>`;
+            document.body.appendChild(ov);
+            const ed = ov.querySelector('#edit-post-editor');
+            if (isRich) ed.innerHTML = _epSanitizeRich(post.richText);
+            else ed.textContent = post[textField] || '';
+            ov.addEventListener('mousedown', (e) => { if (e.target === ov) closeEditPost(); });
+            ov.querySelector('.ep-cancel').addEventListener('click', closeEditPost);
+            ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEditPost(); });
+            const saveBtn = ov.querySelector('.ep-save');
+            saveBtn.addEventListener('click', async () => {
+                const plain = ed.innerText.replace(/\u00a0/g, ' ').trim();
+                const hasMedia = (typeof getPostImages === 'function' && getPostImages(post).length > 0) || !!post.imageData || !!post.song;
+                if (!plain && !hasMedia) { alert("A post can't be empty. Use the delete button to remove it instead."); return; }
+                const update = { edited: true, editedAt: serverTimestamp() };
+                if (isRich) {
+                    update.richText = plain ? _epSanitizeRich(ed.innerHTML) : '';
+                    if (post.text !== undefined) update.text = plain;
+                } else {
+                    update[textField] = plain;
+                }
+                saveBtn.disabled = true;
+                try {
+                    await updateDoc(ref, update);
+                    closeEditPost();
+                } catch (e) {
+                    console.error('editPost', e);
+                    saveBtn.disabled = false;
+                    alert("Couldn't save your changes. Please try again.");
+                }
+            });
+            setTimeout(() => {
+                ed.focus();
+                const r = document.createRange(); r.selectNodeContents(ed); r.collapse(false);
+                const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+            }, 30);
         };
 
         window.deletePagePost = async function(postId) {
@@ -11484,7 +11774,7 @@
 
                     return `<div id="report-row-${d.id}" style="background:${isRead ? '#111' : '#1a0000'};border:1px solid ${isRead ? '#1a1a1a' : '#550000'};border-radius:12px;padding:14px;margin-bottom:10px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                            <div style="font-size:11px;color:#666;">${ts}</div>
+                            <div style="font-size:11px;color:#666;">${ts}${r.reportType ? ' · <strong style="color:#F6A800;">' + (r.reportType === 'comment' ? 'COMMENT' : 'POST') + '</strong>' : ''}</div>
                             ${!isRead ? '<div style="font-size:10px;font-weight:bold;color:#EE352E;text-transform:uppercase;letter-spacing:1px;">New</div>' : ''}
                         </div>
                         <!-- Message card styled like a real bubble -->
@@ -11504,6 +11794,7 @@
                         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
                             ${!isRead ? `<button onclick="adminMarkReportRead('${d.id}')" style="background:#333;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Mark as Read</button>` : ''}
                             <button onclick="adminStrikeFromReport('${d.id}','${(r.sender||'').replace(/'/g,"\\'")}','${(r.msgText||'').replace(/'/g,"\\'").replace(/\n/g,' ').substring(0,200)}','${(r.senderPic||'').replace(/'/g,"\\'")}','${(r.senderFname||'').replace(/'/g,"\\'")}','${(r.sentTo||'').replace(/'/g,"\\'")}')" style="background:#F6A800;border:none;color:#000;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">⚠ Strike User</button>
+                             ${r.reportType ? `<button onclick="adminDeleteReportedContent('${d.id}')" style="background:#7a1713;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete ${r.reportType}</button>` : ''}
                             <button onclick="adminDismissReport('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Dismiss</button>
                         </div>
                     </div>`;
@@ -11519,6 +11810,45 @@
                 await updateDoc(doc(adb, 'reports', reportId), { read: true });
                 await loadAdminReports();
             } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        window.adminDeleteReportedContent = async function(reportId) {
+            try {
+                const adb = getAdminDb();
+                const snap = await getDoc(doc(adb, 'reports', reportId));
+                if (!snap.exists()) return;
+                const r = snap.data();
+                if (!r.reportType || !r.pageOwner || !r.postId) return;
+                if (!confirm('Delete this reported ' + r.reportType + '?')) return;
+                const postRef = doc(adb, 'pages', r.pageOwner, 'posts', r.postId);
+                if (r.reportType === 'post') {
+                    await deleteDoc(postRef);
+                } else if (r.reportType === 'comment') {
+                    const cref = doc(adb, 'pages', r.pageOwner, 'posts', r.postId, 'comments', r.commentId);
+                    const rids = r.commentPath ? r.commentPath.split('|') : [];
+                    if (!rids.length) {
+                        await deleteDoc(cref);
+                        updateDoc(postRef, { commentCount: increment(-1) }).catch(() => {});
+                    } else {
+                        await runTransaction(adb, async (tx) => {
+                            const cs = await tx.get(cref);
+                            if (!cs.exists()) return;
+                            const data = cs.data();
+                            const replies = data.replies || [];
+                            let arr = replies, target = null;
+                            for (const rid of rids) {
+                                target = (arr || []).find(x => (x.id || (x.author + '_' + x.createdAt)) === rid);
+                                if (!target) return;
+                                arr = target.replies;
+                            }
+                            target.deleted = true; target.text = ''; target.likes = {};
+                            tx.update(cref, { replies });
+                        });
+                    }
+                }
+                await updateDoc(doc(adb, 'reports', reportId), { read: true, contentDeleted: true });
+                await loadAdminReports();
+            } catch (e) { alert('Error: ' + e.message); }
         };
 
         window.adminDismissReport = async function(reportId) {
@@ -12127,15 +12457,16 @@
         });
 
         // ── MENTION NOTIFICATIONS HELPER ──────────────────────────────
-        window.sendMentionNotifications = function(text, context) {
+        window.sendMentionNotifications = function(text, context, skipUsers) {
             if (!currentUser || !text) return;
+            const _skip = new Set((skipUsers || []).map(u => String(u || '').toLowerCase()));
             const mentionRegex = /@([a-zA-Z0-9_]+)/g;
             let match;
             const mentioned = new Set();
             const plainText = text.replace(/<[^>]*>/g, '');
             while ((match = mentionRegex.exec(plainText)) !== null) {
                 const username = match[1].toLowerCase();
-                if (username !== currentUser && usersDirectory && usersDirectory.includes(username)) {
+                if (username !== currentUser && !_skip.has(username) && usersDirectory && usersDirectory.includes(username)) {
                     mentioned.add(username);
                 }
             }
@@ -12287,9 +12618,20 @@
             comment_post:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
             reply_comment: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>`,
             react_msg:     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
+            repost:        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
             mention_tag:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>`,
         };
 
+        // A reply used to also fire "mentioned you in a comment" (the reply starts with @name).
+        // Hide that duplicate whenever the same person's "replied to your comment" notification is there.
+        function _dedupeReplyMentions(list) {
+            const sec = (n) => (n.createdAt && n.createdAt.seconds) ? n.createdAt.seconds : Date.now() / 1000;
+            const replies = list.filter(n => n.type === 'reply_comment');
+            if (!replies.length) return list;
+            return list.filter(n => !(n.type === 'mention_tag' && n.context === 'comment' &&
+                replies.some(r => r.from === n.from && Math.abs(sec(r) - sec(n)) <= 20)));
+        }
+        function _nEsc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
         function renderNotifList(notifs) {
             const list = document.getElementById('notif-list');
             if (!list) return;
@@ -12306,12 +12648,16 @@
                 if (n.type === 'like_post') {
                     text = `<strong>${getFullName(n.from)}</strong> liked your post.`;
                 } else if (n.type === 'comment_post') {
-                    const snippet = n.commentText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">"${n.commentText.substring(0,60)}${n.commentText.length>60?'...':''}"</div>` : '';
+                    const snippet = n.commentText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">"${_nEsc(n.commentText.substring(0,60))}${n.commentText.length>60?'...':''}"</div>` : '';
                     text = `<strong>${getFullName(n.from)}</strong> commented on your post.${snippet}`;
                 } else if (n.type === 'like_comment') {
-                    text = `<strong>${getFullName(n.from)}</strong> liked your comment.`;
+                    const _lc = n.commentText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">${_nEsc(n.commentText.substring(0,60))}${n.commentText.length>60?'...':''}</div>` : '';
+                    text = `<strong>${getFullName(n.from)}</strong> liked your comment.${_lc}`;
                 } else if (n.type === 'reply_comment') {
-                    text = `<strong>${getFullName(n.from)}</strong> replied to your comment.`;
+                    const _rp = n.replyText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">"${_nEsc(n.replyText.substring(0,80))}${n.replyText.length>80?'...':''}"</div>` : '';
+                    text = `<strong>${getFullName(n.from)}</strong> replied to your comment.${_rp}`;
+                } else if (n.type === 'repost') {
+                    text = `<strong>${getFullName(n.from)}</strong> reposted your post.`;
                 } else if (n.type === 'react_msg') {
                     text = `<strong>${getFullName(n.from)}</strong> reacted to your message.`;
                 } else if (n.type === 'like_story') {
@@ -12342,6 +12688,10 @@
                         const tryScroll = (attempts) => {
                             const el = document.getElementById('page-post-' + postId);
                             if (el) {
+                                if (type === 'comment_post' || type === 'like_comment' || type === 'reply_comment') {
+                                    const ca = document.getElementById('comments-' + postId);
+                                    if (ca) ca.classList.add('open');
+                                }
                                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 // Briefly highlight so user knows which post it is
                                 el.style.transition = 'box-shadow 0.3s';
@@ -12362,13 +12712,13 @@
             // No orderBy to avoid composite index requirement — sort client-side instead
             const q = query(collection(db, 'notifications'), where('recipient', '==', currentUser), limit(50));
             _notifUnsub = onSnapshot(q, (snap) => {
-                const notifs = snap.docs
+                const notifs = _dedupeReplyMentions(snap.docs
                     .map(d => ({ id: d.id, ...d.data() }))
                     .sort((a, b) => {
                         const at = a.createdAt ? (a.createdAt.seconds || 0) : 0;
                         const bt = b.createdAt ? (b.createdAt.seconds || 0) : 0;
                         return bt - at;
-                    })
+                    }))
                     .slice(0, 30);
                 const unread = notifs.filter(n => !n.read);
                 const badge = document.getElementById('notif-bell-badge');

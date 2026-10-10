@@ -312,6 +312,10 @@
             animation-timing-function: linear;
             animation-fill-mode: forwards;
         }
+        .falling-duck.golden-duck {
+            filter: sepia(1) saturate(6) hue-rotate(-8deg) brightness(1.15) drop-shadow(0 0 8px rgba(255,200,40,0.95));
+            z-index: 10001;
+        }
         @keyframes duckFall {
             from { transform: translateY(0) rotate(0deg); }
             to { transform: translateY(calc(100vh + 120px)) rotate(var(--duck-rot, 25deg)); }
@@ -327,6 +331,7 @@
             transform: translate(-50%, -50%);
             animation: duckPlusOneFloat 0.9s ease-out forwards;
         }
+        .duck-plus-one.golden { color: #E0A800; font-size: 28px; text-shadow: 0 0 10px rgba(255,200,40,0.9), 0 1px 2px rgba(0,0,0,0.35); }
         @keyframes duckPlusOneFloat {
             0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
             30% { transform: translate(-50%, -140%) scale(1.2); }
@@ -808,7 +813,7 @@
         #page-screen { overflow-y: auto !important; justify-content: flex-start !important; }
         #page-body { overflow-y: visible !important; height: auto !important; flex: none !important; padding-bottom: 60px !important; }
         
-        #page-header { background: transparent !important; border: none !important; box-shadow: none !important; padding: 40px 20px 10px 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative; height: auto !important; min-height: fit-content !important; flex-shrink: 0 !important; }
+        #page-header { background: transparent !important; border: none !important; box-shadow: none !important; padding: max(40px, calc(env(safe-area-inset-top) + 24px)) max(20px, env(safe-area-inset-right)) 10px max(20px, env(safe-area-inset-left)) !important; display: flex !important; align-items: center !important; justify-content: center !important; position: relative; height: auto !important; min-height: fit-content !important; flex-shrink: 0 !important; }
         
         #page-header button[onclick*="closePage"], .page-back-btn { display: none !important; } 
         
@@ -833,7 +838,7 @@
         .page-comment-reply-btn:hover { color: var(--accent); }
         
         /* ── USERPAGE: centered header, inline post box, homepage-style action row ── */
-        #page-header .page-header-actions { position: absolute; top: max(14px, env(safe-area-inset-top)); right: 20px; z-index: 30; }
+        #page-header .page-header-actions { position: absolute; top: calc(env(safe-area-inset-top) + 12px); right: max(14px, env(safe-area-inset-right)); z-index: 30; }
         #page-title { text-align: center; width: 100%; flex: 1; }
         .pg-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; width: 100%; margin-top: 10px; }
         .pg-hero-avatar { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; margin-bottom: 12px; flex-shrink: 0; }
@@ -1396,6 +1401,53 @@
             #sidebar-collapse-btn { display: none !important; }
             #sidebar-home-btn-mobile { display: flex !important; }
         }
+
+        /* ── PATCH: mobile / notch-safe layout (userpage + general) ── */
+        @supports (height: 100dvh) {
+            body, html, #app-layout { height: 100dvh; }
+            .modal-overlay, #loading-overlay { height: 100dvh; }
+            #notif-panel { height: 100dvh; }
+        }
+        body, html { width: 100%; }
+        #app-layout { width: 100%; }
+        .modal-overlay, #loading-overlay { width: 100%; }
+        #page-bg-picker { max-width: calc(100vw - 28px); }
+        @media (max-width: 768px) {
+            #page-header { padding-bottom: 6px !important; }
+            #page-body { padding: 12px max(12px, env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)) !important; }
+            .pg-hero { margin-top: 4px; }
+            .pg-hero-avatar { width: 88px; height: 88px; margin-bottom: 10px; }
+            .pg-hero-name { font-size: 26px; }
+            .page-stats-row { gap: 22px; }
+            .page-stat-num { font-size: 22px; }
+            .page-post { padding: 16px; }
+            .page-post-actions { gap: 2px; }
+            .page-post-actions > .page-action-btn { padding: 6px 6px; }
+            #page-bg-picker { position: fixed; top: calc(env(safe-area-inset-top) + 56px); right: 12px; left: 12px; width: auto; max-width: none; max-height: calc(100dvh - env(safe-area-inset-top) - 80px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+            /* 16px inputs stop iOS Safari from zooming the page when a field is focused */
+            #page-screen input:not([type=color]):not([type=range]):not([type=file]), #page-screen textarea, #page-inline-composer #pc-unified-text { font-size: 16px !important; }
+        }
+
+        /* ── PATCH: mobile homepage keeps the top bar overlaid ── */
+        @media (max-width: 768px) {
+            body.mobile-home-bar #sidebar {
+                transform: none !important; opacity: 1 !important; pointer-events: none !important;
+                height: auto !important; background: transparent !important;
+                backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                border: none !important; overflow: visible !important; z-index: 25;
+            }
+            body.mobile-home-bar #sidebar > *:not(.sb-header) { display: none !important; }
+            body.mobile-home-bar #sidebar .sb-header {
+                pointer-events: auto;
+                background: transparent !important;
+                backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+                border: none !important; box-shadow: none !important;
+            }
+            /* the old back arrow would sit underneath the bar; the Pages/Chats button reaches the lists now */
+            body.mobile-home-bar #no-chat-screen > .mobile-back-btn { display: none !important; }
+            /* background customizer sits just below the bar */
+            body.mobile-home-bar #home-bg-btn { top: calc(var(--home-bar-h, 90px) + 8px) !important; }
+        }
 </style>
 </head>
 <body>
@@ -1474,7 +1526,7 @@
                         </div>
                     </div>
                     <div class="sb-actions">
-                        <button id="sidebar-home-btn-mobile" class="theme-btn" onclick="goToHome()" title="Home">
+                        <button id="sidebar-home-btn-mobile" class="theme-btn" onclick="mobileHomeOrBack()" title="Home">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                         </button>
                         <button id="sidebar-collapse-btn" onclick="toggleSidebarCollapse()" title="Collapse sidebar">
@@ -1482,7 +1534,7 @@
                         </button>
                         <button class="theme-btn" onclick="smartHomeBtn()" title="Home / Chat" style="position:relative;">
                             <svg id="home-btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
                             </svg>
                             <span id="sidebar-unread-dot" class="sidebar-notif-dot"></span>
                         </button>
@@ -3420,7 +3472,7 @@
 
         // ── Duck easter egg ──────────────────────────────────────────
         const DUCK_IMG_SRC = 'https://freepngimg.com/thumb/duck/7-white-duck-png-image.png';
-        const VON_SIMON_IMG_SRC = 'https://raw.githubusercontent.com/talkpage/talkpage.github.io/refs/heads/main/images/von-simon-fall.png';
+        const VON_SIMON_IMG_SRC = 'images/von-simon-fall.png';
         function isVonSimonTheme() { return document.body.classList.contains('theme-von-simon'); }
         function getDuckImgSrc() { return isVonSimonTheme() ? VON_SIMON_IMG_SRC : DUCK_IMG_SRC; }
         function duckEmojiHTML() { return isVonSimonTheme() ? `<img src="${VON_SIMON_IMG_SRC}" alt="" style="height:16px;width:auto;vertical-align:-3px;">` : '🦆'; }
@@ -3438,6 +3490,19 @@
         window.updateDuckTheme();
         let duckCount = null; // lazy-loaded from the user's saved lifetime score
         let duckFadeTimeout = null;
+
+        // Every 1000th duck that falls is golden (worth +100). The running total of ducks
+        // dropped is remembered per user in localStorage so it carries across rains/reloads.
+        const GOLDEN_DUCK_EVERY = 1000;
+        const GOLDEN_DUCK_POINTS = 100;
+        function _duckFallKey() { return 'duckFallTotal:' + (currentUser || 'guest'); }
+        function nextDuckFallNumber() {
+            let n = 0;
+            try { n = parseInt(localStorage.getItem(_duckFallKey()), 10) || 0; } catch (e) {}
+            n++;
+            try { localStorage.setItem(_duckFallKey(), String(n)); } catch (e) {}
+            return n;
+        }
 
         function ensureDuckCountLoaded() {
             if (duckCount === null) {
@@ -3477,11 +3542,13 @@
             duck.className = 'falling-duck';
             duck.draggable = false;
             duck.alt = '';
+            const isGolden = nextDuckFallNumber() % GOLDEN_DUCK_EVERY === 0;
+            if (isGolden) duck.classList.add('golden-duck');
 
             // Fixed square box (object-fit: contain in CSS) so the clickable hit area is
             // correct immediately, without waiting on the image to load and report its
             // natural size.
-            const size = 34 + Math.random() * 26;
+            const size = (34 + Math.random() * 26) + (isGolden ? 14 : 0);
             const startX = Math.random() * Math.max(0, window.innerWidth - size);
             const duration = 3 + Math.random() * 2.2;
             const rot = (Math.random() * 70 - 35);
@@ -3498,11 +3565,12 @@
                 caught = true;
                 e.stopPropagation();
                 ensureDuckCountLoaded();
-                duckCount++;
+                const points = isGolden ? GOLDEN_DUCK_POINTS : 1;
+                duckCount += points;
                 showDuckCounter(2500);
-                showDuckPlusOne(e.clientX, e.clientY);
+                showDuckPlusOne(e.clientX, e.clientY, points, isGolden);
                 duck.remove();
-                saveDuckScore();
+                saveDuckScore(points);
             };
             // pointerdown (not click) — the duck keeps falling between mousedown and mouseup,
             // so by the time a "click" would fire the pointer is no longer over it and the
@@ -3513,16 +3581,16 @@
             document.body.appendChild(duck);
         }
 
-        function saveDuckScore() {
+        function saveDuckScore(points = 1) {
             if (!currentUser) return;
             usersCache[currentUser] = { ...(usersCache[currentUser] || {}), duckScore: duckCount };
-            updateDoc(doc(db, 'users', currentUser), { duckScore: increment(1) }).catch(() => {});
+            updateDoc(doc(db, 'users', currentUser), { duckScore: increment(points) }).catch(() => {});
         }
 
-        function showDuckPlusOne(x, y) {
+        function showDuckPlusOne(x, y, points = 1, golden = false) {
             const el = document.createElement('div');
-            el.className = 'duck-plus-one';
-            el.textContent = '+1';
+            el.className = 'duck-plus-one' + (golden ? ' golden' : '');
+            el.textContent = '+' + points;
             el.style.left = x + 'px';
             el.style.top = y + 'px';
             el.addEventListener('animationend', () => el.remove());
@@ -7485,9 +7553,16 @@
             const icon = document.getElementById('home-btn-icon');
             if (!icon) return;
             if (_isMobileUI()) {
-                // Mobile: this button is always "Pages" (the dedicated home button lives next to it)
-                icon.innerHTML = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>';
-                if (icon.parentElement) icon.parentElement.title = 'Pages';
+                // Mobile: the dedicated home button (next to this one) never changes.
+                // This button swaps between the two lists: on the chat list it's "Pages",
+                // on the page list it's "Chats".
+                if ((window.sidebarMode || 'chats') === 'pages') {
+                    icon.innerHTML = '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>';
+                    if (icon.parentElement) icon.parentElement.title = 'Chats';
+                } else {
+                    icon.innerHTML = '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>';
+                    if (icon.parentElement) icon.parentElement.title = 'Pages';
+                }
                 return;
             }
             if (icon.parentElement) icon.parentElement.title = 'Home / Chat';
@@ -7507,7 +7582,13 @@
 
         window.matchMedia('(max-width: 768px)').addEventListener('change', () => window.updateHomeBtnIcon());
         window.smartHomeBtn = function() {
-            if (_isMobileUI()) { setSidebarMode('pages'); return; }
+            if (_isMobileUI()) {
+                // Toggle between the chat list and the page list, and make sure the list is on screen
+                // (from the homepage this slides the list in over it).
+                setSidebarMode((window.sidebarMode || 'chats') === 'pages' ? 'chats' : 'pages');
+                document.body.classList.remove('mobile-chat-open');
+                return;
+            }
             const onHome = window.isViewingHome;
             const mode   = window.sidebarMode || 'chats';
             if (!onHome) {
@@ -7522,6 +7603,48 @@
             }
         };
         // END SMART HOME BUTTON
+
+        // ── Mobile homepage: keep the top bar (Talkpage / profile pic / icons) overlaid ──
+        (function() {
+            const mq = window.matchMedia('(max-width: 768px)');
+            const shown = (id) => { const el = document.getElementById(id); return !!el && getComputedStyle(el).display !== 'none'; };
+            window.mobileHomeOrBack = function() {
+                if (document.body.classList.contains('mobile-home-bar')) window.backToList();
+                else window.goToHome();
+            };
+            window.syncMobileHomeBar = function() {
+                const app = document.getElementById('app-layout');
+                const on = mq.matches
+                    && !!app && app.classList.contains('active')
+                    && document.body.classList.contains('mobile-chat-open')
+                    && shown('chat-area') && shown('no-chat-screen') && !shown('page-screen');
+                document.body.classList.toggle('mobile-home-bar', on);
+                // The home button turns into a back arrow while you're on the homepage
+                const hb = document.getElementById('sidebar-home-btn-mobile');
+                if (hb && hb.dataset.mode !== (on ? 'back' : 'home')) {
+                    hb.dataset.mode = on ? 'back' : 'home';
+                    hb.title = on ? 'Back' : 'Home';
+                    hb.innerHTML = on
+                        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>'
+                        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>';
+                }
+                if (on) {
+                    const hdr = document.querySelector('#sidebar .sb-header');
+                    if (hdr) document.documentElement.style.setProperty('--home-bar-h', hdr.offsetHeight + 'px');
+                }
+            };
+            const obs = new MutationObserver(() => window.syncMobileHomeBar());
+            obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            ['app-layout', 'chat-area', 'no-chat-screen', 'page-screen'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) obs.observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+            });
+            mq.addEventListener('change', () => { window.syncMobileHomeBar(); window.updateHomeBtnIcon && window.updateHomeBtnIcon(); });
+            window.addEventListener('resize', () => window.syncMobileHomeBar());
+            window.addEventListener('load', () => { window.syncMobileHomeBar(); window.updateHomeBtnIcon && window.updateHomeBtnIcon(); });
+            window.updateHomeBtnIcon && window.updateHomeBtnIcon();
+            window.syncMobileHomeBar();
+        })();
 
 
         // ══════════════════════════════════════════════════════════════
@@ -9613,11 +9736,11 @@
             const menu = document.createElement('div');
             menu.id = 'sidebar-mode-menu';
             menu.innerHTML = `
-                <div class="sm-opt${sidebarMode==='chats'?' active':''}" onclick="setSidebarMode('chats')">
+                <div class="sm-opt${sidebarMode==='chats'?' active':''}" onclick="setSidebarModeFromMenu('chats')">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     Chats
                 </div>
-                <div class="sm-opt${sidebarMode==='pages'?' active':''}" onclick="setSidebarMode('pages')">
+                <div class="sm-opt${sidebarMode==='pages'?' active':''}" onclick="setSidebarModeFromMenu('pages')">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     Pages
                 </div>
@@ -9645,6 +9768,13 @@
         };
 
         window.sidebarMode = 'chats'; // Global state
+
+        window.setSidebarModeFromMenu = function(mode) {
+            setSidebarMode(mode);
+            if (window.matchMedia('(max-width: 768px)').matches && document.body.classList.contains('mobile-home-bar')) {
+                document.body.classList.remove('mobile-chat-open');
+            }
+        };
 
         window.setSidebarMode = function(mode) {
             const menu = document.getElementById('sidebar-mode-menu');

@@ -349,7 +349,9 @@
         #gartic-area { display: none; flex: 1; position: relative; background: var(--bg-main); border-left: 2px solid var(--border-dark); overflow: hidden; flex-direction: column; }
 
         /* Clickable Header Area — floats over messages, fades to transparent */
-        .chat-header { height: calc(100px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: none; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: linear-gradient(to bottom, var(--bg-main) 0%, var(--bg-main) 30%, color-mix(in srgb, var(--bg-main) 85%, transparent) 50%, color-mix(in srgb, var(--bg-main) 55%, transparent) 70%, color-mix(in srgb, var(--bg-main) 20%, transparent) 88%, transparent 100%); position: absolute; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none; }
+        .chat-header { height: calc(100px + env(safe-area-inset-top)); padding: env(safe-area-inset-top) 30px 0; border-bottom: none; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: none; position: absolute; top: 0; left: 0; right: 0; z-index: 10; pointer-events: none; }
+        /* the fade extends 40px below the header so it comes further down the page and text stays readable */
+        .chat-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: calc(100% + 40px); z-index: -1; pointer-events: none; background: linear-gradient(to bottom, var(--bg-main) 0%, var(--bg-main) 45%, color-mix(in srgb, var(--bg-main) 88%, transparent) 60%, color-mix(in srgb, var(--bg-main) 60%, transparent) 76%, color-mix(in srgb, var(--bg-main) 25%, transparent) 90%, transparent 100%); }
         .chat-header > * { pointer-events: auto; }
         .chat-header-info { padding: 8px 12px; margin-left: -12px; border-radius: 0; transition: background 0.1s ease-out; display: flex; flex-direction: column; justify-content: center; flex: 1; overflow: hidden;}
         @media (hover: hover) and (pointer: fine) { .chat-header-info:hover { background: transparent; } }
@@ -1145,35 +1147,143 @@
         .pbg-swatch.active { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
         .pbg-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; margin-top: 4px; display: block; }
 
+        /* ── VIDEO EMBEDS (posts) ─────────────────────────────── */
+        .vid-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; margin-top: 10px; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--border-light); }
+        .vid-embed iframe, .vid-embed video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+        .vid-embed.vid-file { aspect-ratio: auto; position: static; max-height: 420px; }
+        .vid-embed.vid-file video { position: static; max-height: 420px; background: #000; }
+
+        /* ── REPOST MENU + QUOTE REPOSTS ──────────────────────── */
+        .repost-menu { position: fixed; z-index: 9100; min-width: 200px; padding: 6px; background: var(--bg-main); border: 1px solid var(--border-light); border-radius: 14px; box-shadow: 0 10px 34px rgba(0,0,0,0.25); animation: fadeUp 0.14s ease; }
+        .rm-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; background: none; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 700; color: var(--text-dark); font-family: var(--font-main); text-align: left; }
+        .rm-item:hover { background: var(--bg-sidebar); }
+        .rm-item svg { flex-shrink: 0; }
+        .rm-item.rm-green svg { color: #10B981; }
+        .qc-overlay { position: fixed; inset: 0; z-index: 9200; background: rgba(0,0,0,0.5); display: flex; align-items: flex-start; justify-content: center; padding: 6vh 14px 14px; backdrop-filter: blur(3px); overflow-y: auto; }
+        .qc-modal { width: 100%; max-width: 560px; background: var(--bg-main); color: var(--text-dark); border-radius: 20px; border: 1px solid var(--border-light); box-shadow: 0 20px 60px rgba(0,0,0,0.35); padding: 10px 16px 16px; animation: fadeUp 0.16s ease; }
+        .qc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+        .qc-x { background: none; border: none; cursor: pointer; color: var(--text-dark); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .qc-x:hover { background: var(--bg-sidebar); }
+        .qc-post { background: var(--accent); color: var(--on-accent); border: none; border-radius: 999px; padding: 8px 20px; font-weight: 800; font-size: 14px; cursor: pointer; font-family: var(--font-main); }
+        .qc-post:disabled { opacity: 0.55; cursor: default; }
+        .qc-compose { display: flex; gap: 12px; align-items: flex-start; }
+        .qc-av { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #fff; }
+        .qc-compose textarea { flex: 1; min-height: 72px; resize: none; background: transparent; border: none; outline: none; font-size: 18px; line-height: 1.4; color: var(--text-dark); font-family: var(--font-main); padding: 8px 0; }
+        .qc-count { text-align: right; font-size: 12px; color: var(--text-muted); margin: 2px 2px 8px; }
+        .quote-card { margin-top: 10px; border: 1px solid var(--border-light); border-radius: 16px; padding: 10px 12px; cursor: pointer; overflow: hidden; text-align: left; transition: background 0.15s; }
+        .quote-card:hover { background: rgba(127,127,127,0.08); }
+        .quote-card.qc-static { cursor: default; margin-left: 52px; }
+        .quote-card.qc-static:hover { background: transparent; }
+        .qc-head { display: flex; align-items: center; gap: 7px; font-size: 14px; min-width: 0; }
+        .qc-av-sm { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; }
+        .qc-name { font-weight: 800; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qc-handle, .qc-time { color: var(--text-muted); white-space: nowrap; font-size: 13px; }
+        .qc-text { margin-top: 6px; font-size: 14px; line-height: 1.45; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+        .qc-img { display: block; width: calc(100% + 24px); margin: 10px -12px -10px; max-height: 280px; object-fit: cover; }
+        .quote-card .vid-embed { margin-top: 8px; }
+
         /* ── ADMIN PANEL ─────────────────────────────────────── */
-        #admin-panel { position: fixed; inset: 0; z-index: 9000; background: #0a0a0a; color: #fff; display: none; flex-direction: column; font-family: var(--font-main); }
+        #admin-panel { position: fixed; inset: 0; z-index: 9000; background: radial-gradient(1100px 520px at 8% -10%, rgba(246,168,0,0.10), transparent 60%), radial-gradient(900px 500px at 100% 0%, rgba(120,90,255,0.07), transparent 60%), #0b0b0f; color: #f2f2f6; display: none; flex-direction: column; font-family: var(--font-main); }
         #admin-panel.active { display: flex; }
-        .admin-header { padding: 30px 30px 20px; border-bottom: 1px solid #222; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .admin-header h1 { font-size: 20px; color: var(--accent); letter-spacing: -0.5px; }
-        .admin-header span { font-size: 12px; color: #555; font-weight: 600; }
-        .admin-body { flex: 1; overflow-y: auto; padding: 24px 30px; }
-        .admin-section { margin-bottom: 30px; }
-        .admin-section h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #555; margin-bottom: 14px; font-weight: 800; }
-        .admin-user-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #111; border-radius: 10px; margin-bottom: 8px; border: 1px solid #1a1a1a; }
-        .admin-user-av { width: 38px; height: 38px; border-radius: 50%; background: #222; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #fff; }
+        #admin-panel, #admin-panel * { text-shadow: none; }
+        .admin-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 32px; border-bottom: 1px solid #1c1c24; background: rgba(14,14,19,0.85); backdrop-filter: blur(12px); flex-shrink: 0; }
+        .admin-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+        .admin-brand-mark { width: 42px; height: 42px; border-radius: 13px; background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 19px; box-shadow: 0 8px 22px rgba(246,168,0,0.28); flex-shrink: 0; }
+        .admin-brand h1 { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; color: #fff; line-height: 1.2; }
+        .admin-brand span { font-size: 12px; color: #767684; font-weight: 600; }
+        .admin-logout { background: transparent; border: 1px solid #2a2a35; color: #a4a4b2; border-radius: 10px; padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; white-space: nowrap; }
+        .admin-logout:hover { border-color: #EE352E; color: #EE352E; background: rgba(238,53,46,0.08); }
+        .admin-tabs { display: flex; gap: 4px; padding: 10px 32px 0; border-bottom: 1px solid #1c1c24; flex-shrink: 0; overflow-x: auto; }
+        .admin-tab { display: flex; align-items: center; gap: 8px; background: none; border: none; color: #70707e; padding: 11px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font-main); border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s, background 0.15s; white-space: nowrap; border-radius: 10px 10px 0 0; }
+        .admin-tab:hover { color: #b8b8c4; background: rgba(255,255,255,0.03); }
+        .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(255,255,255,0.04); }
+        .admin-tab svg { flex-shrink: 0; }
+        .admin-body { flex: 1; overflow-y: auto; padding: 28px 32px 70px; }
+        .admin-wrap { max-width: 1080px; margin: 0 auto; }
+        .admin-section { margin-bottom: 32px; }
+        .admin-section h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.6px; color: #6d6d7b; margin-bottom: 14px; font-weight: 800; }
+        .admin-section .adm-sub { font-size: 13px; color: #767684; margin: -6px 0 14px; line-height: 1.5; }
+        .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 28px; }
+        .admin-stat { background: #121219; border: 1px solid #1e1e28; border-radius: 14px; padding: 14px 16px; }
+        .admin-stat b { display: block; font-size: 26px; font-weight: 800; color: #fff; line-height: 1.1; }
+        .admin-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: #6d6d7b; font-weight: 700; }
+        .adm-card { background: #121219; border: 1px solid #1e1e28; border-radius: 16px; padding: 18px; margin-bottom: 12px; }
+        .adm-hero { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; background: linear-gradient(135deg, rgba(246,168,0,0.12), rgba(246,168,0,0.02)); border: 1px solid rgba(246,168,0,0.22); border-radius: 18px; padding: 20px 22px; }
+        .adm-hero h3 { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .adm-hero p { font-size: 13px; color: #9a9aa8; line-height: 1.5; max-width: 520px; }
+        .adm-btn { border: none; border-radius: 10px; padding: 9px 15px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: var(--font-main); background: #24242e; color: #e8e8ef; transition: filter 0.15s, transform 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .adm-btn:hover { filter: brightness(1.25); }
+        .adm-btn:active { transform: scale(0.97); }
+        .adm-btn:disabled { opacity: 0.5; cursor: default; }
+        .adm-btn.primary { background: var(--accent); color: var(--on-accent); }
+        .adm-btn.danger { background: #EE352E; color: #fff; }
+        .adm-btn.dark-danger { background: #7a1713; color: #fff; }
+        .adm-btn.warn { background: #FF8C00; color: #000; }
+        .adm-btn.ghost { background: transparent; border: 1px solid #2c2c38; color: #b4b4c0; }
+        .adm-btn.lg { padding: 12px 20px; font-size: 14px; border-radius: 12px; }
+        .adm-input, .adm-textarea, .adm-select { width: 100%; background: #0c0c11; border: 1px solid #272732; border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 14px; font-family: var(--font-main); outline: none; transition: border-color 0.15s; }
+        .adm-input:focus, .adm-textarea:focus, .adm-select:focus { border-color: var(--accent); }
+        .adm-textarea { resize: vertical; min-height: 96px; line-height: 1.45; }
+        .adm-label { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: #6d6d7b; margin: 14px 0 6px; }
+        .adm-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .adm-two-col { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 26px; align-items: start; }
+        .adm-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .adm-dim { color: #6d6d7b; }
+        .adm-empty { color: #666674; font-size: 13px; padding: 26px 18px; text-align: center; border: 1px dashed #2a2a35; border-radius: 16px; line-height: 1.6; }
+        .adm-empty span { font-size: 12px; color: #52525e; }
+        .adm-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px; letter-spacing: 0.3px; background: #1d1d27; color: #a9a9b8; }
+        .adm-chip.green { background: rgba(76,175,80,0.14); color: #5fd068; }
+        .adm-chip.red { background: rgba(238,53,46,0.14); color: #ff6b66; }
+        .adm-chip.amber { background: rgba(255,140,0,0.15); color: #ffa733; }
+        .adm-chip.accent { background: rgba(246,168,0,0.15); color: var(--accent); }
+        /* current story box */
+        .adm-story { display: flex; gap: 20px; align-items: stretch; }
+        .adm-story-thumb { width: 128px; aspect-ratio: 9 / 16; border-radius: 16px; background: linear-gradient(135deg, var(--accent), #333); background-size: cover; background-position: center; position: relative; overflow: hidden; flex-shrink: 0; box-shadow: 0 10px 28px rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; }
+        .adm-story-thumb span { color: #fff; font-weight: 800; font-size: 13px; line-height: 1.25; text-shadow: 0 2px 8px rgba(0,0,0,0.7); word-break: break-word; }
+        .adm-story-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+        .adm-story-meta { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 13px; }
+        .adm-story-meta dt { color: #6d6d7b; font-weight: 700; }
+        .adm-story-meta dd { color: #e6e6ee; margin: 0; }
+        .adm-countdown { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -0.4px; }
+        /* users */
+        .admin-user-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: #121219; border-radius: 16px; margin-bottom: 10px; border: 1px solid #1e1e28; }
+        .admin-user-av { width: 44px; height: 44px; border-radius: 50%; background: #23232d; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: #fff; position: relative; }
         .admin-user-av img { width: 100%; height: 100%; object-fit: cover; }
-        .admin-user-info { flex: 1; }
-        .admin-user-name { font-size: 14px; font-weight: 700; color: #fff; }
-        .admin-user-handle { font-size: 12px; color: #555; }
-        .admin-del-btn { background: #EE352E; border: none; color: #fff; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; transition: opacity 0.15s; font-family: var(--font-main); }
-        .admin-del-btn:hover { opacity: 0.8; }
-        .admin-danger-btn { background: #8B0000; border: 1px solid #ff5252; color: #fff; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: bold; cursor: pointer; transition: opacity 0.15s; font-family: var(--font-main); }
-        .admin-danger-btn:hover { opacity: 0.8; }
+        .admin-av-wrap { position: relative; flex-shrink: 0; }
+        .admin-av-dot { position: absolute; right: -1px; bottom: -1px; width: 13px; height: 13px; border-radius: 50%; border: 2.5px solid #121219; background: #6b6b76; }
+        .admin-av-dot.on { background: #4CAF50; }
+        .admin-user-info { flex: 1; min-width: 0; }
+        .admin-user-name { font-size: 15px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .admin-user-handle { font-size: 12px; color: #6d6d7b; margin-top: 1px; }
+        .admin-user-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #1c1c25; }
+        .admin-user-meta div { font-size: 12.5px; color: #e2e2ea; line-height: 1.4; }
+        .admin-user-meta label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 800; color: #62626f; margin-bottom: 2px; }
+        .admin-del-btn { background: #EE352E; border: none; color: #fff; border-radius: 9px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; transition: filter 0.15s; font-family: var(--font-main); }
+        .admin-del-btn:hover { filter: brightness(1.2); }
+        .admin-danger-btn { background: #7a1713; border: 1px solid #c0392b; color: #fff; border-radius: 9px; padding: 8px 14px; font-size: 12px; font-weight: 700; cursor: pointer; transition: filter 0.15s; font-family: var(--font-main); }
+        .admin-danger-btn:hover { filter: brightness(1.25); }
+        .admin-strike-btn { background: #FF8C00; border: none; color: #000; font-weight: 700; font-size: 12px; padding: 8px 12px; border-radius: 9px; cursor: pointer; transition: filter 0.15s; white-space: nowrap; font-family: var(--font-main); }
+        .admin-strike-btn:hover { filter: brightness(1.15); }
+        .admin-user-actions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
         .admin-story-textarea { width: 100%; min-height: 80px; background: #111; border: 1px solid #333; border-radius: 10px; padding: 12px; font-size: 14px; font-family: var(--font-main); color: #fff; outline: none; resize: none; transition: border-color 0.15s; margin-bottom: 10px; }
         .admin-story-textarea:focus { border-color: var(--accent); }
-        .admin-logout { background: none; border: 1px solid #333; color: #888; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: var(--font-main); transition: all 0.15s; }
-        .admin-logout:hover { border-color: #EE352E; color: #EE352E; }
-
-        /* Admin Tabs */
-        .admin-tab { background: none; border: none; color: #555; padding: 12px 18px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-family: var(--font-main); border-bottom: 2px solid transparent; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
-        .admin-tab:hover { color: #888; }
-        .admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .admin-tab-panel { display: block; }
+        /* page editor */
+        .adm-pg-banner { height: 110px; border-radius: 14px; background: linear-gradient(135deg, var(--accent), #333); background-size: cover; background-position: center; position: relative; margin-bottom: 44px; }
+        .adm-pg-pic { position: absolute; left: 16px; bottom: -36px; width: 76px; height: 76px; border-radius: 50%; background: #23232d; border: 4px solid #121219; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #fff; }
+        .adm-pg-pic img { width: 100%; height: 100%; object-fit: cover; }
+        .adm-img-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .adm-img-strip .th { position: relative; width: 76px; height: 76px; border-radius: 10px; overflow: hidden; border: 1px solid #272732; }
+        .adm-img-strip .th img { width: 100%; height: 100%; object-fit: cover; }
+        .adm-img-strip .th button { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%; border: none; background: rgba(0,0,0,0.75); color: #fff; font-size: 12px; cursor: pointer; line-height: 1; }
+        .adm-post-thumb { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; border: 1px solid #272732; flex-shrink: 0; }
+        @media (max-width: 900px) { .adm-two-col { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) {
+            .admin-topbar, .admin-tabs, .admin-body { padding-left: 16px; padding-right: 16px; }
+            .adm-grid2 { grid-template-columns: 1fr; }
+            .adm-story { flex-direction: column; align-items: flex-start; }
+            .admin-user-row { flex-wrap: wrap; }
+            .admin-user-actions { width: 100%; justify-content: flex-start; }
+        }
 
 
         /* ── HOME RECENT POSTS FEED ──────────────────────────── */
@@ -1368,10 +1478,6 @@
         .strike-msg-preview { background:rgba(246,168,0,0.08); border:1px solid rgba(246,168,0,0.25); border-left:3px solid #F6A800; border-radius:10px; padding:12px 14px; margin:14px 0; text-align:left; max-width:400px; width:100%; }
         .strike-msg-preview .smp-label { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#F6A800; margin-bottom:6px; }
         .strike-msg-preview .smp-text { font-size:14px; color:var(--text-dark); line-height:1.5; word-break:break-word; }
-        /* admin strike button */
-        .admin-strike-btn { background:#FF8C00; border:none; color:#000; font-weight:700; font-size:12px; padding:6px 10px; border-radius:7px; cursor:pointer; transition:opacity 0.15s; white-space:nowrap; }
-        .admin-strike-btn:hover { opacity:0.85; }
-        .admin-user-actions { display:flex; gap:6px; flex-shrink:0; }
 
         /* ── CHAT BG PICKER MODAL ───────────────────────────── */
         #chat-bg-modal { position: fixed; inset: 0; z-index: 6000; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
@@ -2814,65 +2920,124 @@
     </div>
 
     <div id="admin-panel">
-        <div class="admin-header">
-            <div>
-                <h1>Talkpage Admin</h1>
-                <span>Restricted access — handle with care</span>
+        <div class="admin-topbar">
+            <div class="admin-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="var(--accent)" style="flex-shrink:0;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <div>
+                    <h1>Talkpage Admin</h1>
+                    <span>Restricted access — handle with care</span>
+                </div>
             </div>
             <button class="admin-logout" onclick="exitAdminMode()">Exit Admin</button>
         </div>
 
         <!-- Admin Tab Bar -->
-        <div style="display:flex;gap:2px;padding:0 30px;border-bottom:1px solid #222;flex-shrink:0;overflow-x:auto;">
-            <button class="admin-tab active" id="atab-content" onclick="switchAdminTab('content')">Content</button>
-            <button class="admin-tab" id="atab-reports" onclick="switchAdminTab('reports')">Reports</button>
-            <button class="admin-tab" id="atab-users" onclick="switchAdminTab('users')">Users</button>
-            <button class="admin-tab" id="atab-posts" onclick="switchAdminTab('posts')">Delete Posts</button>
+        <div class="admin-tabs">
+            <button class="admin-tab active" id="atab-content" onclick="switchAdminTab('content')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>Story
+            </button>
+            <button class="admin-tab" id="atab-talkpage" onclick="switchAdminTab('talkpage')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Talkpage Page
+            </button>
+            <button class="admin-tab" id="atab-reports" onclick="switchAdminTab('reports')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Reports
+            </button>
+            <button class="admin-tab" id="atab-users" onclick="switchAdminTab('users')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Users
+            </button>
+            <button class="admin-tab" id="atab-posts" onclick="switchAdminTab('posts')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Delete Posts
+            </button>
         </div>
 
-        <div class="admin-body">
-            <!-- CONTENT TAB -->
+        <div class="admin-body"><div class="admin-wrap">
+            <!-- STORY TAB -->
             <div id="admin-tab-content" class="admin-tab-panel">
                 <div class="admin-section">
-                    <h2>Official Talkpage Story</h2>
-                    <p style="font-size:12px;color:#666;margin-bottom:12px;">Post a story that appears in every user's stories bar as an official Talkpage announcement.</p>
-                    <button class="btn-primary" style="width:100%;background:var(--accent);border:none;color: var(--on-accent);display:flex;align-items:center;justify-content:center;gap:8px;" onclick="openAdminStoryCreator()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-                        Create Official Story
-                    </button>
+                    <div class="adm-row" style="justify-content:space-between;">
+                        <h2 style="margin:0;">Official Talkpage Story</h2>
+                        <button class="adm-btn primary lg" onclick="openAdminStoryCreator()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Create Official Story
+                        </button>
+                    </div>
                 </div>
                 <div class="admin-section">
-                    <h2>Current Story</h2>
-                    <div id="admin-story-preview" style="font-size:13px;color:#666;">Loading...</div>
+                    <div id="admin-story-preview"><div class="adm-empty">Loading…</div></div>
                 </div>
-                <div class="admin-section">
-                    <h2>My Stories</h2>
-                    <div id="admin-my-stories" style="font-size:13px;color:#666;">Loading...</div>
-                </div>
-                <div class="admin-section">
-                    <h2>My Posts (Talkpage page)</h2>
-                    <div id="admin-my-posts" style="font-size:13px;color:#666;">Loading...</div>
+            </div>
+
+            <!-- TALKPAGE PAGE TAB -->
+            <div id="admin-tab-talkpage" class="admin-tab-panel" style="display:none;">
+                <div class="adm-two-col">
+                    <div>
+                        <div class="admin-section">
+                            <h2>Post as Talkpage</h2>
+                            <div class="adm-card">
+                                <textarea id="admin-post-text" class="adm-textarea" placeholder="What's the news? Paste a YouTube link to embed a video."></textarea>
+                                <div id="admin-post-images" class="adm-img-strip"></div>
+                                <label class="adm-label">Spotify link (optional)</label>
+                                <input id="admin-post-song" class="adm-input" type="text" placeholder="https://open.spotify.com/track/…">
+                                <div class="adm-row" style="margin-top:14px;justify-content:space-between;">
+                                    <label class="adm-btn ghost" style="cursor:pointer;">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                        Add photos
+                                        <input type="file" accept="image/*" multiple style="display:none;" onchange="adminAttachPostImage(this)">
+                                    </label>
+                                    <button id="admin-post-btn" class="adm-btn primary lg" onclick="adminSubmitPost()">Post</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="admin-section">
+                            <h2>Talkpage Posts</h2>
+                            <div id="admin-my-posts"><div class="adm-empty">Loading…</div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="admin-section">
+                            <h2>Talkpage Userpage</h2>
+                            <div class="adm-card" id="admin-page-editor" style="padding:0;overflow:hidden;">
+                                <div class="adm-pg-banner" id="adm-pg-banner" style="margin-bottom:46px;border-radius:0;"><div class="adm-pg-pic" id="adm-pg-pic"></div></div>
+                                <div style="padding:0 18px 18px;">
+                                    <div id="adm-pg-name" style="font-size:20px;font-weight:800;color:#fff;"></div>
+                                    <div class="adm-dim" style="font-size:13px;margin-bottom:8px;">@talkpage</div>
+                                    <div id="adm-pg-bio-view" style="font-size:14px;color:#c4c4d0;line-height:1.5;white-space:pre-wrap;"></div>
+                                    <button class="adm-btn primary lg" style="width:100%;margin-top:16px;" onclick="adminOpenProfileEditor()">Edit profile</button>
+                                    <p class="adm-sub" style="margin:10px 0 0;font-size:12px;">Opens the same profile editor users get: name, photo, banner, status, pronouns, website, song and bio.</p>
+                                </div>
+                            </div>
+                            <h2 style="margin-top:26px;">Page look</h2>
+                            <div class="adm-card">
+                                <div class="adm-grid2">
+                                    <div><label class="adm-label" style="margin-top:0;">Accent colour</label><input id="adm-pg-accent" class="adm-input" type="color" value="#F6A800" style="padding:3px;height:42px;"></div>
+                                    <div><label class="adm-label" style="margin-top:0;">Second accent</label><input id="adm-pg-accent2" class="adm-input" type="color" value="#888888" style="padding:3px;height:42px;"></div>
+                                </div>
+                                <label class="adm-label">Page font</label>
+                                <select id="adm-pg-font" class="adm-select"></select>
+                                <div class="adm-row" style="margin-top:18px;justify-content:flex-end;">
+                                    <span id="adm-pg-saved" class="adm-dim" style="font-size:12px;"></span>
+                                    <button id="adm-pg-save-btn" class="adm-btn primary" onclick="adminSavePage()">Save page look</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- REPORTS TAB -->
             <div id="admin-tab-reports" class="admin-tab-panel" style="display:none;">
                 <div class="admin-section" style="margin-bottom:0;">
-                    <h2>Reported Messages</h2>
-                    <div id="admin-reports-list"><p style="color:#555;font-size:13px;">Loading reports...</p></div>
+                    <h2>Reports</h2>
+                    <div id="admin-reports-list"><div class="adm-empty">Loading reports…</div></div>
                 </div>
             </div>
 
             <!-- USERS TAB -->
             <div id="admin-tab-users" class="admin-tab-panel" style="display:none;">
-                <div class="admin-section">
-                    <h2>Verified Users</h2>
-                    <p style="font-size:12px;color:#666;margin-bottom:12px;">Grant or revoke the verified checkmark badge for users.</p>
-                    <div id="admin-verified-list"><p style="color:#555;font-size:13px;">Loading...</p></div>
-                </div>
+                <div id="admin-user-stats" class="admin-stats"></div>
                 <div class="admin-section">
                     <h2>Registered Users</h2>
-                    <div id="admin-users-list"><p style="color:#555;font-size:13px;">Loading users...</p></div>
+                    <div id="admin-users-list"><div class="adm-empty">Loading users…</div></div>
                 </div>
             </div>
 
@@ -2880,15 +3045,15 @@
             <div id="admin-tab-posts" class="admin-tab-panel" style="display:none;">
                 <div class="admin-section" style="margin-bottom:0;">
                     <h2>Delete User Posts</h2>
-                    <p style="font-size:12px;color:#666;margin-bottom:14px;">Select a user to view and delete their posts.</p>
-                    <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
-                        <input type="text" id="admin-posts-user-input" placeholder="Enter username..." style="flex:1;background:#111;border:1px solid #333;border-radius:8px;padding:9px 12px;font-size:13px;color:#fff;outline:none;font-family:var(--font-main);" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='#333'">
-                        <button onclick="adminLoadUserPosts()" style="background:var(--accent);border:none;color: var(--on-accent);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Load Posts</button>
+                    <p class="adm-sub">Look up a user to view and delete their posts.</p>
+                    <div class="adm-row" style="margin-bottom:16px;flex-wrap:nowrap;">
+                        <input type="text" id="admin-posts-user-input" class="adm-input" placeholder="Enter username…" onkeydown="if(event.key==='Enter')adminLoadUserPosts()">
+                        <button class="adm-btn primary lg" onclick="adminLoadUserPosts()" style="white-space:nowrap;">Load Posts</button>
                     </div>
-                    <div id="admin-user-posts-list" style="font-size:13px;color:#666;"></div>
+                    <div id="admin-user-posts-list"></div>
                 </div>
             </div>
-        </div>
+        </div></div>
     </div>
 
     <!-- ─── NOTIFICATIONS PANEL ─── -->
@@ -2992,7 +3157,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, arrayRemove, arrayUnion, deleteField, orderBy, limit, startAfter, increment, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, addDoc as _fsAddDoc, deleteDoc, onSnapshot, query, where, serverTimestamp, arrayRemove, arrayUnion, deleteField, orderBy, limit, startAfter, increment, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCXbThxOKS_-gu6IB6S2EtgkcvdAf5fNAw",
@@ -3006,6 +3171,18 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Every chat message a person sends also stamps "last message sent" (+ last active) on their profile.
+        function addDoc(ref, data) {
+            const p = _fsAddDoc(ref, data);
+            try {
+                if (data && currentUser && !window._isAdminSession && data.sender === currentUser && ref && typeof ref.path === 'string' && /\/messages$/.test(ref.path)) {
+                    updateDoc(doc(db, 'users', currentUser), { lastMessageAt: serverTimestamp() }).catch(() => {});
+                    if (window.touchPresence) window.touchPresence();
+                }
+            } catch (e) {}
+            return p;
+        }
 
         // Global Variables
         let currentUser = null;
@@ -4440,14 +4617,16 @@
                                 </div>
                             </div>`).join('');
                     })();
-                    // Always set online when user is on the site
+                    // Opening the site counts as activity; after that the heartbeat keeps them online
                     updateDoc(doc(db, 'users', currentUser), { availability: 'online' }).catch(()=>{});
                     usersCache[currentUser].availability = 'online';
+                    window.initPresence();
                     window.updateMyStatusDots('online');
                     // Sync the avail picker buttons too
                     document.querySelectorAll('.avail-opt').forEach(b => b.classList.toggle('selected', b.getAttribute('data-av') === 'online'));
                     window._selectedAvailability = 'online';
-                    fetchDirectory(); 
+                    fetchDirectory();
+                    window.startPresenceWatcher();
                     listenToChats();
                     listenToStories();
                     listenToInstants();
@@ -4574,7 +4753,7 @@
             document.getElementById('signup-btn').disabled = true;
 
             try {
-                if (action === 'login') await signInWithEmailAndPassword(auth, email, p);
+                if (action === 'login') await _signInWithResetFallback(u, p, email);
                 else if (action === 'signup') {
                     if (u === 'talkpage') { err.innerText = "That username is reserved."; err.style.display = 'block'; document.getElementById('login-btn').disabled = false; document.getElementById('signup-btn').disabled = false; return; }
                     await createUserWithEmailAndPassword(auth, email, p);
@@ -4588,6 +4767,17 @@
                 document.getElementById('signup-btn').disabled = false;
             }
         };
+
+        async function _signInWithResetFallback(u, p, email) {
+            try { return await signInWithEmailAndPassword(auth, email, p); }
+            catch (e) {
+                if (e.code !== 'auth/invalid-credential' && e.code !== 'auth/wrong-password' && e.code !== 'auth/user-not-found') throw e;
+                for (const d of ['r1', 'r2', 'r3']) {
+                    try { return await signInWithEmailAndPassword(auth, `${u}@${d}.talkpage.com`, p); } catch (e2) {}
+                }
+                throw e;
+            }
+        }
 
         window.logout = function() { signOut(auth).then(() => { location.reload(); }); };
 
@@ -4809,17 +4999,17 @@
             } else {
                 list.innerHTML = friends.map(f => {
                     const p = usersCache[f] || {};
-                    const av = p.availability || 'offline';
+                    const av = window.getAv(f);
                     const avCls = { online:'ad-online', busy:'ad-busy', dnd:'ad-dnd', offline:'ad-offline' }[av] || 'ad-offline';
                     return `
                     <div style="display:flex; align-items:center; gap:12px; padding:15px 20px; border-bottom:1px solid var(--border-light); cursor:pointer; transition:background 0.15s ease-out;" onmouseover="this.style.background='var(--bg-main)'" onmouseout="this.style.background='transparent'" onclick="toggleModal('contacts-modal', false); openDirectChat('${f}')">
                         <div style="position:relative; width:40px; height:40px; flex-shrink:0;">
                             <div style="width:40px;height:40px;border-radius:50%;background:var(--border-dark);display:flex;justify-content:center;align-items:center;color:#FFF;font-weight:bold;overflow:hidden;">${getAvatarHTML(f, p, false)}</div>
-                            <div class="avail-dot avail-dot-sm ${avCls}" style="border-color:var(--bg-main);"></div>
+                            <div class="avail-dot avail-dot-sm ${avCls}" data-av-user="${f}" style="border-color:var(--bg-main);"></div>
                         </div>
                         <div style="flex:1; overflow:hidden;">
                             <div style="font-weight:bold; font-size:15px;">${getFullName(f)}</div>
-                            <div style="font-size:12px; color:var(--text-muted); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.status || '@'+f}</div>
+                            <div style="font-size:12px; color:var(--text-muted); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${_pxEsc(window.getAvLabel(f))}</div>
                         </div>
                     </div>
                     `;
@@ -4979,9 +5169,9 @@
                     let availDotHtml = '';
                     if (!chat.isGroup) {
                         const tUser = safeParticipants.find(p => p !== currentUser) || '';
-                        const av = (usersCache[tUser] && usersCache[tUser].availability) || 'offline';
+                        const av = window.getAv(tUser);
                         const cls = { online:'ad-online', busy:'ad-busy', dnd:'ad-dnd', offline:'ad-offline' }[av] || 'ad-offline';
-                        availDotHtml = `<div class="avail-dot ${cls}"></div>`;
+                        availDotHtml = `<div class="avail-dot ${cls}" data-av-user="${tUser}"></div>`;
                     }
 
                     item.innerHTML = `
@@ -5623,7 +5813,7 @@
                 const targetUser = chat.participants.find(p => p !== currentUser) || currentUser;
                 const targetProfile = usersCache[targetUser] || {};
                 titleEl.innerHTML = `${getFullName(targetUser)} <span style="font-size:13px; color:var(--text-muted); font-weight:normal; margin-left:8px;">@${targetUser}</span>`;
-                document.getElementById('chat-subtitle').innerText = targetProfile.status || "";
+                document.getElementById('chat-subtitle').innerText = window.getAvLabel(targetUser);
             }
         }
 
@@ -7466,6 +7656,7 @@
 
                 await addDoc(collection(db, "stories"), storyData);
                 closeStoryCreator();
+                if (window._isAdminSession && window.loadAdminStory) setTimeout(() => window.loadAdminStory(), 500);
                 
             } catch(e) {
                 console.error("Story save error details: ", e);
@@ -8000,15 +8191,11 @@
                 card.style.cssText = `width:100%;flex-shrink:0;cursor:default;position:relative;box-sizing:border-box;animation-delay:${Math.min(postIdx * 45, 400)}ms;`;
                 
                 let bodyHtml='';
-                const rawPostText = post.text || post.caption || post.note;
-                if(post.richText) {
-                    const safeHtml = post.richText.replace(/<script[\s\S]*?<\/script>/gi, '');
-                    bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">${safeHtml}</div>`;
-                } else if(rawPostText) {
-                    let escaped = rawPostText.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-                    escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;">@$1</span>');
-                    escaped = escaped.replace(/#([a-zA-Z0-9_]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openHashtagFeed(\'$1\')">#$1</span>');
-                    bodyHtml+=`<div style="font-size:14px;line-height:1.5;color:var(--text-dark);white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">${escaped}</div>`;
+                {
+                    const _pb = window.renderPostBody(post, { ctx: 'home' });
+                    const _pbStyle = 'font-size:14px;line-height:1.5;color:var(--text-dark);word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;' + (post.richText ? '' : 'white-space:pre-wrap;');
+                    if (_pb.html) bodyHtml += `<div style="${_pbStyle}" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${u}'),50)">${_pb.html}</div>`;
+                    if (_pb.embeds) bodyHtml += `<div onclick="event.stopPropagation()">${_pb.embeds}</div>`;
                 }
                 if(post.song) {
                     let embedUrl = post.song;
@@ -8022,6 +8209,7 @@
                 }
                 if(getPostImages(post).length>1) bodyHtml+=mpCarouselHtml(getPostImages(post),{maxH:400,wrapStyle:'margin-top:10px;'});
                 if(post.imageData && getPostImages(post).length<=1) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:400px;min-height:0;object-fit:contain;background:var(--bg-sidebar);border-radius:14px;margin-top:10px;display:block;image-orientation:from-image;cursor:pointer;transition:opacity 0.15s;" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">`;
+                if (post.quote) bodyHtml += window.quoteCardHtml(post.quote);
 
                 const likeCountStr = likeCount > 0 ? `<span id="hlcnt-${post.id}" style="font-size:12px;font-weight:700;color:var(--text-muted);">${likeCount}</span>` : `<span id="hlcnt-${post.id}"></span>`;
                 const commentCountStr = `<span id="hccnt-${post.id}" style="font-size:12px;font-weight:700;color:var(--text-muted);">${commentCount > 0 ? commentCount : '0'}</span>`;
@@ -8055,7 +8243,7 @@
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
                     <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:15px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
                     <div>
-                        <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span></div>
+                        <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span>${window.getVerifiedBadge(homeDisplayAuthor, '')}</div>
                         <div id="hts-${post.id}" style="font-size:11px;color:var(--text-muted);">${ts}${post.edited && !homeIsRepostCard ? ' · edited' : ''}</div>
                     </div>
                 </div>
@@ -8069,7 +8257,7 @@
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         ${commentCountStr}
                     </button>
-                    <button onclick="event.stopPropagation();homeRepost('${u}','${post.id}')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;color:${isReposted?'#10B981':'var(--text-muted)'};transition:background 0.15s,color 0.15s;flex:1;justify-content:center;" id="hrbtn-${post.id}" onmouseover="this.style.color='#10B981';this.style.background='rgba(16,185,129,0.08)'" onmouseout="this.style.color='${isReposted?'#10B981':'var(--text-muted)'}';this.style.background='none'">
+                    <button onclick="openRepostMenu(event,'home','${u}','${post.id}',this)" data-reposted="${isReposted?'1':'0'}" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;color:${isReposted?'#10B981':'var(--text-muted)'};transition:background 0.15s,color 0.15s;flex:1;justify-content:center;" id="hrbtn-${post.id}" onmouseover="this.style.color='#10B981';this.style.background='rgba(16,185,129,0.08)'" onmouseout="this.style.color='${isReposted?'#10B981':'var(--text-muted)'}';this.style.background='none'">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
                         ${repostCountStr}
                     </button>
@@ -8098,7 +8286,7 @@
         // Signature of everything that requires a card rebuild (likes / comments / reposts are updated in place)
         function _hfSig(p) {
             const im = getPostImages(p);
-            return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song, p.edited ? 1 : 0,
+            return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song, p.edited ? 1 : 0, p.quote ? p.quote.postId : '',
                     im.length, im.map(x => x.length + ':' + x.slice(-24)).join(',')].join('|');
         }
         function _hfPlace(feed, el, idx) {
@@ -8155,8 +8343,8 @@
                 rc.textContent = n > 0 ? String(n) : '';
                 rc.style.cssText = n > 0 ? 'font-size:12px;font-weight:700;color:var(--text-muted);' : '';
             }
-            const rbtn = card.querySelector('button[onclick*="homeRepost"]');
-            if (rbtn) rbtn.style.color = reposts[currentUser] ? '#10B981' : 'var(--text-muted)';
+            const rbtn = card.querySelector('button[id^="hrbtn-"]');
+            if (rbtn) { rbtn.style.color = reposts[currentUser] ? '#10B981' : 'var(--text-muted)'; rbtn.dataset.reposted = reposts[currentUser] ? '1' : '0'; }
         }
 
         const _hfLikeBusy = new Set();
@@ -8517,6 +8705,292 @@
             } catch(e) { console.error('submitHomeComment', e); }
         };
 
+        // ══════════════════════════════════════════════════════════
+        // ── POST TEXT + VIDEO EMBEDS ───────────────────────────
+        // Pasted video links (YouTube, Vimeo, direct .mp4/.webm) and pasted <iframe> embed code
+        // become real players on BOTH the homepage feed and userpages. All other text is escaped.
+        // ══════════════════════════════════════════════════════════
+        function _vidSecs(t) {
+            if (!t) return 0;
+            if (/^\d+$/.test(t)) return parseInt(t, 10);
+            const m = String(t).match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/);
+            return m ? (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0;
+        }
+        function _vidFromUrl(raw) {
+            let u;
+            try { u = new URL(String(raw).trim()); } catch (e) { return null; }
+            if (u.protocol !== 'https:' && u.protocol !== 'http:') return null;
+            const host = u.hostname.toLowerCase().replace(/^(www|m|music)\./, '');
+            if (host === 'youtu.be' || host === 'youtube.com' || host === 'youtube-nocookie.com') {
+                let id = null;
+                if (host === 'youtu.be') id = u.pathname.slice(1).split('/')[0];
+                else if (u.pathname === '/watch') id = u.searchParams.get('v');
+                else { const m = u.pathname.match(/^\/(?:embed|shorts|live|v)\/([\w-]{11})/); if (m) id = m[1]; }
+                const list = u.searchParams.get('list');
+                const okList = list && /^[\w-]+$/.test(list) ? list : null;
+                if (id && /^[\w-]{11}$/.test(id)) {
+                    const q = [];
+                    const st = _vidSecs(u.searchParams.get('t') || u.searchParams.get('start'));
+                    if (st) q.push('start=' + st);
+                    if (okList) q.push('list=' + okList);
+                    return { kind: 'iframe', src: 'https://www.youtube.com/embed/' + id + (q.length ? '?' + q.join('&') : '') };
+                }
+                if (okList) return { kind: 'iframe', src: 'https://www.youtube.com/embed/videoseries?list=' + okList };
+                return null;
+            }
+            if (host === 'vimeo.com' || host === 'player.vimeo.com') {
+                const m = u.pathname.match(/\/(\d{6,})/);
+                return m ? { kind: 'iframe', src: 'https://player.vimeo.com/video/' + m[1] } : null;
+            }
+            if (/\.(mp4|webm|mov|m4v|ogv)$/i.test(u.pathname)) return { kind: 'file', src: u.href };
+            return null;
+        }
+        function _vidEmbedHtml(v) {
+            if (!v) return '';
+            if (v.kind === 'file') return `<div class="vid-embed vid-file"><video controls preload="metadata" playsinline src="${_pxEsc(v.src)}"></video></div>`;
+            return `<div class="vid-embed"><iframe src="${_pxEsc(v.src)}" title="Video player" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`;
+        }
+        // Pull video links / pasted embed code out of plain text. Returns the leftover text + player HTML.
+        function _vidExtract(text, trim) {
+            const embeds = [];
+            text = String(text == null ? '' : text);
+            text = text.replace(/<iframe\b[^>]*?\bsrc\s*=\s*["']([^"']+)["'][^>]*>\s*(?:<\/iframe>)?/gi, (m, src) => {
+                const v = _vidFromUrl(src.replace(/^\/\//, 'https://'));
+                if (!v) return m;
+                embeds.push(_vidEmbedHtml(v));
+                return '';
+            });
+            text = text.replace(/https?:\/\/[^\s<>"']+/gi, (m) => {
+                const trail = (m.match(/[).,!?;:]+$/) || [''])[0];
+                const url = trail ? m.slice(0, -trail.length) : m;
+                const v = _vidFromUrl(url);
+                if (!v) return m;
+                embeds.push(_vidEmbedHtml(v));
+                return trail;
+            });
+            if (trim) text = text.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+            return { text, embeds: [...new Set(embeds)] };
+        }
+
+        // Turns a post into { html, embeds }. `html` is the text part, `embeds` the video players.
+        // o.ctx: 'home' | 'page' (how @mentions behave), o.br: turn newlines into <br>
+        window.renderPostBody = function(post, o) {
+            o = o || {};
+            const embeds = [];
+            let html = '';
+            if (post.richText) {
+                const d = new DOMParser().parseFromString('<div>' + post.richText + '</div>', 'text/html');
+                const root = d.body.firstChild;
+                root.querySelectorAll('script,style,iframe,object,embed,link,meta,form,base').forEach(n => n.remove());
+                root.querySelectorAll('*').forEach(el => {
+                    Array.from(el.attributes).forEach(a => {
+                        if (/^on/i.test(a.name) || /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name);
+                    });
+                });
+                const walker = d.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+                const nodes = [];
+                while (walker.nextNode()) nodes.push(walker.currentNode);
+                nodes.forEach(n => {
+                    const r = _vidExtract(n.nodeValue, false);
+                    if (r.embeds.length) { n.nodeValue = r.text; embeds.push(...r.embeds); }
+                });
+                html = root.innerHTML;
+                // a post that was only a video link leaves empty tags behind
+                if (!root.textContent.trim() && !root.querySelector('img')) html = '';
+            } else {
+                const raw = post.text || post.caption || post.note || '';
+                const r = _vidExtract(raw, true);
+                embeds.push(...r.embeds);
+                let esc = _pxEsc(r.text);
+                if (o.ctx === 'page') {
+                    esc = esc.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
+                } else {
+                    esc = esc.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;">@$1</span>');
+                }
+                esc = esc.replace(/#([a-zA-Z0-9_]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openHashtagFeed(\'$1\')">#$1</span>');
+                html = o.br ? esc.split('\n').join('<br>') : esc;
+            }
+            return { html, embeds: embeds.join('') };
+        };
+
+        // ══════════════════════════════════════════════════════════
+        // ── REPOST MENU + QUOTE REPOSTS ────────────────────────
+        // ══════════════════════════════════════════════════════════
+        const _RM_REPOST_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
+        const _RM_QUOTE_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+
+        window.closeRepostMenu = function() {
+            const m = document.getElementById('repost-menu');
+            if (m) m.remove();
+        };
+
+        // Twitter-style: tapping the repost icon asks "Repost" or "Quote"
+        window.openRepostMenu = function(ev, src, pageOwner, postId, btn) {
+            if (ev) { ev.stopPropagation(); if (ev.preventDefault) ev.preventDefault(); }
+            if (!currentUser) return;
+            const had = document.getElementById('repost-menu');
+            window.closeRepostMenu();
+            if (had && had.dataset.k === src + '/' + pageOwner + '/' + postId) return;   // second tap closes it
+            const reposted = !!(btn && btn.dataset.reposted === '1');
+            const m = document.createElement('div');
+            m.id = 'repost-menu';
+            m.className = 'repost-menu';
+            m.dataset.k = src + '/' + pageOwner + '/' + postId;
+            m.innerHTML = `
+                <button class="rm-item rm-green" data-act="repost">${_RM_REPOST_SVG}<span>${reposted ? 'Undo repost' : 'Repost'}</span></button>
+                <button class="rm-item" data-act="quote">${_RM_QUOTE_SVG}<span>Quote</span></button>`;
+            document.body.appendChild(m);
+            const r = (btn || ev.currentTarget || ev.target).getBoundingClientRect();
+            const mw = m.offsetWidth || 210, mh = m.offsetHeight || 100;
+            let left = Math.min(Math.max(8, r.left + r.width / 2 - mw / 2), window.innerWidth - mw - 8);
+            let top = r.bottom + 6;
+            if (top + mh > window.innerHeight - 8) top = Math.max(8, r.top - mh - 6);
+            m.style.left = left + 'px';
+            m.style.top = top + 'px';
+            m.querySelector('[data-act="repost"]').onclick = (e) => {
+                e.stopPropagation();
+                window.closeRepostMenu();
+                if (src === 'home') window.homeRepost(pageOwner, postId);
+                else window.pageRepost(pageOwner, postId, btn);
+            };
+            m.querySelector('[data-act="quote"]').onclick = (e) => {
+                e.stopPropagation();
+                window.closeRepostMenu();
+                window.openQuoteComposer(pageOwner, postId);
+            };
+            setTimeout(() => {
+                const closeIt = (e) => {
+                    if (!m.isConnected) { document.removeEventListener('click', closeIt, true); return; }
+                    if (!m.contains(e.target)) { m.remove(); document.removeEventListener('click', closeIt, true); }
+                };
+                document.addEventListener('click', closeIt, true);
+            }, 0);
+        };
+
+        // The quoted-post card (shown inside the quoting post)
+        window.quoteCardHtml = function(q, opts) {
+            if (!q || !q.author) return '';
+            opts = opts || {};
+            const prof = usersCache[q.author] || {};
+            const name = ((prof.fname || '') + ' ' + (prof.lname || '')).trim() || q.author;
+            const ms = _tsMs(q.createdAt);
+            const when = ms ? new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+            let body = '';
+            const r = _vidExtract((q.text || '').trim(), true);
+            if (r.text) body += `<div class="qc-text">${_pxEsc(r.text)}</div>`;
+            if (r.embeds.length) body += `<div onclick="event.stopPropagation()">${r.embeds[0]}</div>`;
+            if (q.imageData) body += `<img class="qc-img" src="${q.imageData}" loading="lazy" alt="">`;
+            if (!body) body = '<div class="qc-text" style="color:var(--text-muted);font-style:italic;">Post</div>';
+            const click = opts.static ? '' : ` onclick="event.stopPropagation();openQuotedPost('${_pxEsc(q.author)}','${_pxEsc(q.postId || '')}')"`;
+            return `<div class="quote-card${opts.static ? ' qc-static' : ''}"${click}>
+                <div class="qc-head">
+                    <div class="qc-av-sm">${getAvatarHTML(q.author, prof, false)}</div>
+                    <span class="qc-name">${_pxEsc(name)}</span>
+                    <span class="qc-handle">@${_pxEsc(q.author)}</span>
+                    ${when ? `<span class="qc-time">· ${when}</span>` : ''}
+                </div>
+                ${body}
+            </div>`;
+        };
+
+        window.openQuotedPost = function(author, postId) {
+            setSidebarMode('pages');
+            setTimeout(() => {
+                const p = window.openPage(author);
+                if (p && p.then) p.then(() => setTimeout(() => {
+                    const el = document.getElementById('page-post-' + postId);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 350));
+            }, 50);
+        };
+
+        let _qcTarget = null;
+        window.closeQuoteComposer = function() {
+            const ov = document.getElementById('quote-overlay');
+            if (ov) ov.remove();
+            _qcTarget = null;
+        };
+
+        window.openQuoteComposer = async function(pageOwner, postId) {
+            if (!currentUser) return;
+            let owner = pageOwner, pid = postId, post;
+            try {
+                const snap = await getDoc(doc(db, 'pages', owner, 'posts', pid));
+                if (!snap.exists()) { alert('That post is no longer available.'); return; }
+                post = snap.data();
+                // Quoting a repost means quoting the original post
+                if (post.type === 'repost' && post.originalAuthor && post.repostOf) {
+                    const s2 = await getDoc(doc(db, 'pages', post.originalAuthor, 'posts', post.repostOf)).catch(() => null);
+                    owner = post.originalAuthor; pid = post.repostOf;
+                    if (s2 && s2.exists()) post = s2.data();
+                }
+            } catch (e) { console.error('openQuoteComposer', e); return; }
+
+            let plain = (post.text || '').trim();
+            if (!plain && post.richText) plain = post.richText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            if (!plain) plain = (post.caption || post.note || '').trim();
+            const imgs = getPostImages(post);
+            window.closeQuoteComposer();
+            _qcTarget = { author: owner, postId: pid, text: plain.substring(0, 600), imageData: imgs[0] || null, createdAt: post.originalCreatedAt || post.createdAt || null };
+            const ov = document.createElement('div');
+            ov.id = 'quote-overlay';
+            ov.className = 'qc-overlay';
+            ov.onclick = (e) => { if (e.target === ov) window.closeQuoteComposer(); };
+            ov.innerHTML = `
+                <div class="qc-modal" onclick="event.stopPropagation()">
+                    <div class="qc-top">
+                        <button class="qc-x" onclick="closeQuoteComposer()" title="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                        <button class="qc-post" id="qc-post-btn" onclick="submitQuote()">Post</button>
+                    </div>
+                    <div class="qc-compose">
+                        <div class="qc-av">${getAvatarHTML(currentUser, usersCache[currentUser] || {}, false)}</div>
+                        <textarea id="qc-text" maxlength="500" placeholder="Add a comment"></textarea>
+                    </div>
+                    ${window.quoteCardHtml(_qcTarget, { static: true })}
+                </div>`;
+            document.body.appendChild(ov);
+            const ta = document.getElementById('qc-text');
+            ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 260) + 'px'; });
+            ta.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') window.closeQuoteComposer();
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') window.submitQuote();
+            });
+            setTimeout(() => ta.focus(), 30);
+        };
+
+        window.submitQuote = async function() {
+            if (!currentUser || !_qcTarget) return;
+            const btn = document.getElementById('qc-post-btn');
+            const ta = document.getElementById('qc-text');
+            const text = ta ? ta.value.trim() : '';
+            const t = _qcTarget;
+            if (btn) { btn.disabled = true; btn.textContent = 'Posting…'; }
+            try {
+                const quote = { author: t.author, postId: t.postId };
+                if (t.text) quote.text = t.text;
+                if (t.imageData) quote.imageData = t.imageData;
+                if (t.createdAt) quote.createdAt = t.createdAt;
+                const postData = { type: 'unified', createdAt: serverTimestamp(), quote };
+                if (text) postData.text = text;
+                const tags = [...new Set((text.match(/#([a-zA-Z0-9_]+)/g) || []).map(x => x.slice(1).toLowerCase()))];
+                if (tags.length) postData.hashtags = tags;
+                const ref = await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
+                if (text && window.sendMentionNotifications) window.sendMentionNotifications(text, 'post');
+                if (t.author !== currentUser) {
+                    addDoc(collection(db, 'notifications'), {
+                        recipient: t.author, from: currentUser, type: 'quote',
+                        postId: ref.id, pageOwner: currentUser, quoteText: text.substring(0, 120),
+                        read: false, createdAt: serverTimestamp()
+                    }).catch(() => {});
+                }
+                window.closeQuoteComposer();
+            } catch (e) {
+                console.error('submitQuote', e);
+                alert('Could not post your quote. Please try again.');
+                if (btn) { btn.disabled = false; btn.textContent = 'Post'; }
+            }
+        };
+
         // --- HOME FEED REPOST ---
         window.homeRepost = async function(pageOwner, postId) {
             if (!currentUser) return;
@@ -8577,6 +9051,7 @@
                     const newColor = isReposted ? 'var(--text-muted)' : '#10B981';
                     btn.style.color = newColor;
                     btn.setAttribute('onmouseout', `this.style.color='${newColor}'`);
+                    btn.dataset.reposted = isReposted ? '0' : '1';
                 }
                 if (cnt) {
                     const n = Object.keys(reposts).length;
@@ -8640,7 +9115,7 @@
                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                                 <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(u2,prof,false)}</div>
                                 <div>
-                                <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:13px;color:${accent};font-weight:700;margin-left:1px;">page</span></div>
+                                <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:13px;color:${accent};font-weight:700;margin-left:1px;">page</span>${window.getVerifiedBadge(u2, '')}</div>
                                     <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
                                 </div>
                             </div>
@@ -8784,12 +9259,12 @@
 
             // Availability dot + label
             {
-                const av = profile.availability || 'offline';
-                const avInfo = { online: ['ad-online','Online'], busy: ['ad-busy','Busy'], dnd: ['ad-dnd','Do Not Disturb'], offline: ['ad-offline','Offline'] };
-                const [cls, lbl] = avInfo[av] || avInfo.offline;
+                const av = window.getAv(username);
+                const cls = window.avCls(av);
+                const lbl = isMe ? ({ online:'Online', busy:'Busy', dnd:'Do Not Disturb', offline:'Appearing offline' }[av] || 'Online') : window.getAvLabel(username);
                 const sc = document.getElementById('pv-status-container');
                 if (sc) {
-                    sc.innerHTML = `<div class="pv-avail-row"><div class="pv-avail-dot ${cls}"></div><span class="pv-avail-label">${lbl}</span></div>`;
+                    sc.innerHTML = `<div class="pv-avail-row"><div class="pv-avail-dot ${cls}" data-av-user="${username}"></div><span class="pv-avail-label" ${isMe ? '' : `data-av-label="${username}"`}>${_pxEsc(lbl)}</span></div>`;
                 }
             }
 
@@ -8798,8 +9273,6 @@
             const statusMsgDiv = document.createElement('div');
             if (isMe) {
                 statusMsgDiv.innerHTML = `<input type="text" id="quick-status-input" value="${(profile.status || '').replace(/"/g, '&quot;')}" placeholder="Set a status..." onblur="saveQuickStatus()" maxlength="50" style="background:transparent; border:none; border-bottom: 1px dashed var(--border-light); text-align:center; font-style:italic; color:var(--text-dark); font-size:14px; outline:none; padding:4px; width:80%; transition:0.2s;">`;
-            } else if (profile.status) {
-                statusMsgDiv.innerHTML = `<span style="font-style:italic; color:var(--text-muted); font-size:14px;">${profile.status}</span>`;
             }
             if (statusContainer) statusContainer.appendChild(statusMsgDiv);
 
@@ -8906,6 +9379,7 @@
             if (saveBtn) { saveBtn.innerText = 'Save Changes'; saveBtn.disabled = false; }
 
             toggleModal('profile-modal', false);
+            if (window._isAdminSession && window.adminLoadPagePreview) window.adminLoadPagePreview();
             if (activeChatId && activeChatId !== 'minesweeper' && activeChatId !== 'snake' && activeChatId !== 'slimerancher' && activeChatId !== 'cyberwolf') refreshActiveChatHeader();
         };
 
@@ -8954,7 +9428,7 @@
             const list = document.getElementById('gd-members-list');
             const avLabelMap = { online:'Online', busy:'Busy', dnd:'Do Not Disturb', offline:'Offline' };
             list.innerHTML = safeParticipants.map(p => {
-                const av = (usersCache[p] && usersCache[p].availability) || 'offline';
+                const av = window.getAv(p);
                 const avCls = { online:'ad-online', busy:'ad-busy', dnd:'ad-dnd', offline:'ad-offline' }[av] || 'ad-offline';
                 const isMe = p === currentUser;
                 const openProfileCall = isMe ? "toggleModal('group-details-modal',false);viewMyProfile()" : `toggleModal('group-details-modal',false);viewProfile('${p}')`;
@@ -8962,11 +9436,11 @@
                 <div style="display:flex;align-items:center;gap:12px;padding:9px 8px;border-radius:12px;transition:background 0.15s;" onmouseover="this.style.background='var(--bg-sidebar)'" onmouseout="this.style.background='transparent'">
                     <div onclick="${openProfileCall}" style="position:relative;cursor:pointer;flex-shrink:0;">
                         <div style="width:48px;height:48px;border-radius:50%;background:var(--border-dark);display:flex;justify-content:center;align-items:center;color:#FFF;font-weight:bold;overflow:hidden;font-size:17px;border:2px solid var(--border-light);">${getAvatarHTML(p)}</div>
-                        <div class="avail-dot avail-dot-sm ${avCls}" style="border-color:var(--bg-main);"></div>
+                        <div class="avail-dot avail-dot-sm ${avCls}" data-av-user="${p}" style="border-color:var(--bg-main);"></div>
                     </div>
                     <div onclick="${openProfileCall}" style="flex:1;min-width:0;cursor:pointer;">
                         <div style="font-size:14px;font-weight:700;color:var(--text-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${getFullName(p)}${isMe ? ' <span style="color:var(--text-muted);font-weight:600;">(you)</span>' : ''}</div>
-                        <div style="font-size:12px;color:var(--text-muted);font-weight:600;">${avLabelMap[av] || 'Offline'}</div>
+                        <div data-av-label="${p}" style="font-size:12px;color:var(--text-muted);font-weight:600;">${_pxEsc(window.getAvLabel(p))}</div>
                     </div>
                     ${p !== currentUser ? `<button onclick="event.stopPropagation();kickUser('${p}')" title="Remove from group" style="flex-shrink:0;font-size:11px;color:#EE352E;background:rgba(238,53,46,0.08);border:none;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700;font-family:var(--font-main);transition:background 0.15s;" onmouseover="this.style.background='rgba(238,53,46,0.18)'" onmouseout="this.style.background='rgba(238,53,46,0.08)'">Remove</button>` : ''}
                 </div>`;
@@ -9017,9 +9491,9 @@
             const created = chat.createdAt ? new Date(typeof chat.createdAt.toMillis === 'function' ? chat.createdAt.toMillis() : chat.createdAt.seconds * 1000) : null;
             const createdStr = created ? created.toLocaleDateString(undefined, {weekday:'long', month:'long', day:'numeric', year:'numeric'}) : '—';
             const msgCount = Object.keys(activeChatMessages).length;
-            const av = profile.availability || 'offline';
+            const av = window.getAv(otherUser);
             const avColor = { online:'#4CAF50', busy:'#FFC107', dnd:'#EF5350', offline:'#9E9E9E' }[av] || '#9E9E9E';
-            const avLabel = { online:'Online', busy:'Busy', dnd:'Do Not Disturb', offline:'Offline' }[av] || 'Offline';
+            const avLabel = window.getAvLabel(otherUser);
 
             document.getElementById('chat-info-body').innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0 16px;">
@@ -9027,7 +9501,7 @@
                     <div style="font-size:18px;font-weight:800;">${getFullName(otherUser)}</div>
                     <div style="font-size:13px;color:var(--text-muted);">@${otherUser}</div>
                     <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;">
-                        <span style="width:9px;height:9px;border-radius:50%;background:${avColor};display:inline-block;"></span>${avLabel}
+                        <span style="width:9px;height:9px;border-radius:50%;background:${avColor};display:inline-block;"></span>${_pxEsc(avLabel)}
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -9575,17 +10049,127 @@
             } catch(e) { console.error('setMyAvailability error', e); }
         };
 
-        // ── ONLINE PRESENCE HEARTBEAT ─────────────────────────────
-        // Set online when app loads, offline on unload
+        // ── ONLINE PRESENCE ───────────────────────────────────────
+        // Someone only counts as online if they clicked / typed / tapped on the site in the last 5 minutes.
+        // `availability` is the mode they picked (online / busy / dnd / appear offline),
+        // `lastActive` is the heartbeat that proves they're really here.
+        const PRESENCE_TIMEOUT_MS = 5 * 60 * 1000;
+        const PRESENCE_WRITE_EVERY_MS = 45 * 1000;
+        let _lastPresenceWrite = 0;
+        let _presenceTimer = null;
+        let _presenceUnsub = null;
+        let _presenceAckAt = 0, _presenceLoginAt = 0, _presenceFailed = false;
+
+        function _tsMs(t) {
+            if (t == null) return 0;
+            if (typeof t === 'number') return t;
+            if (typeof t.toMillis === 'function') return t.toMillis();
+            if (typeof t.seconds === 'number') return t.seconds * 1000;
+            if (t instanceof Date) return t.getTime();
+            return 0;
+        }
+        function _pxEsc(s) {
+            return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // 'online' | 'busy' | 'dnd' | 'offline' — what everyone else should see for this person
+        window.getAv = function(username) {
+            const p = usersCache[username];
+            if (!p) return 'offline';
+            const chosen = p.availability;
+            const mode = (chosen === 'busy' || chosen === 'dnd') ? chosen : 'online';
+            if (username === currentUser) {
+                // You see exactly what everyone else sees: online only while your heartbeat is actually landing
+                if (chosen === 'offline') return 'offline';
+                const base = _presenceAckAt || _presenceLoginAt;
+                return (!_presenceFailed && base && Date.now() - base <= PRESENCE_TIMEOUT_MS) ? mode : 'offline';
+            }
+            if (chosen === 'offline') return 'offline';                                      // "Appear Offline"
+            const last = _tsMs(p.lastActive);
+            if (!last || Date.now() - last > PRESENCE_TIMEOUT_MS) return 'offline';
+            return mode;
+        };
+        window.avCls = function(av) {
+            return { online: 'ad-online', busy: 'ad-busy', dnd: 'ad-dnd', offline: 'ad-offline' }[av] || 'ad-offline';
+        };
+        // Text shown next to the dot. A custom status replaces "Online" / "Busy" / "Do Not Disturb",
+        // but never hides "Offline".
+        window.getAvLabel = function(username) {
+            const av = window.getAv(username);
+            if (av === 'offline') return 'Offline';
+            const status = ((usersCache[username] || {}).status || '').trim();
+            return status || ({ online: 'Online', busy: 'Busy', dnd: 'Do Not Disturb' }[av] || 'Online');
+        };
+
+        function _writePresence() {
+            _lastPresenceWrite = Date.now();
+            if (usersCache[currentUser]) usersCache[currentUser].lastActive = _lastPresenceWrite;
+            updateDoc(doc(db, 'users', currentUser), { lastActive: serverTimestamp() })
+                .then(() => { _presenceAckAt = Date.now(); _presenceFailed = false; })
+                .catch((e) => {
+                    _presenceFailed = true;
+                    console.error('[presence] Could not save "lastActive". Firestore rules must let a user update their own "lastActive" field:', e);
+                });
+        }
+        window.initPresence = function() {
+            _presenceLoginAt = Date.now();
+            _presenceFailed = false;
+            _lastPresenceWrite = 0;
+            _writePresence();
+        };
+        window.touchPresence = function() {
+            if (!currentUser || window._isAdminSession) return;
+            const wait = PRESENCE_WRITE_EVERY_MS - (Date.now() - _lastPresenceWrite);
+            if (wait <= 0) _writePresence();
+            else if (!_presenceTimer) {
+                _presenceTimer = setTimeout(() => { _presenceTimer = null; if (currentUser) _writePresence(); }, wait);
+            }
+        };
+        // any sign of life counts: clicks, typing, taps, mouse movement, scrolling
+        ['click', 'keydown', 'touchstart', 'touchmove', 'pointerdown', 'mousemove', 'wheel', 'scroll'].forEach(evt => document.addEventListener(evt, window.touchPresence, { capture: true, passive: true }));
+
+        // Everyone's presence, live. (Other people's dots/labels need to flip without a refresh.)
+        window.startPresenceWatcher = function() {
+            if (_presenceUnsub || window._isAdminSession) return;
+            _presenceUnsub = onSnapshot(collection(db, 'users'), (snap) => {
+                let changed = false;
+                snap.docChanges().forEach(ch => {
+                    if (ch.type === 'removed' || ch.doc.id === currentUser) return;
+                    usersCache[ch.doc.id] = ch.doc.data();
+                    changed = true;
+                });
+                if (changed) window.refreshPresenceUI();
+            }, () => {});
+        };
+
+        // Re-paint every status dot / label on screen (runs on every presence change and every 30s,
+        // because someone going idle doesn't change any document)
+        window.refreshPresenceUI = function() {
+            document.querySelectorAll('[data-av-user]').forEach(el => {
+                el.classList.remove('ad-online', 'ad-busy', 'ad-dnd', 'ad-offline');
+                el.classList.add(window.avCls(window.getAv(el.dataset.avUser)));
+            });
+            document.querySelectorAll('[data-av-label]').forEach(el => {
+                el.textContent = window.getAvLabel(el.dataset.avLabel);
+            });
+            try {
+                if (activeChatId) {
+                    const chat = chatsCache.find(c => c.id === activeChatId);
+                    if (chat && !chat.isGroup && Array.isArray(chat.participants)) {
+                        const other = chat.participants.find(p => p !== currentUser) || currentUser;
+                        const sub = document.getElementById('chat-subtitle');
+                        if (sub) sub.innerText = window.getAvLabel(other);
+                    }
+                }
+            } catch (e) {}
+        };
+        setInterval(() => { if (currentUser) window.refreshPresenceUI(); }, 30000);
+
         window.setPresence = async function(av) {
             if (!currentUser) return;
             try { await updateDoc(doc(db, "users", currentUser), { availability: av }); } catch(e) {}
             if (usersCache[currentUser]) usersCache[currentUser].availability = av;
         };
-        window.addEventListener('beforeunload', () => {
-            // Always set offline when leaving, regardless of chosen status
-            updateDoc(doc(db, "users", currentUser), { availability: 'offline' }).catch(()=>{});
-        });
 
         // ── SIDEBAR SEARCH ────────────────────────────────────────
         window.handleSidebarSearch = function(e) {
@@ -10127,7 +10711,7 @@
                     </div>
                     <div style="display:flex; flex-direction:column; justify-content:center;">
                         <div style="font-size:18px; font-weight:800; color:var(--text-dark); display:flex; align-items:center; letter-spacing:-0.5px; line-height:1;">
-                            <span style="white-space:nowrap">${fname}<span style="color:${accent1};">page</span></span>
+                            <span style="white-space:nowrap">${fname}<span style="color:${accent1};">page</span></span>${window.getVerifiedBadge(u, '')}
                         </div>
                         
                     </div>
@@ -10185,7 +10769,7 @@
                     <div class="pg-hero-avatar" ${storyClickAttr} title="${hasStory ? 'View Story' : ''}">
                         ${getAvatarHTML(username, profile, true)}
                     </div>
-                    <div class="pg-hero-name">${fname}<span id="page-accent-text" style="color:${accentColor};">page</span></div>
+                    <div class="pg-hero-name">${fname}<span id="page-accent-text" style="color:${accentColor};">page</span>${window.getVerifiedBadge(username, 'lg')}</div>
                     <div class="pg-hero-handle" id="page-accent2-text" style="color:${accentColor2};">@${username}${pronounsText}</div>
                     <div class="page-stats-row" id="page-stats-row" style="display:none;">
                         <div class="page-stat-item"><span class="page-stat-num" id="pstat-posts">–</span><span class="page-stat-label">Posts</span></div>
@@ -10399,14 +10983,11 @@
                 let contentHtml = '';
                 let textHtml = '';
                 let rawText = post.text || post.caption || post.note;
-                if (post.richText) {
-                    const safeHtml = post.richText.replace(/<script[\s\S]*?<\/script>/gi, '');
-                    textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${safeHtml}</div>`;
-                } else if (rawText) {
-                    let escaped = rawText.replace(/</g, '<').replace(/>/g, '>');
-                    escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="viewProfile(\'$1\'); event.stopPropagation();">@$1</span>');
-                    escaped = escaped.replace(/#([a-zA-Z0-9_]+)/g, '<span style="color:var(--accent);font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openHashtagFeed(\'$1\')">#$1</span>');
-                    textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${escaped.split('\n').join('<br>')}</div>`;
+                let _pageEmbeds = '';
+                {
+                    const _pb = window.renderPostBody(post, { ctx: 'page', br: true });
+                    if (_pb.html) textHtml = `<div class="page-post-text" style="margin-bottom:10px; line-height:1.4;">${_pb.html}</div>`;
+                    _pageEmbeds = _pb.embeds;
                 }
 
                 let songHtml = '';
@@ -10428,7 +11009,7 @@
                     imgHtml = `<img class="page-post-img" src="${post.imageData}" onclick="openLightbox(this.src)" loading="lazy" style="border-radius:12px;">`;
                 }
 
-                contentHtml = textHtml + songHtml + imgHtml;
+                contentHtml = textHtml + _pageEmbeds + songHtml + imgHtml + (post.quote ? window.quoteCardHtml(post.quote) : '');
 
                 const isOwn = username === currentUser;
                 const likes = post.likes || {};
@@ -10479,7 +11060,7 @@
                         <button class="page-action-btn action-comment" title="Comments" onclick="togglePageComments('${post.id}')">
                             ${commentSVG} <span>${commentCount}</span>
                         </button>
-                        <button class="page-action-btn action-repost ${isReposted ? 'reposted' : ''}" title="Repost" id="prbtn-${post.id}" onclick="pageRepost('${username}','${post.id}',this)">
+                        <button class="page-action-btn action-repost ${isReposted ? 'reposted' : ''}" title="Repost" id="prbtn-${post.id}" onclick="openRepostMenu(event,'page','${username}','${post.id}',this)" data-reposted="${isReposted ? '1' : '0'}">
                             ${repostSVG} <span id="prcnt-${post.id}">${repostCount > 0 ? repostCount : ''}</span>
                         </button>
                     </div>
@@ -11040,7 +11621,7 @@
                             postId, pageOwner, read:false, createdAt:serverTimestamp() }).catch(()=>{});
                     }
                 }
-                if (btn) btn.classList.toggle('reposted', !isReposted);
+                if (btn) { btn.classList.toggle('reposted', !isReposted); btn.dataset.reposted = isReposted ? '0' : '1'; }
                 const cntEl = document.getElementById('prcnt-' + postId);
                 if (cntEl) cntEl.textContent = Object.keys(reposts).length > 0 ? Object.keys(reposts).length : '';
             } catch(e) { console.error('pageRepost', e); }
@@ -11588,42 +12169,73 @@
             switchAdminTab('content');
         };
 
+        // ── admin helpers ─────────────────────────────────────
+        function _admFmt(ms) {
+            return ms ? new Date(ms).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'medium' }) : '';
+        }
+        function _admAgo(ms) {
+            const s = Math.max(0, Math.floor((Date.now() - ms) / 1000));
+            if (s < 60) return s + 's ago';
+            const m = Math.floor(s / 60);
+            if (m < 60) return m + 'm ago';
+            const h = Math.floor(m / 60);
+            if (h < 24) return h + 'h ago';
+            return Math.floor(h / 24) + 'd ago';
+        }
+        function _admLeft(ms) {
+            const s = Math.max(0, Math.floor((ms - Date.now()) / 1000));
+            const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+            return h > 0 ? `${h}h ${m}m left` : `${m}m left`;
+        }
+        function _admAvatar(u, size) {
+            const initials = ((u.fname || u.id || '?')[0] || '?').toUpperCase();
+            return u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#fff;font-size:${size || 15}px;font-weight:bold;">${_pxEsc(initials)}</span>`;
+        }
+
         window.switchAdminTab = function(tab) {
-            ['content','reports','users','posts'].forEach(t => {
+            ['content','talkpage','reports','users','posts'].forEach(t => {
                 const btn = document.getElementById('atab-' + t);
                 const panel = document.getElementById('admin-tab-' + t);
                 if (btn) btn.classList.toggle('active', t === tab);
                 if (panel) panel.style.display = t === tab ? 'block' : 'none';
             });
-            if (tab === 'content') { loadAdminStory(); loadAdminMyStories(); loadAdminMyPosts(); }
+            if (tab === 'content') loadAdminStory();
+            else if (tab === 'talkpage') { adminLoadPageEditor(); loadAdminMyPosts(); }
             else if (tab === 'reports') loadAdminReports();
-            else if (tab === 'users') { loadAdminVerified(); loadAdminUsers(); }
+            else if (tab === 'users') loadAdminUsers();
         };
+
+        // One post, as a card (used by both "Talkpage Posts" and "Delete Posts")
+        function _admPostCard(p, id, owner, delFn) {
+            const ms = _tsMs(p.createdAt);
+            const tags = (p.type === 'repost' ? '<span class="adm-chip">Repost</span>' : '') + (p.quote ? '<span class="adm-chip accent">Quote</span>' : '') + (p.song ? '<span class="adm-chip">🎵 Song</span>' : '');
+            let txt = p.richText ? p.richText.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : (p.text || p.caption || p.note || '');
+            txt = txt.substring(0, 240);
+            const imgs = (Array.isArray(p.images) && p.images.length) ? p.images : (p.imageData ? [p.imageData] : []);
+            return `<div class="adm-card" style="display:flex;gap:14px;align-items:flex-start;">
+                ${imgs.length ? `<img class="adm-post-thumb" src="${imgs[0]}" alt="">` : ''}
+                <div style="flex:1;min-width:0;">
+                    <div class="adm-row" style="gap:8px;margin-bottom:6px;"><span class="adm-dim" style="font-size:12px;">${ms ? _admFmt(ms) : ''}</span>${tags}${imgs.length > 1 ? `<span class="adm-chip">📷 ${imgs.length}</span>` : ''}</div>
+                    <div style="font-size:14px;color:#dcdce6;white-space:pre-wrap;word-break:break-word;line-height:1.45;">${txt ? _pxEsc(txt) + (txt.length >= 240 ? '…' : '') : '<span class="adm-dim">(no text)</span>'}</div>
+                    <div style="margin-top:12px;"><button class="adm-btn danger" onclick="${delFn}('${owner}','${id}')">Delete post</button></div>
+                </div>
+            </div>`;
+        }
 
         window.adminLoadUserPosts = async function() {
             const username = (document.getElementById('admin-posts-user-input')?.value || '').trim().toLowerCase();
             const listEl = document.getElementById('admin-user-posts-list');
             if (!listEl) return;
-            if (!username) { listEl.innerHTML = '<p style="color:#666;font-size:13px;">Enter a username above.</p>'; return; }
-            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading posts for @' + username + '…</p>';
+            if (!username) { listEl.innerHTML = '<div class="adm-empty">Enter a username above.</div>'; return; }
+            listEl.innerHTML = `<div class="adm-empty">Loading posts for @${_pxEsc(username)}…</div>`;
             try {
                 const adb = getAdminDb();
                 const snap = await getDocs(query(collection(adb, 'pages', username, 'posts'), orderBy('createdAt', 'desc')));
-                if (snap.empty) { listEl.innerHTML = '<p style="color:#555;font-size:13px;">No posts found for @' + username + '.</p>'; return; }
-                listEl.innerHTML = `<p style="font-size:12px;color:#666;margin-bottom:10px;">${snap.size} post(s) for @${username}</p>` +
-                    snap.docs.map(d => {
-                        const p = d.data();
-                        const ts = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleString() : '';
-                        const preview = (p.richText ? p.richText.replace(/<[^>]+>/g,'') : (p.text || p.caption || p.note || '(no text)')).substring(0, 100);
-                        return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
-                            <div style="font-size:11px;color:#555;margin-bottom:5px;">${ts}${p.type === 'repost' ? ' · <span style="color:#888;">Repost</span>' : ''}</div>
-                            <div style="font-size:13px;color:#ccc;white-space:pre-wrap;word-break:break-word;margin-bottom:8px;">${preview.replace(/</g,'&lt;')}${preview.length >= 100 ? '…' : ''}</div>
-                            ${p.imageData ? '<div style="font-size:11px;color:#888;margin-bottom:6px;">📷 Has image</div>' : ''}
-                            <button onclick="adminDeleteAnyPost('${username}','${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete Post</button>
-                        </div>`;
-                    }).join('');
+                if (snap.empty) { listEl.innerHTML = `<div class="adm-empty">No posts found for @${_pxEsc(username)}.</div>`; return; }
+                listEl.innerHTML = `<p class="adm-sub" style="margin-bottom:12px;">${snap.size} post${snap.size === 1 ? '' : 's'} by @${_pxEsc(username)}</p>` +
+                    snap.docs.map(d => _admPostCard(d.data(), d.id, username, 'adminDeleteAnyPost')).join('');
             } catch(e) {
-                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+                listEl.innerHTML = `<div class="adm-empty" style="color:#EE352E;">Error: ${_pxEsc(e.message)}</div>`;
             }
         };
 
@@ -11636,90 +12248,163 @@
             } catch(e) { alert('Error: ' + e.message); }
         };
 
-        async function loadAdminMyStories() {
-            const el = document.getElementById('admin-my-stories');
-            if (!el) return;
-            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
-            try {
-                const adb = getAdminDb();
-                // Load stories by the logged-in admin (talkpage user)
-                const adminUser = 'talkpage';
-                const now = new Date();
-                const snap = await getDocs(query(collection(adb, 'stories'), where('author', '==', adminUser)));
-                if (snap.empty) { el.innerHTML = '<span style="color:#555;font-size:13px;">No stories.</span>'; return; }
-                const stories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                stories.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                el.innerHTML = stories.map(s => {
-                    const ts = s.createdAt ? new Date(s.createdAt.seconds * 1000).toLocaleString() : '';
-                    const exp = s.expiresAt ? new Date(s.expiresAt.seconds * 1000) : null;
-                    const isExpired = exp && exp < now;
-                    return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
-                        <div style="font-size:12px;color:#888;margin-bottom:4px;">Posted: ${ts} ${isExpired ? '<span style="color:#EE352E;font-size:10px;font-weight:bold;">EXPIRED</span>' : '<span style="color:#4CAF50;font-size:10px;font-weight:bold;">ACTIVE</span>'}</div>
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button onclick="adminViewMyStory('${s.id}')" style="flex:1;background:#222;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">View</button>
-                            <button onclick="adminDeleteMyStory('${s.id}')" style="flex:1;background:#EE352E;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete</button>
-                        </div>
-                    </div>`;
-                }).join('');
-            } catch(e) {
-                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
-            }
-        }
-
-        window.adminViewMyStory = function(storyId) {
-            const sc = storiesCache['talkpage'];
-            if (sc && sc.length > 0) {
-                const sv = document.getElementById('story-viewer');
-                if (sv) { sv.style.zIndex = '9500'; sv.style.display = 'flex'; void sv.offsetWidth; sv.style.opacity = '1'; }
-                openStoryViewer('talkpage');
-            } else {
-                alert('Story not visible — it may have expired or not loaded yet.');
-            }
-        };
-
-        window.adminDeleteMyStory = async function(storyId) {
-            if (!confirm('Delete this story?')) return;
-            try {
-                const adb = getAdminDb();
-                await deleteDoc(doc(adb, 'stories', storyId));
-                alert('Story deleted.');
-                loadAdminMyStories();
-                loadAdminStory();
-            } catch(e) { alert('Error: ' + e.message); }
-        };
-
+        // ── TALKPAGE TAB: posts list ──────────────────────────
         async function loadAdminMyPosts() {
             const el = document.getElementById('admin-my-posts');
             if (!el) return;
-            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
             try {
                 const adb = getAdminDb();
-                const adminUser = 'talkpage';
-                const snap = await getDocs(query(collection(adb, 'pages', adminUser, 'posts'), orderBy('createdAt', 'desc')));
-                if (snap.empty) { el.innerHTML = '<span style="color:#555;font-size:13px;">No posts yet.</span>'; return; }
-                el.innerHTML = snap.docs.map(d => {
-                    const p = d.data();
-                    const ts = p.createdAt ? new Date(p.createdAt.seconds * 1000).toLocaleString() : '';
-                    const preview = (p.text || p.caption || p.note || '(no text)').substring(0, 80);
-                    return `<div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
-                        <div style="font-size:12px;color:#888;margin-bottom:6px;">${ts}</div>
-                        <div style="font-size:13px;color:#ccc;white-space:pre-wrap;word-break:break-word;margin-bottom:8px;">${preview.replace(/</g,'&lt;')}${(p.text||'').length > 80 ? '…' : ''}</div>
-                        ${p.imageData ? '<div style="font-size:11px;color:#888;margin-bottom:6px;">📷 Has image</div>' : ''}
-                        <button onclick="adminDeleteMyPost('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete Post</button>
-                    </div>`;
-                }).join('');
+                const snap = await getDocs(query(collection(adb, 'pages', 'talkpage', 'posts'), orderBy('createdAt', 'desc')));
+                if (snap.empty) { el.innerHTML = '<div class="adm-empty">No posts yet.<br><span>Posts you make here show up on the Talkpage userpage and in everyone\'s home feed.</span></div>'; return; }
+                el.innerHTML = snap.docs.map(d => _admPostCard(d.data(), d.id, 'talkpage', 'adminDeleteMyPost')).join('');
             } catch(e) {
-                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
+                el.innerHTML = `<div class="adm-empty" style="color:#EE352E;">Error: ${_pxEsc(e.message)}</div>`;
             }
         }
 
-        window.adminDeleteMyPost = async function(postId) {
+        window.adminDeleteMyPost = async function(owner, postId) {
             if (!confirm('Delete this post?')) return;
             try {
                 const adb = getAdminDb();
                 await deleteDoc(doc(adb, 'pages', 'talkpage', 'posts', postId));
                 loadAdminMyPosts();
             } catch(e) { alert('Error: ' + e.message); }
+        };
+
+        // ── TALKPAGE TAB: make a post ─────────────────────────
+        let _admPostImages = [];
+        function _admRenderPostImages() {
+            const strip = document.getElementById('admin-post-images');
+            if (!strip) return;
+            strip.innerHTML = _admPostImages.map((src, i) => `<div class="th"><img src="${src}" alt=""><button onclick="adminRemovePostImage(${i})" title="Remove">✕</button></div>`).join('');
+        }
+        window.adminRemovePostImage = function(i) { _admPostImages.splice(i, 1); _admRenderPostImages(); };
+        window.adminAttachPostImage = async function(inp) {
+            const files = Array.from(inp.files || []).slice(0, Math.max(0, MP_MAX_PHOTOS - _admPostImages.length));
+            for (const f of files) {
+                const d = await _mpCompress(f, 1200);
+                if (d) _admPostImages.push(d);
+            }
+            inp.value = '';
+            _admRenderPostImages();
+        };
+
+        window.adminSubmitPost = async function() {
+            const ta = document.getElementById('admin-post-text');
+            const songIn = document.getElementById('admin-post-song');
+            const btn = document.getElementById('admin-post-btn');
+            const text = (ta.value || '').trim();
+            let song = (songIn.value || '').trim();
+            if (!text && !_admPostImages.length && !song) { alert('Write something, add a photo, or attach a song first.'); return; }
+            if (song) {
+                const m = song.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist)\/([a-zA-Z0-9]+)/);
+                if (!m) { alert("That doesn't look like a Spotify track / album / playlist link."); return; }
+                song = `https://open.spotify.com/embed/${m[1]}/${m[2]}?utm_source=generator&theme=0`;
+            }
+            btn.disabled = true; btn.textContent = 'Posting…';
+            try {
+                const postData = { type: 'unified', createdAt: serverTimestamp() };
+                if (text) postData.text = text;
+                _mpApplyToPost(postData, _admPostImages);
+                if (song) postData.song = song;
+                const tags = [...new Set((text.match(/#([a-zA-Z0-9_]+)/g) || []).map(x => x.slice(1).toLowerCase()))];
+                if (tags.length) postData.hashtags = tags;
+                await addDoc(collection(getAdminDb(), 'pages', 'talkpage', 'posts'), postData);
+                ta.value = ''; songIn.value = ''; _admPostImages = []; _admRenderPostImages();
+                loadAdminMyPosts();
+            } catch(e) {
+                alert('Could not post: ' + e.message);
+            }
+            btn.disabled = false; btn.textContent = 'Post';
+        };
+
+        // ── TALKPAGE TAB: userpage ────────────────────────────
+        async function adminLoadPageEditor() {
+            try {
+                const snap = await getDoc(doc(getAdminDb(), 'users', 'talkpage'));
+                const p = snap.exists() ? snap.data() : {};
+                usersCache['talkpage'] = p;
+                const ban = document.getElementById('adm-pg-banner');
+                if (ban) ban.style.backgroundImage = p.bannerPic ? `url('${p.bannerPic}')` : '';
+                const pic = document.getElementById('adm-pg-pic');
+                if (pic) pic.innerHTML = p.pic ? `<img src="${p.pic}" alt="">` : _pxEsc(((p.fname || 'T')[0] || 'T').toUpperCase());
+                const nm = document.getElementById('adm-pg-name');
+                if (nm) nm.textContent = ((p.fname || '') + ' ' + (p.lname || '')).trim() || 'Talkpage';
+                const bio = document.getElementById('adm-pg-bio-view');
+                if (bio) bio.textContent = p.bio || 'No bio yet.';
+                const hex = (v, d) => /^#[0-9a-f]{6}$/i.test(v || '') ? v : d;
+                const a1 = document.getElementById('adm-pg-accent'); if (a1) a1.value = hex(p.pageAccent, '#F6A800');
+                const a2 = document.getElementById('adm-pg-accent2'); if (a2) a2.value = hex(p.pageAccent2, '#888888');
+                const fontSel = document.getElementById('adm-pg-font');
+                if (fontSel) {
+                    fontSel.innerHTML = PAGE_FONTS.map(f => `<option value="${f.id}">${_pxEsc(f.label)}</option>`).join('');
+                    fontSel.value = p.pageFont && PAGE_FONTS.some(f => f.id === p.pageFont) ? p.pageFont : 'default';
+                }
+                const saved = document.getElementById('adm-pg-saved'); if (saved) saved.textContent = '';
+            } catch(e) { console.error('adminLoadPageEditor', e); }
+        }
+        window.adminLoadPagePreview = adminLoadPageEditor;
+
+        // The real profile editor users see, shown above the admin panel
+        window.adminOpenProfileEditor = async function() {
+            try {
+                if (!currentUser) currentUser = 'talkpage';
+                const modal = document.getElementById('profile-modal');
+                if (modal) modal.style.zIndex = '9500';
+                delete usersCache['talkpage'];
+                await window.viewProfile('talkpage');
+                window.enableProfileEdit();
+            } catch(e) { alert('Could not open the profile editor: ' + e.message); }
+        };
+
+        window.adminSavePage = async function() {
+            const btn = document.getElementById('adm-pg-save-btn');
+            const saved = document.getElementById('adm-pg-saved');
+            const font = document.getElementById('adm-pg-font').value;
+            const data = {
+                pageAccent: document.getElementById('adm-pg-accent').value,
+                pageAccent2: document.getElementById('adm-pg-accent2').value,
+                pageFont: (!font || font === 'default') ? deleteField() : font
+            };
+            btn.disabled = true; btn.textContent = 'Saving…';
+            try {
+                await updateDoc(doc(getAdminDb(), 'users', 'talkpage'), data);
+                if (saved) saved.textContent = 'Saved ✓';
+            } catch(e) { alert('Could not save: ' + e.message); }
+            btn.disabled = false; btn.textContent = 'Save page look';
+        };
+
+        // ── RESET A USER'S PASSWORD ───────────────────────────
+        // The browser SDK can't change someone else's password, so a reset makes a fresh login for the
+        // user (username@r1.talkpage.com, same username) with a temporary password. The login screen
+        // tries these automatically. They keep all their data and can change the password in settings.
+        let _resetApp = null;
+        window.adminResetPassword = async function(username) {
+            if (username === 'talkpage') { alert('This is the admin account — it can\'t be reset here.'); return; }
+            if (!confirm(`Reset the password for @${username}?`)) return;
+            let temp = prompt(`Temporary password for @${username} (at least 6 characters).\nLeave blank to generate one:`);
+            if (temp === null) return;
+            temp = temp.trim();
+            if (!temp) { const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'; temp = Array.from(crypto.getRandomValues(new Uint32Array(10))).map(n => chars[n % chars.length]).join(''); }
+            if (temp.length < 6) { alert('Password must be at least 6 characters.'); return; }
+            const pw = prompt('Enter the admin login password to confirm this reset:');
+            if (!pw) return;
+            try {
+                const cred = EmailAuthProvider.credential('talkpage@talkpage.com', pw);
+                await reauthenticateWithCredential(auth.currentUser, cred);
+            } catch (e) { alert('Incorrect admin password. Nothing was changed.'); return; }
+            try {
+                if (!_resetApp) _resetApp = initializeApp(firebaseConfig, 'reset-helper');
+                const secAuth = getAuth(_resetApp);
+                let done = false;
+                for (const d of ['r1', 'r2', 'r3']) {
+                    try { await createUserWithEmailAndPassword(secAuth, `${username}@${d}.talkpage.com`, temp); done = true; break; }
+                    catch (e) { if (e.code !== 'auth/email-already-in-use') throw e; }
+                }
+                try { await signOut(secAuth); } catch (e) {}
+                if (!done) { alert('@' + username + ' has already been reset 3 times, so no more resets are possible.'); return; }
+                prompt(`Done! Give @${username} this temporary password (copy it now):`, temp);
+            } catch (e) { alert('Could not reset the password: ' + e.message); }
         };
 
         window.openAdminStoryCreator = function() {
@@ -11750,57 +12435,46 @@
         async function loadAdminReports() {
             const listEl = document.getElementById('admin-reports-list');
             if (!listEl) return;
-            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
+            listEl.innerHTML = '<div class="adm-empty">Loading…</div>';
             try {
                 const adb = getAdminDb();
                 const snap = await getDocs(query(collection(adb, 'reports'), orderBy('createdAt', 'desc')));
-                if (snap.empty) { listEl.innerHTML = '<p style="color:#555;font-size:13px;">No reports yet.</p>'; return; }
+                if (snap.empty) { listEl.innerHTML = '<div class="adm-empty">No reports yet. 🎉</div>'; return; }
                 listEl.innerHTML = [...snap.docs].map(d => {
                     const r = d.data();
-                    const ts = r.createdAt ? new Date(r.createdAt.seconds * 1000).toLocaleString() : 'Unknown time';
+                    const ts = r.createdAt ? _admFmt(_tsMs(r.createdAt)) : 'Unknown time';
                     const isRead = r.read === true;
-
-                    // Sender avatar
-                    const senderInitial = ((r.senderFname || r.sender || '?')[0]).toUpperCase();
-                    const senderAvHtml = r.senderPic
-                        ? `<img src="${r.senderPic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-                        : `<span style="font-size:13px;font-weight:bold;color:#fff;">${senderInitial}</span>`;
-
-                    // Reporter avatar
-                    const repInitial = ((r.reportedByFname || r.reportedBy || '?')[0]).toUpperCase();
-                    const repAvHtml = r.reportedByPic
-                        ? `<img src="${r.reportedByPic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
-                        : `<span style="font-size:11px;font-weight:bold;color:#fff;">${repInitial}</span>`;
-
-                    return `<div id="report-row-${d.id}" style="background:${isRead ? '#111' : '#1a0000'};border:1px solid ${isRead ? '#1a1a1a' : '#550000'};border-radius:12px;padding:14px;margin-bottom:10px;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-                            <div style="font-size:11px;color:#666;">${ts}${r.reportType ? ' · <strong style="color:#F6A800;">' + (r.reportType === 'comment' ? 'COMMENT' : 'POST') + '</strong>' : ''}</div>
-                            ${!isRead ? '<div style="font-size:10px;font-weight:bold;color:#EE352E;text-transform:uppercase;letter-spacing:1px;">New</div>' : ''}
+                    const senderAv = _admAvatar({ pic: r.senderPic, fname: r.senderFname, id: r.sender }, 14);
+                    const repAv = _admAvatar({ pic: r.reportedByPic, fname: r.reportedByFname, id: r.reportedBy }, 11);
+                    const kind = r.reportType ? (r.reportType === 'comment' ? 'Comment' : 'Post') : 'Message';
+                    const q = s => _pxEsc(String(s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' '));
+                    return `<div id="report-row-${d.id}" class="adm-card" style="${isRead ? '' : 'border-color:#5a1d1a;background:linear-gradient(180deg,#1a1011,#121219);'}">
+                        <div class="adm-row" style="justify-content:space-between;margin-bottom:12px;">
+                            <div class="adm-row" style="gap:8px;"><span class="adm-chip amber">${kind}</span><span class="adm-dim" style="font-size:12px;">${ts}</span></div>
+                            ${!isRead ? '<span class="adm-chip red">NEW</span>' : ''}
                         </div>
-                        <!-- Message card styled like a real bubble -->
-                        <div style="display:flex;align-items:flex-start;gap:10px;background:#0d0d0d;border-radius:10px;padding:10px 12px;margin-bottom:8px;border-left:3px solid #EE352E;">
-                            <div style="width:36px;height:36px;border-radius:50%;background:#333;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${senderAvHtml}</div>
-                            <div style="flex:1;">
-                                <div style="font-size:12px;font-weight:700;color:#aaa;margin-bottom:4px;">@${r.sender || '?'}</div>
-                                <div style="font-size:14px;color:#e0e0e0;line-height:1.45;word-break:break-word;">${(r.msgText || '(no text)').replace(/</g,'&lt;')}</div>
+                        <div style="display:flex;align-items:flex-start;gap:12px;background:#0c0c11;border-radius:12px;padding:12px 14px;margin-bottom:12px;border-left:3px solid #EE352E;">
+                            <div class="admin-user-av" style="width:38px;height:38px;">${senderAv}</div>
+                            <div style="flex:1;min-width:0;">
+                                <div style="font-size:12px;font-weight:700;color:#a4a4b2;margin-bottom:4px;">@${_pxEsc(r.sender || '?')}</div>
+                                <div style="font-size:14px;color:#e6e6ee;line-height:1.45;word-break:break-word;">${_pxEsc(r.msgText || '(no text)')}</div>
                             </div>
                         </div>
-                        <!-- Reported by -->
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:${r.reason ? '6px' : '8px'};">
-                            <div style="width:24px;height:24px;border-radius:50%;background:#444;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">${repAvHtml}</div>
-                            <div style="font-size:12px;color:#888;">Reported by <strong style="color:#bbb;">@${r.reportedBy || '?'}</strong></div>
+                        <div class="adm-row" style="gap:8px;margin-bottom:${r.reason ? '8px' : '14px'};">
+                            <div class="admin-user-av" style="width:24px;height:24px;font-size:11px;">${repAv}</div>
+                            <span style="font-size:12px;color:#8a8a98;">Reported by <strong style="color:#c4c4d0;">@${_pxEsc(r.reportedBy || '?')}</strong></span>
                         </div>
-                        ${r.reason ? `<div style="font-size:12px;color:#888;background:#0a0a0a;border-radius:6px;padding:6px 10px;margin-bottom:8px;"><span style="color:#666;">Reason:</span> ${r.reason.replace(/</g,'&lt;')}</div>` : ''}
-                        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
-                            ${!isRead ? `<button onclick="adminMarkReportRead('${d.id}')" style="background:#333;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Mark as Read</button>` : ''}
-                            <button onclick="adminStrikeFromReport('${d.id}','${(r.sender||'').replace(/'/g,"\\'")}','${(r.msgText||'').replace(/'/g,"\\'").replace(/\n/g,' ').substring(0,200)}','${(r.senderPic||'').replace(/'/g,"\\'")}','${(r.senderFname||'').replace(/'/g,"\\'")}','${(r.sentTo||'').replace(/'/g,"\\'")}')" style="background:#F6A800;border:none;color:#000;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">⚠ Strike User</button>
-                             ${r.reportType ? `<button onclick="adminDeleteReportedContent('${d.id}')" style="background:#7a1713;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Delete ${r.reportType}</button>` : ''}
-                            <button onclick="adminDismissReport('${d.id}')" style="background:#EE352E;border:none;color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);">Dismiss</button>
+                        ${r.reason ? `<div style="font-size:13px;color:#9a9aa8;background:#0c0c11;border-radius:10px;padding:8px 12px;margin-bottom:14px;"><span class="adm-dim">Reason:</span> ${_pxEsc(r.reason)}</div>` : ''}
+                        <div class="adm-row">
+                            ${!isRead ? `<button class="adm-btn" onclick="adminMarkReportRead('${d.id}')">Mark as read</button>` : ''}
+                            <button class="adm-btn warn" onclick="adminStrikeFromReport('${d.id}','${q(r.sender)}','${q((r.msgText || '').substring(0, 200))}','${q(r.senderPic)}','${q(r.senderFname)}','${q(r.sentTo)}')">⚠ Strike user</button>
+                            ${r.reportType ? `<button class="adm-btn dark-danger" onclick="adminDeleteReportedContent('${d.id}')">Delete ${_pxEsc(r.reportType)}</button>` : ''}
+                            <button class="adm-btn danger" onclick="adminDismissReport('${d.id}')">Dismiss</button>
                         </div>
                     </div>`;
                 }).join('');
             } catch(e) {
-                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+                listEl.innerHTML = `<div class="adm-empty" style="color:#EE352E;">Error: ${_pxEsc(e.message)}</div>`;
             }
         }
 
@@ -11874,53 +12548,104 @@
             } catch(e) { /* non-critical */ }
         };
 
+        function _admLmHtml(ms) {
+            return ms ? `${_admFmt(ms)} <span class="adm-dim">(${_admAgo(ms)})</span>` : '<span class="adm-dim">No messages found</span>';
+        }
+
+        function adminUserRowHtml(u, now) {
+            const isBanned = u.banned === true;
+            const activeStrikes = (u.strikes || []).filter(s => s.expiresAt > now);
+            const isVerified = u.verified === true;
+            const strikeLabel = activeStrikes.length > 0 ? `<span class="adm-chip amber">⚠ ${activeStrikes.length} strike${activeStrikes.length > 1 ? 's' : ''}</span>` : '';
+            const lastActive = _tsMs(u.lastActive);
+            const isOnline = !!lastActive && now - lastActive <= PRESENCE_TIMEOUT_MS && u.availability !== 'offline';
+            const lm = _tsMs(u.lastMessageAt);
+            const ip = u.ip || u.lastIp || '';
+            const strikeRows = activeStrikes.map((s, idx) => {
+                const issued = s.issuedAt ? new Date(s.issuedAt).toLocaleDateString() : '?';
+                return `<div style="display:flex;align-items:center;gap:8px;margin-top:8px;background:#0c0c11;border-radius:10px;padding:8px 12px;">
+                    <span style="flex:1;font-size:12px;color:#a4a4b2;"><span style="color:#FF8C00;font-weight:bold;">Strike ${idx + 1}</span> · ${issued} · ${_pxEsc(s.reason || 'No reason')}</span>
+                    <button class="adm-btn ghost" onclick="adminRemoveStrike('${u.id}', ${s.issuedAt})">✕ Remove</button>
+                </div>`;
+            }).join('');
+            return `<div class="admin-user-row" style="flex-direction:column;align-items:stretch;">
+                <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                    <div class="admin-av-wrap"><div class="admin-user-av">${_admAvatar(u)}</div><div class="admin-av-dot ${isOnline ? 'on' : ''}" title="${isOnline ? 'Online' : 'Offline'}"></div></div>
+                    <div class="admin-user-info">
+                        <div class="admin-user-name">${_pxEsc((u.fname || '').trim())} ${_pxEsc((u.lname || '').trim())} ${isVerified ? '<span class="adm-chip accent">✓ VERIFIED</span>' : ''}${isBanned ? '<span class="adm-chip red">BANNED</span>' : strikeLabel}</div>
+                        <div class="admin-user-handle">@${_pxEsc(u.id)} &middot; joined ${_pxEsc(u.joined || '?')}</div>
+                    </div>
+                    <div class="admin-user-actions">
+                        <button class="adm-btn ${isVerified ? 'ghost' : 'primary'}" style="padding:8px 14px;" onclick="adminToggleVerified('${u.id}', ${isVerified})">${isVerified ? 'Revoke ✓' : 'Verify'}</button>
+                        ${u.id !== 'talkpage' ? `<button class="adm-btn" style="padding:8px 14px;" onclick="adminResetPassword('${u.id}')">Reset password</button>` : ''}
+                        ${!isBanned ? `<button class="admin-strike-btn" onclick="adminIssueStrike('${u.id}')">⚠ Strike</button>` : ''}
+                        <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
+                        ${u.id !== 'talkpage' ? `<button class="admin-danger-btn" onclick="adminDeleteUserAccount('${u.id}')">Delete Account</button>` : ''}
+                    </div>
+                </div>
+                <div class="admin-user-meta">
+                    <div><label>Last message sent</label><span id="adm-lm-${u.id}">${lm ? _admLmHtml(lm) : (u.id === 'talkpage' ? '<span class="adm-dim">—</span>' : '<span class="adm-dim">Checking…</span>')}</span></div>
+                    <div><label>Last active</label>${lastActive ? `${_admFmt(lastActive)} <span class="adm-dim">(${_admAgo(lastActive)})</span>` : '<span class="adm-dim">Unknown</span>'}</div>
+                    <div><label>IP address</label>${ip ? _pxEsc(ip) : '<span class="adm-dim">Not recorded</span>'}</div>
+                </div>
+                ${strikeRows}
+            </div>`;
+        }
+
+        // Users who haven't sent anything since "last message" tracking began: look it up once
+        // from their chats and save it on their profile so it's instant next time.
+        async function adminBackfillLastMessages(targets) {
+            if (!targets.length) return;
+            const want = new Map(targets.map(u => [u.id, 0]));
+            try {
+                const adb = getAdminDb();
+                const chats = await getDocs(collection(adb, 'chats'));
+                for (const c of chats.docs) {
+                    const parts = c.data().participants;
+                    if (!Array.isArray(parts) || !parts.some(p => want.has(p))) continue;
+                    let ms;
+                    try { ms = await getDocs(query(collection(adb, 'chats', c.id, 'messages'), orderBy('createdAt', 'desc'), limit(40))); } catch (e) { continue; }
+                    ms.forEach(m => {
+                        const d = m.data();
+                        if (want.has(d.sender)) { const t = _tsMs(d.createdAt); if (t > want.get(d.sender)) want.set(d.sender, t); }
+                    });
+                }
+            } catch (e) {
+                targets.forEach(u => { const c = document.getElementById('adm-lm-' + u.id); if (c) c.innerHTML = '<span class="adm-dim">Unavailable</span>'; });
+                return;
+            }
+            for (const [id, t] of want) {
+                const c = document.getElementById('adm-lm-' + id);
+                if (c) c.innerHTML = _admLmHtml(t);
+                if (t) updateDoc(doc(getAdminDb(), 'users', id), { lastMessageAt: new Date(t) }).catch(() => {});
+            }
+        }
+
         async function loadAdminUsers() {
             const listEl = document.getElementById('admin-users-list');
+            const statsEl = document.getElementById('admin-user-stats');
             if (!listEl) return;
-            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
+            listEl.innerHTML = '<div class="adm-empty">Loading users…</div>';
             try {
                 const adb = getAdminDb();
                 const snap = await getDocs(collection(adb, 'users'));
                 const users = [];
                 snap.forEach(d => users.push({ id: d.id, ...d.data() }));
-                if (users.length === 0) { listEl.innerHTML = '<p style="color:#555;font-size:13px;">No users found.</p>'; return; }
-                users.sort((a,b) => (a.fname||a.id).localeCompare(b.fname||b.id));
-                listEl.innerHTML = users.map(u => {
-                    const initials = ((u.fname||'')[0]||'?').toUpperCase();
-                    const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
-                    const isBanned = u.banned === true;
-                    // Count active strikes
-                    const now = Date.now();
-                    const activeStrikes = (u.strikes || []).filter(s => s.expiresAt > now);
-                    const strikeLabel = activeStrikes.length > 0 ? `<span style="color:#FF8C00;font-size:11px;font-weight:bold;"> ⚠ ${activeStrikes.length} STRIKE${activeStrikes.length>1?'S':''}</span>` : '';
-                    // Build per-strike remove rows
-                    const strikeRows = activeStrikes.map((s, idx) => {
-                        const issued = s.issuedAt ? new Date(s.issuedAt).toLocaleDateString() : '?';
-                        const safeReason = (s.reason||'No reason').replace(/'/g, "\\'");
-                        return `<div style="display:flex;align-items:center;gap:8px;margin-top:6px;background:#1a1a1a;border-radius:7px;padding:6px 10px;">
-                            <span style="flex:1;font-size:11px;color:#aaa;"><span style="color:#FF8C00;font-weight:bold;">Strike ${idx+1}</span> · ${issued} · ${s.reason||'No reason'}</span>
-                            <button class="admin-strike-btn" style="background:#333;color:#FF8C00;font-size:11px;padding:4px 8px;" onclick="adminRemoveStrike('${u.id}', ${s.issuedAt})">✕ Remove</button>
-                        </div>`;
-                    }).join('');
-                    return `<div class="admin-user-row" style="flex-direction:column;align-items:stretch;">
-                        <div style="display:flex;align-items:center;gap:12px;">
-                            <div class="admin-user-av">${avHtml}</div>
-                            <div class="admin-user-info">
-                                <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isBanned ? '<span style="color:#EE352E;font-size:11px;font-weight:bold;"> BANNED</span>' : strikeLabel}</div>
-                                <div class="admin-user-handle">@${u.id} &middot; joined ${u.joined||'?'}</div>
-                            </div>
-                            <div class="admin-user-actions">
-                                ${!isBanned ? `<button class="admin-strike-btn" onclick="adminIssueStrike('${u.id}')">⚠ Strike</button>` : ''}
-                                <button class="admin-del-btn" style="${isBanned ? 'background:#555;' : ''}" onclick="adminBanUser('${u.id}', ${isBanned})">${isBanned ? 'Unban' : 'Ban'}</button>
-                                ${u.id !== 'talkpage' ? `<button class="admin-danger-btn" onclick="adminDeleteUserAccount('${u.id}')">Delete Account</button>` : ''}
-                            </div>
-                        </div>
-                        ${strikeRows}
-                    </div>`;
-                }).join('');
+                if (users.length === 0) { listEl.innerHTML = '<div class="adm-empty">No users found.</div>'; return; }
+                users.sort((a, b) => (a.fname || a.id).localeCompare(b.fname || b.id));
+                const now = Date.now();
+                if (statsEl) {
+                    const online = users.filter(u => u.availability !== 'offline' && _tsMs(u.lastActive) && now - _tsMs(u.lastActive) <= PRESENCE_TIMEOUT_MS).length;
+                    const banned = users.filter(u => u.banned === true).length;
+                    const strikes = users.reduce((n, u) => n + (u.strikes || []).filter(s => s.expiresAt > now).length, 0);
+                    statsEl.innerHTML = [['Users', users.length], ['Online now', online], ['Banned', banned], ['Active strikes', strikes]]
+                        .map(([l, v]) => `<div class="admin-stat"><b>${v}</b><span>${l}</span></div>`).join('');
+                }
+                listEl.innerHTML = users.map(u => adminUserRowHtml(u, now)).join('');
+                adminBackfillLastMessages(users.filter(u => u.id !== 'talkpage' && !u.lastMessageAt));
             } catch(e) {
                 console.error('Admin load users error:', e);
-                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
+                listEl.innerHTML = `<div class="adm-empty" style="color:#EE352E;">Error: ${_pxEsc(e.message)}</div>`;
             }
         }
 
@@ -12057,61 +12782,85 @@
             }
         };
 
+        // ── CURRENT STORY BOX ─────────────────────────────────
+        // Shows the live official story. Expired stories are deleted — they're not kept.
+        let _admStoryTimers = [];
         async function loadAdminStory() {
             const el = document.getElementById('admin-story-preview');
             if (!el) return;
-            el.innerHTML = '<span style="color:#555;font-size:13px;">Loading...</span>';
+            _admStoryTimers.forEach(t => { clearTimeout(t); clearInterval(t); });
+            _admStoryTimers = [];
+            el.innerHTML = '<div class="adm-empty">Loading…</div>';
             try {
                 const adb = getAdminDb();
-                const snap = await getDocs(query(collection(adb, 'stories'), where('author', '==', 'talkpage'), orderBy('createdAt', 'desc'), limit(1)));
-                if (snap.empty) {
-                    el.innerHTML = '<span style="color:#555;font-size:13px;">No active story.</span>';
-                } else {
-                    const d = snap.docs[0];
+                const snap = await getDocs(query(collection(adb, 'stories'), where('author', '==', 'talkpage')));
+                const now = Date.now();
+                const active = [];
+                snap.docs.forEach(d => {
                     const s = d.data();
-                    const ts = s.createdAt ? new Date(s.createdAt.seconds * 1000).toLocaleString() : '';
-                    const expires = s.expiresAt ? new Date(s.expiresAt.seconds * 1000).toLocaleString() : '';
-                    el.innerHTML = `
-                        <div style="background:#111;border:1px solid #222;border-radius:10px;padding:12px 14px;">
-                            <div style="font-size:12px;color:#888;margin-bottom:6px;">Posted: ${ts}</div>
-                            <div style="font-size:12px;color:#666;margin-bottom:10px;">Expires: ${expires}</div>
-                            <div style="display:flex;gap:8px;">
-                                <button onclick="adminViewTalkpageStory()" style="flex:1;background:#222;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;">View Story</button>
-                                <button onclick="adminDeleteTalkpageStory('${d.id}')" style="flex:1;background:#EE352E;border:none;color:#fff;border-radius:7px;padding:8px;font-size:12px;font-weight:bold;cursor:pointer;">Delete Story</button>
-                            </div>
-                        </div>`;
+                    const exp = _tsMs(s.expiresAt);
+                    if (exp && exp <= now) deleteDoc(d.ref).catch(() => {});
+                    else active.push({ id: d.id, ...s, _exp: exp, _created: _tsMs(s.createdAt) });
+                });
+                active.sort((a, b) => b._created - a._created);
+                storiesCache['talkpage'] = active;
+                if (!active.length) {
+                    el.innerHTML = '<div class="adm-empty">No active story right now.<br><span>Create one above — it will show here until it expires, then disappear on its own.</span></div>';
+                    return;
                 }
+                el.innerHTML = active.map(s => {
+                    const firstText = (s.elements || []).find(e => e.type === 'text' && e.content);
+                    const bg = s.bgImage ? `background-image:url('${s.bgImage}');` : (s.bgColor ? `background:${_pxEsc(s.bgColor)};` : '');
+                    const count = (s.elements || []).length;
+                    return `<div class="adm-card adm-story">
+                        <div class="adm-story-thumb" style="${bg}">${firstText ? `<span>${_pxEsc(firstText.content.substring(0, 60))}</span>` : ''}</div>
+                        <div class="adm-story-info">
+                            <div class="adm-row"><span class="adm-chip green">● LIVE</span><span class="adm-chip">${count} element${count === 1 ? '' : 's'}</span>${s.bgImage ? '<span class="adm-chip">Photo background</span>' : ''}</div>
+                            ${s._exp ? `<div class="adm-countdown" data-story-exp="${s._exp}">${_admLeft(s._exp)}</div>` : ''}
+                            <dl class="adm-story-meta">
+                                <dt>Posted</dt><dd>${s._created ? _admFmt(s._created) : '—'}</dd>
+                                <dt>Expires</dt><dd>${s._exp ? _admFmt(s._exp) : 'Never'}</dd>
+                            </dl>
+                            <div class="adm-row" style="margin-top:auto;">
+                                <button class="adm-btn" onclick="adminViewTalkpageStory()">View story</button>
+                                <button class="adm-btn danger" onclick="adminDeleteTalkpageStory('${s.id}')">Delete story</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                // live countdown + clean up the moment it expires
+                _admStoryTimers.push(setInterval(() => {
+                    document.querySelectorAll('[data-story-exp]').forEach(n => { n.textContent = _admLeft(+n.dataset.storyExp); });
+                }, 30000));
+                const soonest = Math.min(...active.map(s => s._exp).filter(Boolean));
+                if (isFinite(soonest)) _admStoryTimers.push(setTimeout(loadAdminStory, Math.max(1000, soonest - Date.now() + 1000)));
             } catch(e) {
-                el.innerHTML = `<span style="color:#EE352E;font-size:13px;">Error: ${e.message}</span>`;
+                el.innerHTML = `<div class="adm-empty" style="color:#EE352E;">Error: ${_pxEsc(e.message)}</div>`;
             }
         }
+        window.loadAdminStory = loadAdminStory;
 
         window.adminViewTalkpageStory = function() {
-            // Temporarily show app-layout just enough to open the story viewer
             if (!currentUser) currentUser = 'talkpage';
             const sc = storiesCache['talkpage'];
             if (sc && sc.length > 0) {
-                // Bring story viewer above admin panel
                 const sv = document.getElementById('story-viewer');
                 if (sv) { sv.style.zIndex = '9500'; sv.style.display = 'flex'; void sv.offsetWidth; sv.style.opacity = '1'; }
                 openStoryViewer('talkpage');
             } else {
-                alert('No active Talkpage story found. It may still be loading — try again in a moment.');
+                alert('No active Talkpage story found.');
             }
         };
 
         window.adminDeleteTalkpageStory = async function(storyId) {
             if (!confirm('Delete this official Talkpage story?')) return;
             try {
-                const adb = getAdminDb();
-                await deleteDoc(doc(adb, 'stories', storyId));
-                alert('Story deleted.');
+                await deleteDoc(doc(getAdminDb(), 'stories', storyId));
                 loadAdminStory();
             } catch(e) {
                 alert('Error: ' + e.message);
             }
         };
-
 
         // ══════════════════════════════════════════════════════════
         // ── HOME RECENT POSTS FEED ─────────────────────────────
@@ -12621,6 +13370,7 @@
             repost:        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>`,
             mention_tag:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>`,
         };
+        _NOTIF_ICONS.quote = _NOTIF_ICONS.repost;
 
         // A reply used to also fire "mentioned you in a comment" (the reply starts with @name).
         // Hide that duplicate whenever the same person's "replied to your comment" notification is there.
@@ -12658,6 +13408,9 @@
                     text = `<strong>${getFullName(n.from)}</strong> replied to your comment.${_rp}`;
                 } else if (n.type === 'repost') {
                     text = `<strong>${getFullName(n.from)}</strong> reposted your post.`;
+                } else if (n.type === 'quote') {
+                    const _qt = n.quoteText ? `<div style="margin-top:3px;font-size:12px;color:var(--text-muted);font-style:italic;">"${_nEsc(n.quoteText.substring(0,80))}${n.quoteText.length>80?'...':''}"</div>` : '';
+                    text = `<strong>${getFullName(n.from)}</strong> quoted your post.${_qt}`;
                 } else if (n.type === 'react_msg') {
                     text = `<strong>${getFullName(n.from)}</strong> reacted to your message.`;
                 } else if (n.type === 'like_story') {
@@ -12807,40 +13560,12 @@
         };
 
         // ── ADMIN: VERIFIED USERS SECTION ──────────────────────────
-        async function loadAdminVerified() {
-            const listEl = document.getElementById('admin-verified-list');
-            if (!listEl) return;
-            listEl.innerHTML = '<p style="color:#555;font-size:13px;">Loading...</p>';
-            try {
-                const adb = getAdminDb();
-                const snap = await getDocs(collection(adb, 'users'));
-                const users = [];
-                snap.forEach(d => users.push({ id: d.id, ...d.data() }));
-                users.sort((a,b) => (a.fname||a.id).localeCompare(b.fname||b.id));
-                listEl.innerHTML = users.map(u => {
-                    const initials = ((u.fname||'')[0]||'?').toUpperCase();
-                    const avHtml = u.pic ? `<img src="${u.pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : `<span style="color:#fff;font-size:14px;font-weight:bold;">${initials}</span>`;
-                    const isVerified = u.verified === true;
-                    return `<div class="admin-user-row">
-                        <div class="admin-user-av">${avHtml}</div>
-                        <div class="admin-user-info" style="flex:1;">
-                            <div class="admin-user-name">${(u.fname||'').trim()} ${(u.lname||'').trim()} ${isVerified ? '<span style="color:var(--accent);font-size:11px;font-weight:bold;">✓ VERIFIED</span>' : ''}</div>
-                            <div class="admin-user-handle">@${u.id}</div>
-                        </div>
-                        <button onclick="adminToggleVerified('${u.id}', ${isVerified})" style="background:${isVerified ? '#333' : 'var(--accent)'};border:none;color:${isVerified ? '#aaa' : '#000'};border-radius:7px;padding:7px 14px;font-size:12px;font-weight:bold;cursor:pointer;font-family:var(--font-main);transition:opacity 0.15s;">${isVerified ? 'Revoke' : 'Verify'}</button>
-                    </div>`;
-                }).join('');
-            } catch(e) {
-                listEl.innerHTML = `<p style="color:#EE352E;font-size:13px;">Error: ${e.message}</p>`;
-            }
-        }
-
         window.adminToggleVerified = async function(username, isVerified) {
             try {
                 const adb = getAdminDb();
                 await updateDoc(doc(adb, 'users', username), { verified: !isVerified });
                 if (usersCache[username]) usersCache[username].verified = !isVerified;
-                await loadAdminVerified();
+                await loadAdminUsers();
             } catch(e) { alert('Error: ' + e.message); }
         };
 

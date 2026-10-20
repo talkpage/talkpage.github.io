@@ -669,9 +669,10 @@
         .verified-badge {
             display: inline-flex; align-items: center; justify-content: center;
             width: 16px; height: 16px;
-            flex-shrink: 0; vertical-align: middle; margin-left: 3px;
-            position: relative;
+            flex-shrink: 0; vertical-align: middle; margin-left: 4px;
+            position: relative; top: 0.09em; line-height: 0; align-self: center;
         }
+        .verified-badge-pending { display: none; }
         .verified-badge svg { display: block; }
         .verified-badge-lg { width: 20px; height: 20px; }
         .profile-banner { height: 82px; background: linear-gradient(135deg, var(--accent) 0%, var(--border-dark) 100%); position: relative; flex-shrink: 0; border-radius: 14px 14px 0 0; }
@@ -1174,11 +1175,14 @@
         .quote-card:hover { background: rgba(127,127,127,0.08); }
         .quote-card.qc-static { cursor: default; margin-left: 52px; }
         .quote-card.qc-static:hover { background: transparent; }
-        .qc-head { display: flex; align-items: center; gap: 7px; font-size: 14px; min-width: 0; }
-        .qc-av-sm { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff; }
+        .qc-head { display: flex; align-items: center; gap: 10px; font-size: 14px; min-width: 0; }
+        .qc-av-sm { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: var(--border-dark); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; color: #fff; }
+        .qc-meta { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+        .qc-namerow { display: flex; align-items: center; gap: 0; font-size: 14px; line-height: 1.25; min-width: 0; }
+        .qc-namerow .qc-page { font-weight: 800; }
         .qc-name { font-weight: 800; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .qc-handle, .qc-time { color: var(--text-muted); white-space: nowrap; font-size: 13px; }
-        .qc-text { margin-top: 6px; font-size: 14px; line-height: 1.45; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+        .qc-handle, .qc-time { color: var(--text-muted); white-space: nowrap; font-size: 11px; }
+        .qc-text { margin-top: 8px; font-size: 14px; line-height: 1.45; color: var(--text-dark); white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
         .qc-img { display: block; width: calc(100% + 24px); margin: 10px -12px -10px; max-height: 280px; object-fit: cover; }
         .quote-card .vid-embed { margin-top: 8px; }
 
@@ -1372,6 +1376,22 @@
         .mp-prev { left: 8px; } .mp-next { right: 8px; }
         .mp-carousel:hover .mp-nav { opacity: 1; }
         @media (hover: none) { .mp-nav { display: none; } }
+        .mp-media { position: relative; }
+        .mp-grid { display: grid; gap: 3px; border-radius: 14px; overflow: hidden; background: var(--bg-sidebar); }
+        .mp-grid-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+        .mp-grid-3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .mp-grid-3 .mp-gcell:first-child { grid-row: 1 / span 2; }
+        .mp-grid-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+        .mp-gcell { position: relative; overflow: hidden; min-width: 0; min-height: 0; background: var(--bg-sidebar); }
+        .mp-gcell img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; image-orientation: from-image; }
+        .mp-gph { animation: mpPulse 1.1s ease-in-out infinite alternate; }
+        @keyframes mpPulse { from { opacity: 0.5; } to { opacity: 1; } }
+        .mp-grid-toggle { width: 38px; height: 38px; align-self: flex-end; border-radius: 10px; border: 1px solid var(--border-dark); background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+        .mp-grid-toggle:hover { color: var(--accent); border-color: var(--accent); }
+        .mp-grid-toggle.on { color: #000; background: var(--accent); border-color: var(--accent); }
+        .mp-count-label { align-self: flex-end; font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 0 2px 4px; }
+        #ep-photos { margin: 12px 18px 0; max-height: 28vh; overflow-y: auto; }
+        #ep-photos .ep-photos-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 6px; }
         .mp-grid-badge { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 10px; pointer-events: none; }
 
         /* ── Profile class schedule ── */
@@ -4959,6 +4979,7 @@
                     usersDirectory.push(doc.id);
                 });
                 window._callUsersCache = usersCache;
+                if (window.refreshVerifiedBadges) window.refreshVerifiedBadges();
             } catch(e) { console.error("Directory fetch safely skipped."); }
         }
 
@@ -8207,8 +8228,8 @@
                         bodyHtml += `<div style="margin-top:8px;"><iframe src="${embedUrl}" loading="lazy" width="100%" height="80" frameborder="0" allow="encrypted-media" style="border-radius:12px;display:block;"></iframe></div>`;
                     }
                 }
-                if(getPostImages(post).length>1) bodyHtml+=mpCarouselHtml(getPostImages(post),{maxH:400,wrapStyle:'margin-top:10px;'});
-                if(post.imageData && getPostImages(post).length<=1) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:400px;min-height:0;object-fit:contain;background:var(--bg-sidebar);border-radius:14px;margin-top:10px;display:block;image-orientation:from-image;cursor:pointer;transition:opacity 0.15s;" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">`;
+                if(mpTotal(post)>1) bodyHtml+=mpMediaHtml(post,u,{maxH:400,wrapStyle:'margin-top:10px;'});
+                if(post.imageData && mpTotal(post)<=1) bodyHtml+=`<img src="${post.imageData}" style="width:100%;max-height:400px;min-height:0;object-fit:contain;background:var(--bg-sidebar);border-radius:14px;margin-top:10px;display:block;image-orientation:from-image;cursor:pointer;transition:opacity 0.15s;" loading="lazy" onclick="event.stopPropagation();openLightbox(this.src)" onmouseover="this.style.opacity='0.92'" onmouseout="this.style.opacity='1'">`;
                 if (post.quote) bodyHtml += window.quoteCardHtml(post.quote);
 
                 const likeCountStr = likeCount > 0 ? `<span id="hlcnt-${post.id}" style="font-size:12px;font-weight:700;color:var(--text-muted);">${likeCount}</span>` : `<span id="hlcnt-${post.id}"></span>`;
@@ -8243,7 +8264,7 @@
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;" onclick="setSidebarMode('pages');setTimeout(()=>openPage('${homeDisplayAuthor}'),50)">
                     <div style="width:42px;height:42px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:15px;">${getAvatarHTML(homeDisplayAuthor, homeDisplayProf, false)}</div>
                     <div>
-                        <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span>${window.getVerifiedBadge(homeDisplayAuthor, '')}</div>
+                        <div style="display:flex;align-items:center;gap:0;font-size:15px;line-height:1.25;"><span style="font-size:15px;font-weight:800;color:var(--text-dark);">${homeDisplayName}</span><span style="font-size:15px;color:${accent};font-weight:800;">page</span>${window.getVerifiedBadge(homeDisplayAuthor, '')}</div>
                         <div id="hts-${post.id}" style="font-size:11px;color:var(--text-muted);">${ts}${post.edited && !homeIsRepostCard ? ' · edited' : ''}</div>
                     </div>
                 </div>
@@ -8286,7 +8307,9 @@
         // Signature of everything that requires a card rebuild (likes / comments / reposts are updated in place)
         function _hfSig(p) {
             const im = getPostImages(p);
+            const _em = p.editedAt ? (typeof p.editedAt.toMillis === 'function' ? p.editedAt.toMillis() : (p.editedAt.seconds || 0)) : 0;
             return [p.type, p.repostBy, p.originalAuthor, p.text, p.caption, p.note, p.richText, p.song, p.edited ? 1 : 0, p.quote ? p.quote.postId : '',
+                    p.imageCount || 0, p.photoLayout || '', _em,
                     im.length, im.map(x => x.length + ':' + x.slice(-24)).join(',')].join('|');
         }
         function _hfPlace(feed, el, idx) {
@@ -8872,9 +8895,12 @@
             if (!q || !q.author) return '';
             opts = opts || {};
             const prof = usersCache[q.author] || {};
-            const name = ((prof.fname || '') + ' ' + (prof.lname || '')).trim() || q.author;
+            const fname = (prof.fname || '').trim() || q.author;
+            const accent = prof.pageAccent || 'var(--accent)';
+            // Same date format as a regular post on the home feed
             const ms = _tsMs(q.createdAt);
-            const when = ms ? new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+            const diff = Date.now() - ms;
+            const when = !ms ? '' : diff < 60000 ? 'Just now' : diff < 3600000 ? Math.floor(diff / 60000) + 'm ago' : diff < 86400000 ? Math.floor(diff / 3600000) + 'h ago' : new Date(ms).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
             let body = '';
             const r = _vidExtract((q.text || '').trim(), true);
             if (r.text) body += `<div class="qc-text">${_pxEsc(r.text)}</div>`;
@@ -8885,9 +8911,10 @@
             return `<div class="quote-card${opts.static ? ' qc-static' : ''}"${click}>
                 <div class="qc-head">
                     <div class="qc-av-sm">${getAvatarHTML(q.author, prof, false)}</div>
-                    <span class="qc-name">${_pxEsc(name)}</span>
-                    <span class="qc-handle">@${_pxEsc(q.author)}</span>
-                    ${when ? `<span class="qc-time">· ${when}</span>` : ''}
+                    <div class="qc-meta">
+                        <div class="qc-namerow"><span class="qc-name">${_pxEsc(fname)}</span><span class="qc-page" style="color:${accent};">page</span>${window.getVerifiedBadge ? window.getVerifiedBadge(q.author, '') : ''}</div>
+                        ${when ? `<div class="qc-time">${when}</div>` : ''}
+                    </div>
                 </div>
                 ${body}
             </div>`;
@@ -9029,6 +9056,8 @@
                         richText: postData.richText || null,
                         imageData: postData.imageData || null,
                         images: postData.images || null,
+                        imageCount: postData.imageCount || null,
+                        photoLayout: postData.photoLayout || null,
                         song: postData.song || null,
                         createdAt: serverTimestamp()
                     };
@@ -9110,12 +9139,12 @@
                         let escaped = (post.text||'').replace(/</g,'<').replace(/>/g,'>');
                         escaped = escaped.replace(/#([a-zA-Z0-9_]+)/g,'<span style="color:var(--accent);font-weight:600;">#$1</span>');
                         escaped = escaped.replace(/@([a-zA-Z0-9_.-]+)/g,'<span style="color:var(--accent);font-weight:600;">@$1</span>');
-                        const imgHtml = getPostImages(post).length > 1 ? mpCarouselHtml(getPostImages(post), { maxH: 320, wrapStyle: 'margin-top:8px;' }) : post.imageData ? `<img src="${post.imageData}" style="width:100%;max-height:320px;object-fit:contain;background:var(--bg-sidebar);border-radius:10px;margin-top:8px;" loading="lazy">` : '';
+                        const imgHtml = mpTotal(post) > 1 ? mpMediaHtml(post, u2, { maxH: 320, wrapStyle: 'margin-top:8px;' }) : post.imageData ? `<img src="${post.imageData}" style="width:100%;max-height:320px;object-fit:contain;background:var(--bg-sidebar);border-radius:10px;margin-top:8px;" loading="lazy">` : '';
                         div.innerHTML = `
                             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                                 <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--border-dark);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#FFF;font-size:12px;">${getAvatarHTML(u2,prof,false)}</div>
                                 <div>
-                                <div style="display:flex;align-items:baseline;gap:0;"><span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:13px;color:${accent};font-weight:700;margin-left:1px;">page</span>${window.getVerifiedBadge(u2, '')}</div>
+                                <div style="display:flex;align-items:center;gap:0;font-size:13px;line-height:1.25;"><span style="font-size:13px;font-weight:700;color:var(--text-dark);">${fname}</span><span style="font-size:13px;color:${accent};font-weight:700;margin-left:1px;">page</span>${window.getVerifiedBadge(u2, '')}</div>
                                     <div style="font-size:11px;color:var(--text-muted);">${ts}</div>
                                 </div>
                             </div>
@@ -10138,7 +10167,7 @@
                     usersCache[ch.doc.id] = ch.doc.data();
                     changed = true;
                 });
-                if (changed) window.refreshPresenceUI();
+                if (changed) { window.refreshPresenceUI(); if (window.refreshVerifiedBadges) window.refreshVerifiedBadges(); }
             }, () => {});
         };
 
@@ -11003,8 +11032,8 @@
                 }
 
                 let imgHtml = '';
-                if (getPostImages(post).length > 1) {
-                    imgHtml = mpCarouselHtml(getPostImages(post), { maxH: 500, wrapStyle: 'margin-top:12px;' });
+                if (mpTotal(post) > 1) {
+                    imgHtml = mpMediaHtml(post, username, { maxH: 500, wrapStyle: 'margin-top:12px;' });
                 } else if (post.imageData) {
                     imgHtml = `<img class="page-post-img" src="${post.imageData}" onclick="openLightbox(this.src)" loading="lazy" style="border-radius:12px;">`;
                 }
@@ -11091,22 +11120,93 @@
                     thumb.className = 'page-grid-thumb';
                     thumb.onclick = () => { setPageView('list'); const el = document.getElementById('page-post-'+post.id); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); };
                     thumb.innerHTML = `<img src="${post.imageData}" loading="lazy" alt="">`;
-                    if (getPostImages(post).length > 1) thumb.insertAdjacentHTML('beforeend', '<span class="mp-grid-badge">' + getPostImages(post).length + '</span>');
+                    if (mpTotal(post) > 1) thumb.insertAdjacentHTML('beforeend', '<span class="mp-grid-badge">' + mpTotal(post) + '</span>');
                     gridEl.appendChild(thumb);
                 }
             });
         }
 
-        // ── MULTI-PHOTO POSTS ─────────────────────────────────────
-        // Posts keep `imageData` (first photo, for older code paths) and add `images: [...]` when there is more than one.
-        const MP_MAX_PHOTOS = 4;
-        const MP_BUDGET = 215000;      // max base64 chars per photo (keeps the post under Firestore's 1 MB doc limit)
+        // -- MULTI-PHOTO POSTS -------------------------------------
+        // A post keeps its first photo in `imageData`. Any photos after the first live in the post's
+        // `photos` subcollection (one document each, so a post can have as many photos as you like
+        // without hitting Firestore's 1 MB document limit). `imageCount` is the total number of photos
+        // and `photoLayout: 'grid'` means "show as a grid" (only used for 2-4 photos).
+        // Older posts that stored up to 4 photos in an `images` array still display normally.
+        const MP_BUDGET = 215000;      // max base64 chars per photo
         let _pcImages = [];
         let _hcImages = [];
+        let _epImages = [];
+        const _mpLayout = { pc: 'carousel', hc: 'carousel', ep: 'carousel' };
+        const _mpCache = {};            // "owner/postId" -> { sig, imgs }
+        const _mpPending = {};
+        const _mpPosts = {};
+        const _MP_GRID_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>';
 
         function getPostImages(post) {
             if (post && Array.isArray(post.images) && post.images.length) return post.images;
             return post && post.imageData ? [post.imageData] : [];
+        }
+        function mpTotal(post) {
+            if (!post) return 0;
+            return Math.max(getPostImages(post).length, post.imageCount || 0);
+        }
+        function _mpArr(kind) { return kind === 'hc' ? _hcImages : kind === 'ep' ? _epImages : _pcImages; }
+        function _mpRef(post, owner) {
+            if (post && post.type === 'repost' && post.originalAuthor && post.repostOf) return { owner: post.originalAuthor, id: post.repostOf };
+            return { owner: owner, id: post.id };
+        }
+        function _mpSig(post) {
+            const e = post.editedAt;
+            const em = e ? (typeof e.toMillis === 'function' ? e.toMillis() : (e.seconds || 0) * 1000) : 0;
+            return mpTotal(post) + '|' + em;
+        }
+
+        async function mpLoadFull(owner, postId, post) {
+            const key = owner + '/' + postId;
+            const sig = _mpSig(post);
+            const hit = _mpCache[key];
+            if (hit && hit.sig === sig) return hit.imgs;
+            const inline = getPostImages(post);
+            const total = mpTotal(post);
+            if (inline.length >= total) return inline;
+            if (_mpPending[key]) return _mpPending[key];
+            _mpPending[key] = (async () => {
+                const snap = await getDocs(collection(db, 'pages', owner, 'posts', postId, 'photos'));
+                const extra = [];
+                snap.forEach(d => { const v = d.data(); if (v && v.data) extra.push(v); });
+                extra.sort((x, y) => (x.idx || 0) - (y.idx || 0));
+                const all = [post.imageData, ...extra.map(e => e.data)].filter(Boolean);
+                if (all.length >= total) _mpCache[key] = { sig, imgs: all };
+                return all;
+            })().finally(() => { delete _mpPending[key]; });
+            return _mpPending[key];
+        }
+
+        async function _mpWriteExtra(owner, postId, arr, only) {
+            const jobs = [];
+            for (let i = 1; i < arr.length; i++) {
+                if (only && !only(i)) continue;
+                jobs.push(() => setDoc(doc(db, 'pages', owner, 'posts', postId, 'photos', 'p' + i), { idx: i, data: arr[i] }));
+            }
+            for (let i = 0; i < jobs.length; i += 4) await Promise.all(jobs.slice(i, i + 4).map(j => j()));
+        }
+
+        // Create a new post (with any extra photos) for the current user
+        async function _mpCreatePost(postData, arr, kind) {
+            _mpApplyToPost(postData, arr, kind);
+            const ref = await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
+            if (arr.length > 1) {
+                const key = currentUser + '/' + ref.id;
+                _mpCache[key] = { sig: arr.length + '|0', imgs: arr.slice() };
+                try {
+                    await _mpWriteExtra(currentUser, ref.id, arr);
+                } catch (e) {
+                    delete _mpCache[key];
+                    await deleteDoc(ref).catch(() => {});
+                    throw e;
+                }
+            }
+            return ref;
         }
 
         function _mpCompress(file, maxDim) {
@@ -11138,11 +11238,12 @@
         }
 
         function _mpRenderThumbs(kind) {
-            const arr = kind === 'hc' ? _hcImages : _pcImages;
+            const arr = _mpArr(kind);
             const box = document.getElementById(kind + '-img-preview-box');
             const wrap = document.getElementById(kind + '-img-thumbs');
             if (!box || !wrap) return;
-            box.style.display = arr.length ? 'block' : 'none';
+            const alwaysOn = kind === 'ep';
+            box.style.display = (arr.length || alwaysOn) ? 'block' : 'none';
             wrap.innerHTML = '';
             arr.forEach((src, i) => {
                 const t = document.createElement('div');
@@ -11150,44 +11251,125 @@
                 const im = document.createElement('img');
                 im.src = src; im.alt = '';
                 const x = document.createElement('button');
-                x.type = 'button'; x.className = 'mp-thumb-x'; x.textContent = '✕'; x.title = 'Remove photo';
+                x.type = 'button'; x.className = 'mp-thumb-x'; x.innerHTML = '&#10005;'; x.title = 'Remove photo';
                 x.onclick = ev => { ev.stopPropagation(); arr.splice(i, 1); _mpRenderThumbs(kind); };
                 t.appendChild(im); t.appendChild(x);
                 wrap.appendChild(t);
             });
-            if (arr.length && arr.length < MP_MAX_PHOTOS) {
+            if (arr.length || alwaysOn) {
                 const add = document.createElement('button');
-                add.type = 'button'; add.className = 'mp-add'; add.textContent = '+'; add.title = 'Add another photo';
+                add.type = 'button'; add.className = 'mp-add'; add.textContent = '+'; add.title = 'Add photos';
                 add.onclick = () => document.getElementById(kind + '-img-input')?.click();
                 wrap.appendChild(add);
+            }
+            // Grid option: only offered while there are 2-4 photos
+            if (arr.length >= 2 && arr.length <= 4) {
+                const g = document.createElement('button');
+                g.type = 'button';
+                g.className = 'mp-grid-toggle' + (_mpLayout[kind] === 'grid' ? ' on' : '');
+                g.title = _mpLayout[kind] === 'grid' ? 'Showing as a grid (tap to switch back to swipe)' : 'Show photos as a grid';
+                g.setAttribute('aria-pressed', _mpLayout[kind] === 'grid' ? 'true' : 'false');
+                g.innerHTML = _MP_GRID_SVG;
+                g.onclick = ev => { ev.stopPropagation(); _mpLayout[kind] = _mpLayout[kind] === 'grid' ? 'carousel' : 'grid'; _mpRenderThumbs(kind); };
+                wrap.appendChild(g);
+            }
+            if (arr.length > 4) {
+                const lab = document.createElement('div');
+                lab.className = 'mp-count-label';
+                lab.textContent = arr.length + ' photos';
+                wrap.appendChild(lab);
             }
         }
 
         async function _mpAddFiles(kind, files, maxDim) {
-            const arr = kind === 'hc' ? _hcImages : _pcImages;
+            const arr = _mpArr(kind);
             files = files.filter(f => f && f.type && f.type.startsWith('image/'));
             if (!files.length) return;
-            const room = MP_MAX_PHOTOS - arr.length;
-            if (room <= 0 || files.length > room) alert('You can add up to ' + MP_MAX_PHOTOS + ' photos per post.');
-            for (const f of files.slice(0, Math.max(0, room))) {
+            for (const f of files) {
                 const data = await _mpCompress(f, maxDim);
                 if (data) { arr.push(data); _mpRenderThumbs(kind); }
             }
         }
 
-        function _mpApplyToPost(postData, arr) {
+        function _mpApplyToPost(postData, arr, kind) {
             if (!arr.length) return;
             postData.imageData = arr[0];
-            if (arr.length > 1) postData.images = [...arr];
+            if (arr.length > 1) postData.imageCount = arr.length;
+            if (kind && _mpLayout[kind] === 'grid' && arr.length >= 2 && arr.length <= 4) postData.photoLayout = 'grid';
+        }
+
+        function _mpGridHtml(imgs, total, maxH) {
+            let cells = '';
+            for (let i = 0; i < total; i++) {
+                cells += imgs[i]
+                    ? `<div class="mp-gcell"><img src="${imgs[i]}" loading="lazy" alt="" onclick="event.stopPropagation();openLightbox(this.src)"></div>`
+                    : '<div class="mp-gcell mp-gph"></div>';
+            }
+            return `<div class="mp-grid mp-grid-${total}" style="height:${Math.min(maxH, 360)}px;">${cells}</div>`;
         }
 
         function mpCarouselHtml(imgs, o) {
             o = o || {};
             const maxH = o.maxH || 400;
+            const total = o.total || imgs.length;
+            const multi = imgs.length > 1;
             const slides = imgs.map(src => `<div class="mp-slide"><img src="${src}" loading="lazy" style="max-height:${maxH}px;" onclick="event.stopPropagation();openLightbox(this.src)"></div>`).join('');
-            const dots = imgs.map((_, i) => `<span class="mp-dot${i === 0 ? ' on' : ''}"></span>`).join('');
-            return `<div class="mp-carousel" style="${o.wrapStyle || ''}"><div class="mp-track" onscroll="_mpScroll(this)">${slides}</div><button type="button" class="mp-nav mp-prev" onclick="event.stopPropagation();_mpNav(this,-1)">‹</button><button type="button" class="mp-nav mp-next" onclick="event.stopPropagation();_mpNav(this,1)">›</button><div class="mp-count">1/${imgs.length}</div><div class="mp-dots">${dots}</div></div>`;
+            const dots = multi ? imgs.map((_, i) => `<span class="mp-dot${i === 0 ? ' on' : ''}"></span>`).join('') : '';
+            const nav = multi ? '<button type="button" class="mp-nav mp-prev" onclick="event.stopPropagation();_mpNav(this,-1)">&#8249;</button><button type="button" class="mp-nav mp-next" onclick="event.stopPropagation();_mpNav(this,1)">&#8250;</button>' : '';
+            return `<div class="mp-carousel" style="${o.wrapStyle || ''}"><div class="mp-track" onscroll="_mpScroll(this)">${slides}</div>${nav}<div class="mp-count">1/${total}</div><div class="mp-dots">${dots}</div></div>`;
         }
+        function _mpInner(imgs, total, layout, maxH) {
+            if (layout === 'grid' && total >= 2 && total <= 4) return _mpGridHtml(imgs, total, maxH);
+            return mpCarouselHtml(imgs, { maxH: maxH, total: total });
+        }
+
+        // The photo block of a post (2+ photos). Renders what it has right away and fills in the rest.
+        function mpMediaHtml(post, owner, o) {
+            o = o || {};
+            const total = mpTotal(post);
+            if (!total) return '';
+            const ref = _mpRef(post, owner);
+            const key = ref.owner + '/' + ref.id;
+            _mpPosts[key] = post;
+            const hit = _mpCache[key];
+            const imgs = (hit && hit.sig === _mpSig(post)) ? hit.imgs : getPostImages(post);
+            const done = imgs.length >= total;
+            const layout = (post.photoLayout === 'grid' && total >= 2 && total <= 4) ? 'grid' : 'carousel';
+            const maxH = o.maxH || 400;
+            const q = x => String(x).replace(/"/g, '&quot;');
+            const html = `<div class="mp-media" style="${o.wrapStyle || ''}" data-mp-owner="${q(ref.owner)}" data-mp-id="${q(ref.id)}" data-mp-total="${total}" data-mp-layout="${layout}" data-mp-maxh="${maxH}"${done ? '' : ' data-mp-pending="1" data-mp-try="0"'}>${_mpInner(imgs, total, layout, maxH)}</div>`;
+            if (!done) _mpScheduleHydrate(60);
+            return html;
+        }
+
+        let _mpHydTimer = null;
+        function _mpScheduleHydrate(ms) {
+            clearTimeout(_mpHydTimer);
+            _mpHydTimer = setTimeout(_mpHydrateAll, ms || 60);
+        }
+        async function _mpHydrateAll() {
+            const els = [...document.querySelectorAll('.mp-media[data-mp-pending="1"]')];
+            let again = false;
+            await Promise.all(els.map(async el => {
+                const owner = el.dataset.mpOwner, id = el.dataset.mpId, total = +el.dataset.mpTotal;
+                const post = _mpPosts[owner + '/' + id];
+                if (!post) return;
+                try {
+                    const imgs = await mpLoadFull(owner, id, post);
+                    if (!el.isConnected) return;
+                    el.innerHTML = _mpInner(imgs, total, el.dataset.mpLayout, +el.dataset.mpMaxh || 400);
+                    if (imgs.length >= total) { el.removeAttribute('data-mp-pending'); }
+                    else {
+                        // The rest of the photos may still be uploading - try again a few times
+                        const n = (+el.dataset.mpTry || 0) + 1;
+                        el.dataset.mpTry = n;
+                        if (n < 6) again = true; else el.removeAttribute('data-mp-pending');
+                    }
+                } catch (e) { console.error('mpHydrate', e); el.removeAttribute('data-mp-pending'); }
+            }));
+            if (again) _mpScheduleHydrate(2000);
+        }
+
         window._mpScroll = function(track) {
             if (!track.clientWidth) return;
             const i = Math.round(track.scrollLeft / track.clientWidth);
@@ -11235,7 +11417,7 @@
         };
 
         window.clearPcImage = function() {
-            _pcImages.length = 0;
+            _pcImages.length = 0; _mpLayout.pc = 'carousel';
             _mpRenderThumbs('pc');
             const inp = document.getElementById('pc-img-input');
             if (inp) inp.value = '';
@@ -11304,13 +11486,12 @@
                 // Preserve rich formatting (bold/italic/color) if present
                 const hasFormatting = /<(b|strong|i|em|u|span)[\s>]/i.test(htmlContent);
                 if (hasFormatting) postData.richText = htmlContent;
-                _mpApplyToPost(postData, _pcImages);
                 if (_pcCapturedSong) postData.song = _pcCapturedSong;
                 // Extract hashtags
                 const tags = [...new Set((text.match(/#([a-zA-Z0-9_]+)/g)||[]).map(t=>t.slice(1).toLowerCase()))];
                 if (tags.length) postData.hashtags = tags;
 
-                await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
+                await _mpCreatePost(postData, _pcImages, 'pc');
                 
                 // Send mention notifications for the post
                 if (text) window.sendMentionNotifications(text, 'post');
@@ -11342,11 +11523,10 @@
                 if (plainText) postData.text = plainText;
                 const hasFormatting = /<(b|strong|i|em|u|span|font)[\s>]/i.test(htmlContent);
                 if (hasFormatting) postData.richText = htmlContent;
-                _mpApplyToPost(postData, _hcImages);
                 if (_hcCapturedSong) postData.song = _hcCapturedSong;
                 const tags = [...new Set((plainText.match(/#([a-zA-Z0-9_]+)/g)||[]).map(t=>t.slice(1).toLowerCase()))];
                 if (tags.length) postData.hashtags = tags;
-                await addDoc(collection(db, 'pages', currentUser, 'posts'), postData);
+                await _mpCreatePost(postData, _hcImages, 'hc');
                 if (window.sendMentionNotifications) window.sendMentionNotifications(plainText, 'post');
                 textEl.innerHTML = '';
                 clearHcImage();
@@ -11408,7 +11588,7 @@
             _mpAddFiles('hc', files, 1200);
         };
         window.clearHcImage = function() {
-            _hcImages.length = 0;
+            _hcImages.length = 0; _mpLayout.hc = 'carousel';
             _mpRenderThumbs('hc');
             const inp = document.getElementById('hc-img-input');
             if (inp) inp.value = '';
@@ -11530,6 +11710,7 @@
         window.closeEditPost = function() {
             const ov = document.getElementById('edit-post-overlay');
             if (ov) ov.remove();
+            _epImages.length = 0; _mpLayout.ep = 'carousel';
         };
 
         window.editPost = async function(owner, postId) {
@@ -11548,20 +11729,51 @@
             ov.innerHTML = `<div id="edit-post-card" role="dialog" aria-label="Edit post">
                 <div class="ep-head">Edit post</div>
                 <div id="edit-post-editor" contenteditable="true" spellcheck="true"></div>
-                <div class="ep-note">Photos and music on this post stay as they are.</div>
+                <div id="ep-photos"><div class="ep-photos-label">Photos</div><div id="ep-img-preview-box" style="display:block;"><div id="ep-img-thumbs" class="mp-thumbs"></div></div><input type="file" id="ep-img-input" accept="image/*" multiple style="display:none;"></div>
+                ${post.song ? '<div class="ep-note">The music on this post stays as it is.</div>' : ''}
                 <div class="ep-actions"><button class="ep-cancel" type="button">Cancel</button><button class="ep-save" type="button">Save</button></div>
             </div>`;
             document.body.appendChild(ov);
             const ed = ov.querySelector('#edit-post-editor');
+            // Photos: load the post's full photo set so they can be removed / added / reordered by removal
+            _epImages.length = 0;
+            _mpLayout.ep = post.photoLayout === 'grid' ? 'grid' : 'carousel';
+            let _epOrig = [];
+            let _epReady = mpTotal(post) === 0;
+            const _epLegacy = Array.isArray(post.images) && post.images.length > 0;
+            const _epOrigLayout = _mpLayout.ep;
+            ov.querySelector('#ep-img-input').addEventListener('change', (e) => {
+                const files = [...e.target.files]; e.target.value = '';
+                _mpAddFiles('ep', files, 1200);
+            });
+            _mpRenderThumbs('ep');
+            if (!_epReady) {
+                const _thumbsEl = ov.querySelector('#ep-img-thumbs');
+                _thumbsEl.innerHTML = '<div class="mp-count-label" style="align-self:center;">Loading photos...</div>';
+                mpLoadFull(owner, postId, post).then(all => {
+                    if (!document.body.contains(ov)) return;
+                    _epOrig = all.slice();
+                    _epImages.push(...all);
+                    _epReady = true;
+                    _mpRenderThumbs('ep');
+                    saveBtn.disabled = false;
+                }).catch(err => {
+                    console.error('editPost photos', err);
+                    if (!document.body.contains(ov)) return;
+                    _thumbsEl.innerHTML = '<div class="mp-count-label" style="align-self:center;">Could not load photos. Close and try again.</div>';
+                });
+            }
             if (isRich) ed.innerHTML = _epSanitizeRich(post.richText);
             else ed.textContent = post[textField] || '';
             ov.addEventListener('mousedown', (e) => { if (e.target === ov) closeEditPost(); });
             ov.querySelector('.ep-cancel').addEventListener('click', closeEditPost);
             ov.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEditPost(); });
             const saveBtn = ov.querySelector('.ep-save');
+            if (!_epReady) saveBtn.disabled = true;
             saveBtn.addEventListener('click', async () => {
+                if (!_epReady) return;
                 const plain = ed.innerText.replace(/\u00a0/g, ' ').trim();
-                const hasMedia = (typeof getPostImages === 'function' && getPostImages(post).length > 0) || !!post.imageData || !!post.song;
+                const hasMedia = _epImages.length > 0 || !!post.song;
                 if (!plain && !hasMedia) { alert("A post can't be empty. Use the delete button to remove it instead."); return; }
                 const update = { edited: true, editedAt: serverTimestamp() };
                 if (isRich) {
@@ -11572,7 +11784,26 @@
                 }
                 saveBtn.disabled = true;
                 try {
+                    // Photos changed? (added, removed, or the grid option flipped)
+                    const imgs = _epImages.slice();
+                    const gridNow = _mpLayout.ep === 'grid' && imgs.length >= 2 && imgs.length <= 4;
+                    const gridBefore = _epOrigLayout === 'grid' && _epOrig.length >= 2 && _epOrig.length <= 4;
+                    const photosChanged = imgs.length !== _epOrig.length || imgs.some((x, i) => x !== _epOrig[i]);
+                    if (photosChanged || gridNow !== gridBefore || _epLegacy) {
+                        // 1) write the extra photos first (only the ones that are new / different)
+                        await _mpWriteExtra(currentUser, postId, imgs, i => _epLegacy || imgs[i] !== _epOrig[i]);
+                        // 2) update the post itself
+                        if (imgs.length) update.imageData = imgs[0]; else update.imageData = deleteField();
+                        update.imageCount = imgs.length > 1 ? imgs.length : deleteField();
+                        update.images = deleteField();
+                        update.photoLayout = gridNow ? 'grid' : deleteField();
+                    }
                     await updateDoc(ref, update);
+                    // 3) clean up photo documents that no longer belong to the post
+                    for (let i = Math.max(1, imgs.length); i < _epOrig.length; i++) {
+                        deleteDoc(doc(db, 'pages', currentUser, 'posts', postId, 'photos', 'p' + i)).catch(() => {});
+                    }
+                    delete _mpCache[currentUser + '/' + postId];
                     closeEditPost();
                 } catch (e) {
                     console.error('editPost', e);
@@ -11589,6 +11820,7 @@
 
         window.deletePagePost = async function(postId) {
             if (!currentUser || !activePageUser || activePageUser !== currentUser) return;
+            try { const ps = await getDocs(collection(db, 'pages', currentUser, 'posts', postId, 'photos')); ps.forEach(d => deleteDoc(d.ref).catch(()=>{})); } catch (e) {}
             await deleteDoc(doc(db, 'pages', currentUser, 'posts', postId)).catch(()=>{});
         };
 
@@ -11612,7 +11844,7 @@
                     await updateDoc(ref, { reposts });
                     const repostDoc = { type:'repost', repostOf:postId, repostBy:currentUser, originalAuthor:pageOwner,
                         originalCreatedAt: postData.originalCreatedAt || postData.createdAt || null,
-                        text:postData.text||null, richText:postData.richText||null, imageData:postData.imageData||null, images:postData.images||null,
+                        text:postData.text||null, richText:postData.richText||null, imageData:postData.imageData||null, images:postData.images||null, imageCount:postData.imageCount||null, photoLayout:postData.photoLayout||null,
                         song:postData.song||null, createdAt:serverTimestamp() };
                     Object.keys(repostDoc).forEach(k => repostDoc[k]===null && delete repostDoc[k]);
                     await addDoc(collection(db, 'pages', currentUser, 'posts'), repostDoc);
@@ -13511,16 +13743,25 @@
         // ── VERIFIED BADGE HELPER ───────────────────────────────────
         const VERIFIED_BADGE_SVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
+        let _vbSeq = 0;
         window.getVerifiedBadge = function(username, size) {
-            const p = usersCache[username] || {};
+            const p = usersCache[username];
+            // Profile not loaded yet (the user directory loads in the background): leave a hidden
+            // placeholder so the badge can be filled in as soon as the profile arrives, instead of
+            // the badge being silently missing until the next re-render.
+            const loaded = !!p && (p.fname !== undefined || p.lname !== undefined || p.verified !== undefined);
+            if (!loaded) {
+                return '<span class="verified-badge-pending" data-vb-user="' + String(username).replace(/"/g, '') + '" data-vb-size="' + (size || '') + '"></span>';
+            }
             if (!p.verified) return '';
             const cls = size === 'lg' ? 'verified-badge verified-badge-lg' : 'verified-badge';
             const color = p.accentColor || '#F6A800';
             const light = blendHex(color, '#ffffff', 0.4);
             const dim = size === 'lg' ? 20 : 16;
-            const uid = username.replace(/[^a-z0-9]/gi, '');
-            // Generate a smooth scalloped badge shape — 10 bumps like the reference image.
-            // Each bump is defined by an inner point (valley) and outer point (peak).
+            // Unique gradient id per badge. A shared id (one per username) breaks every badge after
+            // the first one whenever the first copy sits in a hidden element - they render with no fill.
+            const uid = 'vbg' + (++_vbSeq);
+            // Generate a smooth scalloped badge shape - 10 bumps like the reference image.
             const numBumps = 10;
             const cx = 12, cy = 12;
             const outerR = 11.2, innerR = 8.8;
@@ -13535,10 +13776,22 @@
             d += 'Z';
             const check = 'M7.5,12.5 L10.5,15.5 L16.5,9';
             return '<span class="' + cls + '" title="Verified"><svg width="' + dim + '" height="' + dim + '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">' +
-                '<defs><linearGradient id="vbg_' + uid + '" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="' + light + '"/><stop offset="100%" stop-color="' + color + '"/></linearGradient></defs>' +
-                '<path d="' + d + '" fill="url(#vbg_' + uid + ')" stroke="none"/>' +
+                '<defs><linearGradient id="' + uid + '" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="' + light + '"/><stop offset="100%" stop-color="' + color + '"/></linearGradient></defs>' +
+                '<path d="' + d + '" fill="url(#' + uid + ')" stroke="none"/>' +
                 '<path d="' + check + '" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>' +
                 '</svg></span>';
+        };
+
+        // Fill in badges that were rendered before the user's profile had loaded
+        window.refreshVerifiedBadges = function() {
+            document.querySelectorAll('.verified-badge-pending').forEach(el => {
+                const u = el.dataset.vbUser;
+                const p = usersCache[u];
+                if (!p || !(p.fname !== undefined || p.lname !== undefined || p.verified !== undefined)) return;
+                const html = window.getVerifiedBadge(u, el.dataset.vbSize || '');
+                if (!html) { el.remove(); return; }
+                el.outerHTML = html;
+            });
         };
 
         // Helpers to lighten/darken a hex color
@@ -13565,6 +13818,7 @@
                 const adb = getAdminDb();
                 await updateDoc(doc(adb, 'users', username), { verified: !isVerified });
                 if (usersCache[username]) usersCache[username].verified = !isVerified;
+                if (window.refreshVerifiedBadges) window.refreshVerifiedBadges();
                 await loadAdminUsers();
             } catch(e) { alert('Error: ' + e.message); }
         };
